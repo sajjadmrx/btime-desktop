@@ -1,7 +1,11 @@
 {
   "name": "btime-desktop",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.9.0",
+  "author": {
+    "name": "sajjadmrx",
+    "url": "https://github.com/sajjadmrx"
+  },
   "scripts": {
     "dev": "vite",
     "build:ts": "tsc -w",

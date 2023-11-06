@@ -58,7 +58,7 @@ async function createWindow() {
     width: 170,
     frame: false,
     resizable: false,
-    alwaysOnTop: true,
+    alwaysOnTop: false, // todo customable
     skipTaskbar: true,
 
     movable: true,
