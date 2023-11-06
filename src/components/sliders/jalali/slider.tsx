@@ -11,7 +11,7 @@ export function JalaliSlider(prop: Prop) {
         <div className="select-none text-gray-600">
           {currentTime.locale("fa").format("dddd")}
         </div>
-        <div className="text-5xl select-none text-gray-600">
+        <div className="text-6xl select-none text-gray-600">
           {currentTime.locale("fa").jDate()}
         </div>
         <div className="flex flex-row gap-3 text-gray-600">

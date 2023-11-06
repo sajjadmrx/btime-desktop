@@ -58,6 +58,10 @@
 body {
   background: #fef7f2;
   font-family: Vazir;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .moveable {

@@ -12,7 +12,7 @@ export function GregorianSlider(prop: Prop) {
         <div className="select-none text-gray-600 font-[balooTamma]">
           {currentTime.locale("en").format("dddd")}
         </div>
-        <div className="text-5xl select-none text-gray-600 font-[balooTamma]">
+        <div className="text-6xl select-none text-gray-600 font-[balooTamma]">
           {currentTime.locale("en").date()}
         </div>
         <div className="flex flex-row gap-3 text-gray-600 font-[balooTamma]">

@@ -1,110 +1,54 @@
-import moment from "jalali-moment";
-import { useEffect, useState } from "react";
-import { Carousel, IconButton } from "@material-tailwind/react";
-import { JalaliSlider } from "./sliders/jalali/slider";
-import { GregorianSlider } from "./sliders/gregorian/slider";
+import { useState } from "react";
+import { Slider } from "./components/slider";
+import { IconButton } from "@material-tailwind/react";
 
 function App() {
-  const [currentTime, setCurrentTime] = useState(moment());
   const [showArrows, setShowArrows] = useState<boolean>(false);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(moment());
-    }, 60000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
 
   function onMouseEnter() {
-    setShowArrows(!showArrows);
+    setShowArrows(true);
+  }
+
+  function onMouseLave() {
+    setShowArrows(false);
   }
 
   return (
-    <Carousel
-      className="rounded-xl"
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseEnter}
-      prevArrow={({ handlePrev }) => (
-        <IconButton
-          variant="text"
-          color="blue-gray"
-          size="sm"
-          onClick={handlePrev}
-          className={`!absolute top-2/4 left-4 -translate-y-2/4 ${
-            !showArrows && "hidden"
-          }`}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="h-6 w-6"
+    <>
+      <div
+        className="h-screen w-screen"
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLave}
+      >
+        <div className={`fixed inline bottom-[140px] left-2 moveable`}>
+          <IconButton
+            variant="text"
+            color="blue-gray"
+            size="sm"
+            className={` moveable ${!showArrows && "hidden"} `}
           >
-            <g id="Arrow / Chevron_Right_MD">
-              <path
-                id="Vector"
-                d="M14 16L10 12L14 8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </g>
-          </svg>
-        </IconButton>
-      )}
-      nextArrow={({ handleNext }) => (
-        <IconButton
-          variant="text"
-          color="blue-gray"
-          size="sm"
-          onClick={handleNext}
-          className={`!absolute top-2/4 !right-4 -translate-y-2/4 ${
-            !showArrows && "hidden"
-          }`}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="h-6 w-6"
-          >
-            <g id="Arrow / Chevron_Right_MD">
-              <path
-                id="Vector"
-                d="M10 8L14 12L10 16 12h18"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </g>
-          </svg>
-        </IconButton>
-      )}
-      navigation={({ setActiveIndex, activeIndex, length }) => (
-        <div
-          className={`absolute bottom-4 left-2/4 z-50 flex -translate-x-2/4 gap-2 ${
-            !showArrows && "hidden"
-          }`}
-        >
-          {new Array(length).fill("").map((_, i) => (
-            <span
-              key={i}
-              className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${
-                activeIndex === i ? "w-8 bg-gray-600" : "w-4 bg-white/50"
-              }`}
-              onClick={() => setActiveIndex(i)}
-            />
-          ))}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1}
+              stroke="currentColor"
+              className="h-6 w-6 test"
+            >
+              <g id="move / Chevron_Right_MD">
+                <path
+                  id="Vector"
+                  d="M12 21V12M12 21L15 18M12 21L9 18M12 12V3M12 12H3M12 12H21M12 3L9 6M12 3L15 6M3 12L6 15M3 12L6 9M21 12L18 9M21 12L18 15"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </g>
+            </svg>
+          </IconButton>
         </div>
-      )}
-    >
-      <JalaliSlider currentTime={currentTime} />
-      <GregorianSlider currentTime={currentTime} />
-    </Carousel>
+        <Slider showArrows={showArrows} />
+      </div>
+    </>
   );
 }
 

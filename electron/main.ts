@@ -4,9 +4,8 @@ import { store } from './store';
 import { join } from "node:path";
 import { config } from "dotenv";
 import { getIconPath, getPublicFilePath } from '../shared/getIconPath';
-
+import os from "os";
 config();
-
 process.env.DIST_ELECTRON = join(__dirname, "../");
 process.env.DIST = join(process.env.DIST_ELECTRON, "./dist");
 process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
@@ -23,6 +22,9 @@ function createWindow() {
     icon: getIconPath(),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      devTools: false,
+      nodeIntegration: true,
+      contextIsolation: true,
     },
     height: 180,
     width: 170,
@@ -30,6 +32,7 @@ function createWindow() {
     resizable: false,
     alwaysOnTop: true,
     skipTaskbar: true,
+
     movable: true,
     center: true,
     x: store.get("bounds").x,
@@ -45,6 +48,7 @@ function createWindow() {
     }
   });
 
+  if (os.platform() == "darwin") win.setWindowButtonVisibility(false);
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
   })
