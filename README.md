@@ -19,10 +19,9 @@
 </p>
 
 ویجت نمایش تاریخ و آب و هوا برای سیستم عامل های ویندوز،مک، لینوکس
-
-<video width="809" height="240" controls>
-  <source src=".github/assets/b-time.mp4" type="video/mp4">
-</video>
+<p align="center">
+    <img src="https://github.com/sajjadmrx/btime-desktop/assets/66132114/de33b023-7fb3-4ada-b989-a431d39c68fa" alt="gif" >
+</p>
 
 - [✍ معرفی](#-معرفی)
   - [📥 دانلود](#-دانلود)
@@ -40,6 +39,7 @@
 | Linux | ✅ Stable |
 
 ## 📝 تغییرات
+
 
 شما میتونید تغییرات رو از [changelog](changelog.md) مشاهده کنید
 
