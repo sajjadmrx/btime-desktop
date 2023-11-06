@@ -20,7 +20,9 @@
 
 ویجت نمایش تاریخ و آب و هوا برای سیستم عامل های ویندوز،مک، لینوکس
 
-<video src=".github/assets/b-time.mp4" controls title="B time" w="10" h="10"></video>
+<video width="809" height="240" controls>
+  <source src=".github/assets/b-time.mp4" type="video/mp4">
+</video>
 
 - [✍ معرفی](#-معرفی)
   - [📥 دانلود](#-دانلود)

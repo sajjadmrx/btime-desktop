@@ -21,8 +21,8 @@ win:
     - github
   target:
     # - zip
-    - msi
-    # - nsis
+    # - msi
+    - nsis
 linux:
   icon: "public/icons/icon.icns"
   maintainer: "btime.github.io"
