@@ -1,19 +1,26 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Menu, nativeImage, shell, Tray } from 'electron'
 import path from 'node:path'
 import { store } from './store';
+import { join } from "node:path";
+import { config } from "dotenv";
+import { getIconPath, getPublicFilePath } from '../shared/getIconPath';
 
+config();
 
-process.env.DIST = path.join(__dirname, '../dist')
-process.env.VITE_PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
+process.env.DIST_ELECTRON = join(__dirname, "../");
+process.env.DIST = join(process.env.DIST_ELECTRON, "./dist");
+process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
+  ? join(process.env.DIST_ELECTRON, "./public")
+  : process.env.DIST;
 
 
 let win: BrowserWindow | null;
-
+const icon = nativeImage.createFromPath(getIconPath());
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 
 function createWindow() {
   win = new BrowserWindow({
-    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    icon: getIconPath(),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
@@ -22,13 +29,15 @@ function createWindow() {
     frame: false,
     resizable: false,
     alwaysOnTop: true,
+    skipTaskbar: true,
     movable: true,
     center: true,
     x: store.get("bounds").x,
     y: store.get("bounds").y,
+    title: "bTime",
+    titleBarStyle: "hidden",
   })
-
-  win.webContents.openDevTools();
+  createTray()
   win.on("moved", () => {
     if (win) {
       const { x, y } = win.getBounds()
@@ -36,7 +45,6 @@ function createWindow() {
     }
   });
 
-  // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
   })
@@ -44,7 +52,6 @@ function createWindow() {
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)
   } else {
-    // win.loadFile('dist/index.html')
     win.loadFile(path.join(process.env.DIST, 'index.html'))
   }
 }
@@ -57,6 +64,13 @@ app.on('window-all-closed', () => {
     win = null
   }
 })
+
+app.on("second-instance", () => {
+  if (win) {
+    if (win.isMinimized()) win.restore();
+    win.focus();
+  }
+});
 
 
 app.on('activate', () => {
@@ -71,3 +85,50 @@ app.on('activate', () => {
 })
 
 app.whenReady().then(createWindow)
+
+
+function createTray() {
+
+  const appIcon = new Tray(icon);
+
+  const powerIcon = nativeImage.createFromPath(
+    getPublicFilePath("icons/power.png")
+  );
+  const settingIcon = nativeImage.createFromPath(
+    getPublicFilePath("icons/setting.png")
+  );
+  const linkIcon = nativeImage.createFromPath(
+    getPublicFilePath("icons/link.png")
+  );
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: "bTime",
+      enabled: false,
+      icon: icon.resize({ height: 19, width: 19 }),
+    },
+    {
+      label: "settings(soon)",
+      icon: settingIcon,
+      enabled: false,
+    },
+    {
+      label: "website",
+      icon: linkIcon,
+      click: function () {
+        shell.openExternal("https://github.com/sajjadmrx/btime-desktop");
+      },
+    },
+    {
+      label: "Quit bTime",
+      icon: powerIcon,
+      click: function () {
+        app.exit(1);
+      },
+    },
+  ]);
+
+
+  appIcon.setToolTip("bTime");
+  appIcon.setContextMenu(contextMenu);
+  return appIcon;
+}
