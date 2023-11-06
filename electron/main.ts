@@ -5,7 +5,13 @@ import { join } from "node:path";
 import { config } from "dotenv";
 import { getIconPath, getPublicFilePath } from '../shared/getIconPath';
 import os from "os";
+import { update } from './update';
+import isDev from "electron-is-dev";
+import { release } from "node:os";
+
 config();
+
+
 process.env.DIST_ELECTRON = join(__dirname, "../");
 process.env.DIST = join(process.env.DIST_ELECTRON, "./dist");
 process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
@@ -16,6 +22,26 @@ process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
 let win: BrowserWindow | null;
 const icon = nativeImage.createFromPath(getIconPath());
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
+
+
+if (release().startsWith("6.1")) app.disableHardwareAcceleration();
+
+if (process.platform === "win32")
+  app.setAppUserModelId(app.getName());
+
+
+if (!app.requestSingleInstanceLock()) {
+  app.quit();
+  process.exit(0);
+}
+
+
+if (isDev)
+  Object.defineProperty(app, "isPackaged", {
+    get() {
+      return true;
+    },
+  });
 
 function createWindow() {
   win = new BrowserWindow({
@@ -58,6 +84,8 @@ function createWindow() {
   } else {
     win.loadFile(path.join(process.env.DIST, 'index.html'))
   }
+
+  update(win, app)
 }
 
 

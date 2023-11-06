@@ -17,7 +17,10 @@
   "dependencies": {
     "@material-tailwind/react": "^2.1.4",
     "dotenv": "^16.3.1",
+    "electron-is-dev": "^2.0.0",
+    "electron-log": "^5.0.0",
     "electron-store": "^8.1.0",
+    "electron-updater": "^6.1.4",
     "jalali-moment": "^3.3.11",
     "moment-jalali": "^0.3.9",
     "react": "^18.2.0",
