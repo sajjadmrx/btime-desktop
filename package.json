@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build:ts": "tsc -w",
+    "build:ts": "tsc",
     "build": "tsc && vite build && electron-builder",
     "preview": "vite preview",
     "pree2e": "vite build --mode=test",
