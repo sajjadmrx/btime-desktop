@@ -8,6 +8,8 @@ import os from "os";
 import { update } from './update';
 import isDev from "electron-is-dev";
 import { release } from "node:os";
+import { initialize, trackEvent } from "@aptabase/electron/main";
+
 
 config();
 
@@ -22,7 +24,7 @@ process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
 let win: BrowserWindow | null;
 const icon = nativeImage.createFromPath(getIconPath());
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
-
+initialize("A-EU-6807586961");
 
 if (release().startsWith("6.1")) app.disableHardwareAcceleration();
 
@@ -43,7 +45,7 @@ if (isDev)
     },
   });
 
-function createWindow() {
+async function createWindow() {
   win = new BrowserWindow({
     icon: getIconPath(),
     webPreferences: {
@@ -86,6 +88,7 @@ function createWindow() {
   }
 
   update(win, app)
+  await trackEvent(`app_started__${app.getVersion()}`);
 }
 
 
