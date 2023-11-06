@@ -137,7 +137,7 @@ function createTray() {
   );
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: "bTime",
+      label: `B Time | ${app.getVersion()}`,
       enabled: false,
       icon: icon.resize({ height: 19, width: 19 }),
     },

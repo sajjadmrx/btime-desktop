@@ -1,12 +1,11 @@
-name: Release
+name: pull_request
 on:
-  push:
-    branches: ["main"]
+  pull_request:
+    types:
+      - opened
+      - synchronize
     paths-ignore:
-      - "README.md"
       - "*.md"
-      - ".github/ISSUE_TEMPLATE/*"
-      - ".github/assets/*"
 jobs:
   publish_on_linux:
     runs-on: ubuntu-latest
@@ -26,10 +25,8 @@ jobs:
       - name: Install electron-builder
         run: npm i electron-builder -g
 
-      - name: Publish
-        env:
-          GH_TOKEN: ${{ secrets.TOKEN }}
-        run: npm run publish:linux
+      - name: build
+        run: npm run build
   publish_on_win:
     runs-on: windows-latest
     steps:
@@ -48,10 +45,8 @@ jobs:
       - name: Install electron-builder
         run: npm i electron-builder -g
 
-      - name: Publish
-        env:
-          GH_TOKEN: ${{ secrets.TOKEN }}
-        run: npm run publish:win
+      - name: build
+        run: npm run build
   publish_on_macos:
     runs-on: macOS-latest
     steps:
@@ -73,7 +68,5 @@ jobs:
       - name: Install electron-builder
         run: npm i electron-builder -g
 
-      - name: Publish
-        env:
-          GH_TOKEN: ${{ secrets.TOKEN }}
-        run: npm run publish:mac
+      - name: build
+        run: npm run build
