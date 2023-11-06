@@ -15,6 +15,7 @@
     "publish:mac": "tsc && vite build && electron-builder --mac  -p always"
   },
   "dependencies": {
+    "@material-tailwind/react": "^2.1.4",
     "dotenv": "^16.3.1",
     "electron-store": "^8.1.0",
     "jalali-moment": "^3.3.11",
