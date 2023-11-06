@@ -49,6 +49,12 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: balooTamma;
+
+  src: url("./assets/fonts/BalooTamma/BalooTamma2-Bold.ttf");
+}
+
 body {
   background: #fef7f2;
   font-family: Vazir;
