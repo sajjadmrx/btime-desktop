@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Slider } from "./components/slider";
 import { IconButton } from "@material-tailwind/react";
 
@@ -12,6 +12,27 @@ function App() {
   function onMouseLave() {
     setShowArrows(false);
   }
+
+  useEffect(() => {
+    const handleColorSchemeChange = (e) => {
+      document.documentElement.classList.remove("dark");
+      if (e.matches) {
+        document.documentElement.classList.add("dark");
+      }
+    };
+
+    const colorSchemeMediaQuery = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    );
+    colorSchemeMediaQuery.addEventListener("change", handleColorSchemeChange);
+
+    return () => {
+      colorSchemeMediaQuery.removeEventListener(
+        "change",
+        handleColorSchemeChange
+      );
+    };
+  }, []);
 
   return (
     <>

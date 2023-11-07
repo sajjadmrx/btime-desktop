@@ -26,12 +26,12 @@ export function Slider(prop: Prop) {
         prevArrow={({ handlePrev }) => (
           <IconButton
             variant="text"
-            color="blue-gray"
             size="sm"
+            color="blue-gray"
             onClick={handlePrev}
             className={`!absolute top-2/4 left-4 -translate-y-2/4 ${
               !showArrows && "hidden"
-            }`}
+            } `}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -55,12 +55,12 @@ export function Slider(prop: Prop) {
         nextArrow={({ handleNext }) => (
           <IconButton
             variant="text"
-            color="blue-gray"
             size="sm"
+            color="blue-gray"
             onClick={handleNext}
             className={`!absolute top-2/4 !right-4 -translate-y-2/4 ${
               !showArrows && "hidden"
-            }`}
+            } `}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

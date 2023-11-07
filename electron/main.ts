@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, nativeImage, shell, Tray } from 'electron'
+import { app, BrowserWindow, Menu, nativeImage, shell, Tray, nativeTheme } from 'electron'
 import path from 'node:path'
 import { store } from './store';
 import { join } from "node:path";
@@ -121,20 +121,16 @@ app.on('activate', () => {
 
 app.whenReady().then(createWindow)
 
-
+function getIcon(name: string) {
+  return nativeImage.createFromPath(
+    getPublicFilePath(name)
+  );
+}
 function createTray() {
 
   const appIcon = new Tray(icon);
 
-  const powerIcon = nativeImage.createFromPath(
-    getPublicFilePath("icons/power.png")
-  );
-  const settingIcon = nativeImage.createFromPath(
-    getPublicFilePath("icons/setting.png")
-  );
-  const linkIcon = nativeImage.createFromPath(
-    getPublicFilePath("icons/link.png")
-  );
+
   const contextMenu = Menu.buildFromTemplate([
     {
       label: `B Time | ${app.getVersion()}`,
@@ -142,24 +138,40 @@ function createTray() {
       icon: icon.resize({ height: 19, width: 19 }),
     },
     {
-      label: "settings(soon)",
-      icon: settingIcon,
-      enabled: false,
+      label: "Theme",
+      icon: getIcon("icons/theme.png"),
+      submenu: [
+        {
+          label: "Dark",
+          icon: getIcon("icons/moon.png").resize({ height: 12, width: 12 }),
+          click: function (menuItem, browserWindow, event) {
+            nativeTheme.themeSource = "dark"
+          },
+        },
+        {
+          label: "Light",
+          icon: getIcon("icons/sun.png").resize({ height: 12, width: 12 }),
+          click: function (menuItem, browserWindow, event) {
+            nativeTheme.themeSource = "light"
+          },
+        }
+      ]
     },
     {
       label: "website",
-      icon: linkIcon,
+      icon: getIcon("icons/link.png"),
       click: function () {
         shell.openExternal("https://github.com/sajjadmrx/btime-desktop");
       },
     },
     {
       label: "Quit bTime",
-      icon: powerIcon,
+      icon: getIcon("icons/power.png"),
       click: function () {
         app.exit(1);
       },
     },
+
   ]);
 
 
