@@ -163,6 +163,10 @@ function createTray() {
   ]);
 
 
+  appIcon.on("double-click", function () {
+    win.show();
+  });
+
   appIcon.setToolTip("bTime");
   appIcon.setContextMenu(contextMenu);
   return appIcon;
