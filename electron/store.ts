@@ -8,6 +8,7 @@ export interface StoreKey {
         width: number
         height: number
     }
+    alwaysOnTop: boolean
 }
 export const store = new electronStore<StoreKey>({
     defaults: {
@@ -16,7 +17,8 @@ export const store = new electronStore<StoreKey>({
             y: 0,
             height: 0,
             width: 0
-        }
+        },
+        alwaysOnTop: false
     },
     name: "bTime.1",
 });

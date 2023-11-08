@@ -24,8 +24,8 @@ function App() {
     const colorSchemeMediaQuery = window.matchMedia(
       "(prefers-color-scheme: dark)"
     );
+    handleColorSchemeChange(colorSchemeMediaQuery);
     colorSchemeMediaQuery.addEventListener("change", handleColorSchemeChange);
-
     return () => {
       colorSchemeMediaQuery.removeEventListener(
         "change",

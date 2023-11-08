@@ -10,7 +10,6 @@ import isDev from "electron-is-dev";
 import { release } from "node:os";
 import { initialize, trackEvent } from "@aptabase/electron/main";
 
-
 config();
 
 
@@ -58,7 +57,7 @@ async function createWindow() {
     width: 170,
     frame: false,
     resizable: false,
-    alwaysOnTop: false, // todo customable
+    alwaysOnTop: store.get("alwaysOnTop"),
     skipTaskbar: true,
 
     movable: true,
@@ -126,10 +125,29 @@ function getIcon(name: string) {
     getPublicFilePath(name)
   );
 }
+
+let createdTray: Tray | null = null;
 function createTray() {
+  if (createdTray)
+    createdTray.destroy()
 
   const appIcon = new Tray(icon);
 
+  const contextMenu = getContextMenu()
+
+  appIcon.on("double-click", function () {
+    win.show();
+  });
+
+  appIcon.setToolTip("bTime");
+
+  appIcon.setContextMenu(contextMenu);
+  createdTray = appIcon
+  return appIcon;
+}
+
+function getContextMenu() {
+  const alwaysOnTop: boolean = store.get("alwaysOnTop")
 
   const contextMenu = Menu.buildFromTemplate([
     {
@@ -144,21 +162,37 @@ function createTray() {
         {
           label: "Dark",
           icon: getIcon("icons/moon.png").resize({ height: 12, width: 12 }),
-          click: function (menuItem, browserWindow, event) {
+          click: function () {
             nativeTheme.themeSource = "dark"
           },
         },
         {
           label: "Light",
           icon: getIcon("icons/sun.png").resize({ height: 12, width: 12 }),
-          click: function (menuItem, browserWindow, event) {
+          click: function () {
             nativeTheme.themeSource = "light"
           },
         }
       ]
     },
     {
-      label: "website",
+      label: "Options",
+      icon: getIcon("icons/options.png"),
+      submenu: [
+        {
+          label: "alwaysOnTop",
+          icon: alwaysOnTop && getIcon("icons/checked.png"),
+          click: function () {
+            store.set("alwaysOnTop", !alwaysOnTop)
+            contextMenu.closePopup()
+            createTray()
+            win.setAlwaysOnTop(!alwaysOnTop)
+          }
+        }
+      ]
+    },
+    {
+      label: "Website",
       icon: getIcon("icons/link.png"),
       click: function () {
         shell.openExternal("https://github.com/sajjadmrx/btime-desktop");
@@ -174,12 +208,5 @@ function createTray() {
 
   ]);
 
-
-  appIcon.on("double-click", function () {
-    win.show();
-  });
-
-  appIcon.setToolTip("bTime");
-  appIcon.setContextMenu(contextMenu);
-  return appIcon;
+  return contextMenu
 }
