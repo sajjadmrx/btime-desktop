@@ -8,7 +8,6 @@ import os from "os";
 import { update } from './update';
 import isDev from "electron-is-dev";
 import { release } from "node:os";
-import { initialize, trackEvent } from "@aptabase/electron/main";
 
 config();
 
@@ -23,7 +22,7 @@ process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
 let win: BrowserWindow | null;
 const icon = nativeImage.createFromPath(getIconPath());
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
-initialize("A-EU-6807586961");
+
 
 if (release().startsWith("6.1")) app.disableHardwareAcceleration();
 
@@ -86,8 +85,9 @@ async function createWindow() {
     win.loadFile(path.join(process.env.DIST, 'index.html'))
   }
 
+  nativeTheme.themeSource = store.get("theme")
+
   update(win, app)
-  await trackEvent(`app_started__${app.getVersion()}`);
 }
 
 
@@ -148,7 +148,7 @@ function createTray() {
 
 function getContextMenu() {
   const alwaysOnTop: boolean = store.get("alwaysOnTop")
-
+  const currentTheme = store.get("theme")
   const contextMenu = Menu.buildFromTemplate([
     {
       label: `B Time | ${app.getVersion()}`,
@@ -161,16 +161,20 @@ function getContextMenu() {
       submenu: [
         {
           label: "Dark",
-          icon: getIcon("icons/moon.png").resize({ height: 12, width: 12 }),
+          icon: currentTheme == "dark" && getIcon("icons/checked.png"),
           click: function () {
             nativeTheme.themeSource = "dark"
+            store.set("theme", "dark")
+            createTray()
           },
         },
         {
           label: "Light",
-          icon: getIcon("icons/sun.png").resize({ height: 12, width: 12 }),
+          icon: currentTheme == "light" && getIcon("icons/checked.png"),
           click: function () {
             nativeTheme.themeSource = "light"
+            store.set("theme", "light")
+            createTray()
           },
         }
       ]

@@ -19,7 +19,6 @@
     "publish:mac": "tsc && vite build && electron-builder --mac  -p always"
   },
   "dependencies": {
-    "@aptabase/electron": "^0.3.1",
     "@material-tailwind/react": "^2.1.4",
     "dotenv": "^16.3.1",
     "electron-is-dev": "^2.0.0",
