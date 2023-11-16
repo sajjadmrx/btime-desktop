@@ -22,6 +22,7 @@ export function Slider(prop: Prop) {
   return (
     <>
       <Carousel
+        loop={true}
         className="rounded-xl test"
         prevArrow={({ handlePrev }) => (
           <IconButton
