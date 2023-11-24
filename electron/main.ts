@@ -55,6 +55,7 @@ async function createWindow() {
     height: 180,
     width: 170,
     frame: false,
+    transparent: true,
     resizable: false,
     alwaysOnTop: store.get("alwaysOnTop"),
     skipTaskbar: true,
@@ -89,7 +90,6 @@ async function createWindow() {
 
   update(win, app)
 }
-
 
 app.on('window-all-closed', () => {
 
