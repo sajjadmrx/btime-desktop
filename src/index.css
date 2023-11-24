@@ -55,8 +55,11 @@
   src: url("./assets/fonts/BalooTamma/BalooTamma2-Bold.ttf");
 }
 
+.h-screen {
+  border-radius: 28px;
+}
+
 body {
-  background: #fef7f2;
   font-family: Vazir;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -66,17 +69,18 @@ body {
 
 .moveable {
   -webkit-app-region: drag;
+  z-index: 4;
 }
 
 @media (prefers-color-scheme: dark) {
-  body {
+  .h-screen {
     background: #333;
     color: white;
   }
 }
 
 @media (prefers-color-scheme: light) {
-  body {
+  .h-screen {
     background: #ddd;
     color: black;
   }
