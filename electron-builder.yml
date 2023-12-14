@@ -16,7 +16,6 @@ directories:
   output: "release/${version}"
 win:
   icon: "public/icons/icon.ico"
-  requestedExecutionLevel: "highestAvailable"
   publish:
     - github
   target:
