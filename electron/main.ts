@@ -78,6 +78,7 @@ async function createWindow() {
   if (os.platform() == "darwin") win.setWindowButtonVisibility(false);
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
+    win.webContents.send("transparent_status", { newStatus: store.get("transparentStatus") })
   })
 
   if (VITE_DEV_SERVER_URL) {
@@ -184,13 +185,25 @@ function getContextMenu() {
       icon: getIcon("icons/options.png"),
       submenu: [
         {
-          label: "alwaysOnTop",
+          label: "AlwaysOnTop",
           icon: alwaysOnTop && getIcon("icons/checked.png"),
           click: function () {
             store.set("alwaysOnTop", !alwaysOnTop)
             contextMenu.closePopup()
             createTray()
             win.setAlwaysOnTop(!alwaysOnTop)
+          }
+        },
+        {
+          label: "Transparent",
+          icon: store.get("transparentStatus") && getIcon("icons/checked.png"),
+          click: function () {
+            const transparetStatus = store.get("transparentStatus")
+            const newValue = !transparetStatus
+            store.set("transparentStatus", newValue)
+            contextMenu.closePopup()
+            createTray()
+            win.webContents.send("transparent_status", { newStatus: newValue })
           }
         }
       ]
