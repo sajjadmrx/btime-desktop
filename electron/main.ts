@@ -93,6 +93,32 @@ async function createWindow() {
   }
 
   nativeTheme.themeSource = store.get("theme")
+  win.on("moved", () => {
+    if (win) {
+      const { screen } = require('electron');
+      let { x, y } = win.getBounds();
+      const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
+      // Check if the window is out of bounds and adjust the position
+      if (x < 0) {
+        x = 0;
+      } else if (x + win.getBounds().width > width) {
+        x = width - win.getBounds().width;
+      }
+
+      if (y < 0) {
+        y = 0;
+      } else if (y + win.getBounds().height > height) {
+        y = height - win.getBounds().height;
+      }
+
+      // Set the new bounds if adjustments were made                    
+      win.setBounds({ x, y, width: win.getBounds().width, height: win.getBounds().height });
+
+      // Save the new position
+      store.set("bounds", { x, y });
+    }
+  });
 
   update(win, app)
 }
