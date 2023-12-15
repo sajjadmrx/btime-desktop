@@ -10,6 +10,7 @@ export interface StoreKey {
     }
     alwaysOnTop: boolean,
     transparentStatus: boolean,
+    startup: true
     theme: "system" | "light" | "dark"
 }
 export const store = new electronStore<StoreKey>({
@@ -22,6 +23,7 @@ export const store = new electronStore<StoreKey>({
         },
         alwaysOnTop: false,
         transparentStatus: false,
+        startup: true,
         theme: "light"
 
     },

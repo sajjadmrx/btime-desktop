@@ -10,7 +10,6 @@
   src: url("./assets/fonts/vazir/Vazirmatn-FD-Medium.eot?#iefix")
       format("embedded-opentype"),
     url("./assets/fonts/vazir/Vazirmatn-FD-Medium.woff2") format("woff2"),
-    url("./assets/fonts/vazir/Vazirmatn-FD-Medium.woff") format("woff"),
     url("./assets/fonts/vazir/Vazirmatn-FD-Medium.ttf") format("truetype");
 
   font-weight: normal;
@@ -25,7 +24,6 @@
   src: url("./assets/fonts/vazir/Vazirmatn-FD-Bold.eot?#iefix")
       format("embedded-opentype"),
     url("./assets/fonts/vazir/Vazirmatn-FD-Bold.woff2") format("woff2"),
-    url("./assets/fonts/vazir/Vazirmatn-FD-Bold.woff") format("woff"),
     url("./assets/fonts/vazir/Vazirmatn-FD-Bold.ttf") format("truetype");
 
   font-weight: normal;
@@ -41,7 +39,6 @@
   src: url("./assets/fonts/vazir/Vazirmatn-FD-Black.eot?#iefix")
       format("embedded-opentype"),
     url("./assets/fonts/vazir/Vazirmatn-FD-Black.woff2") format("woff2"),
-    url("./assets/fonts/vazir/Vazirmatn-FD-Black.woff") format("woff"),
     url("./assets/fonts/vazir/Vazirmatn-FD-Black.ttf") format("truetype");
 
   font-weight: 900;

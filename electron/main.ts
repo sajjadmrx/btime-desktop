@@ -8,6 +8,7 @@ import os from "os";
 import { update } from './update';
 import isDev from "electron-is-dev";
 import { release } from "node:os";
+import { toggleStartUp } from './utils/startup.util';
 
 config();
 
@@ -42,6 +43,10 @@ if (isDev)
       return true;
     },
   });
+const isWindoAndDrawin: boolean = ["darwin", "win32"].includes(process.platform)
+if (isWindoAndDrawin) {
+  toggleStartUp(app, store.get("startup"))
+}
 
 async function createWindow() {
   win = new BrowserWindow({
@@ -204,6 +209,19 @@ function getContextMenu() {
             contextMenu.closePopup()
             createTray()
             win.webContents.send("transparent_status", { newStatus: newValue })
+          },
+        },
+        {
+          label: "Open at boot",
+          icon: store.get("startup") && getIcon("icons/checked.png"),
+          visible: isWindoAndDrawin,
+          click: function () {
+            const startupStatus = store.get("startup")
+            const newValue = !startupStatus
+            store.set("startup", newValue)
+            toggleStartUp(app, newValue)
+            contextMenu.closePopup()
+            createTray()
           }
         }
       ]
