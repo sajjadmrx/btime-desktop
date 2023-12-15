@@ -66,7 +66,6 @@ body {
 
 .moveable {
   -webkit-app-region: drag;
-  z-index: 4;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -89,6 +88,9 @@ body {
     background: #dddddd30;
   }
   body.transparent-active .text-gray-trasnparent {
+    color: #e0e0e0;
+  }
+  body.transparent-active .arrow_btn {
     color: #e0e0e0;
   }
 }

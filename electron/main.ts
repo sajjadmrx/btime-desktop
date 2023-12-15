@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, nativeImage, shell, Tray, nativeTheme } from 'electron'
+import { app, BrowserWindow, Menu, nativeImage, shell, Tray, nativeTheme, screen } from 'electron'
 import path from 'node:path'
 import { store } from './store';
 import { join } from "node:path";
@@ -57,7 +57,7 @@ async function createWindow() {
       nodeIntegration: true,
       contextIsolation: true,
     },
-    height: 180,
+    height: 190,
     width: 170,
     frame: false,
     transparent: true,
@@ -93,6 +93,31 @@ async function createWindow() {
   }
 
   nativeTheme.themeSource = store.get("theme")
+  win.on("moved", () => {
+    if (win) {
+      let { x, y } = win.getBounds();
+      const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+
+      // Check if the window is out of bounds and adjust the position
+      if (x < 0) {
+        x = 0;
+      } else if (x + win.getBounds().width > width) {
+        x = width - win.getBounds().width;
+      }
+
+      if (y < 0) {
+        y = 0;
+      } else if (y + win.getBounds().height > height) {
+        y = height - win.getBounds().height;
+      }
+
+      // Set the new bounds if adjustments were made                    
+      win.setBounds({ x, y, width: win.getBounds().width, height: win.getBounds().height });
+
+      // Save the new position
+      store.set("bounds", { x, y });
+    }
+  });
 
   update(win, app)
 }
@@ -163,8 +188,17 @@ function getContextMenu() {
     },
     {
       label: "Theme",
-      icon: getIcon("icons/theme.png"),
+      icon: getIcon("icons/theme.png").resize({ height: 19, width: 19 }),
       submenu: [
+        {
+          label: "System",
+          icon: currentTheme == "system" && getIcon("icons/checked.png"),
+          click: function () {
+            nativeTheme.themeSource = "system"
+            store.set("theme", "system")
+            createTray()
+          },
+        },
         {
           label: "Dark",
           icon: currentTheme == "dark" && getIcon("icons/checked.png"),
@@ -187,7 +221,7 @@ function getContextMenu() {
     },
     {
       label: "Options",
-      icon: getIcon("icons/options.png"),
+      icon: getIcon("icons/options.png").resize({ height: 19, width: 19 }),
       submenu: [
         {
           label: "AlwaysOnTop",
@@ -228,7 +262,7 @@ function getContextMenu() {
     },
     {
       label: "Website",
-      icon: getIcon("icons/link.png"),
+      icon: getIcon("icons/link.png").resize({ height: 19, width: 19 }),
       click: function () {
         shell.openExternal("https://github.com/sajjadmrx/btime-desktop");
       },

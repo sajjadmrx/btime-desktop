@@ -23,14 +23,14 @@ export function Slider(prop: Prop) {
     <>
       <Carousel
         loop={true}
-        className="rounded-xl test"
+        className="rounded-xl"
         prevArrow={({ handlePrev }) => (
           <IconButton
             variant="text"
             size="sm"
             color="blue-gray"
             onClick={handlePrev}
-            className={`!absolute top-2/4 left-4 -translate-y-2/4 ${
+            className={`!absolute top-2/4 dark:text-white arrow_btn left-4 -translate-y-2/4  ${
               !showArrows && "hidden"
             } `}
           >
@@ -59,7 +59,7 @@ export function Slider(prop: Prop) {
             size="sm"
             color="blue-gray"
             onClick={handleNext}
-            className={`!absolute top-2/4 !right-4 -translate-y-2/4 ${
+            className={`!absolute top-2/4 dark:text-white arrow_btn !right-4 -translate-y-2/4  ${
               !showArrows && "hidden"
             } `}
           >

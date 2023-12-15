@@ -2,7 +2,9 @@ name: BuildCode
 
 on:
   push:
-
+    paths-ignore:
+      - "*.yml"
+      - ".github/*"
 jobs:
   build:
     runs-on: ubuntu-latest

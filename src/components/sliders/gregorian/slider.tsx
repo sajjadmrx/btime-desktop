@@ -8,7 +8,7 @@ export function GregorianSlider(prop: Prop) {
   const { currentTime } = prop;
   return (
     <div className="flex h-screen items-center justify-center">
-      <div className="flex flex-col items-center justify-center gap-4">
+      <div className="flex flex-col items-center justify-center gap-4 moveable w-[40%]">
         <div className="select-none  text-gray-600 text-gray-trasnparent dark:text-[#eee]  font-[balooTamma]">
           {currentTime.locale("en").format("dddd")}
         </div>
