@@ -6,6 +6,7 @@ on:
       - synchronize
     paths-ignore:
       - "*.md"
+      - ".github/*"
 jobs:
   build_on_linux:
     runs-on: ubuntu-latest

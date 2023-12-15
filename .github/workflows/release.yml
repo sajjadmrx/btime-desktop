@@ -7,6 +7,8 @@ on:
       - "*.md"
       - ".github/ISSUE_TEMPLATE/*"
       - ".github/assets/*"
+      - ".github/*"
+      - "*.md"
 jobs:
   publish_on_linux:
     runs-on: ubuntu-latest
