@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, nativeImage, shell, Tray, nativeTheme } from 'electron'
+import { app, BrowserWindow, Menu, nativeImage, shell, Tray, nativeTheme, screen } from 'electron'
 import path from 'node:path'
 import { store } from './store';
 import { join } from "node:path";
@@ -95,7 +95,6 @@ async function createWindow() {
   nativeTheme.themeSource = store.get("theme")
   win.on("moved", () => {
     if (win) {
-      const { screen } = require('electron');
       let { x, y } = win.getBounds();
       const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 

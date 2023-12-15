@@ -7,7 +7,7 @@ on:
     paths-ignore:
       - "*.md"
 jobs:
-  publish_on_linux:
+  build_on_linux:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -26,8 +26,8 @@ jobs:
         run: npm i electron-builder -g
 
       - name: build
-        run: npm run build:ts
-  publish_on_win:
+        run: npm run build
+  build_on_win:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
@@ -46,8 +46,8 @@ jobs:
         run: npm i electron-builder -g
 
       - name: build
-        run: npm run build:ts
-  publish_on_macos:
+        run: npm run build
+  build_on_macos:
     runs-on: macOS-latest
     steps:
       - name: Checkout repository
@@ -69,4 +69,4 @@ jobs:
         run: npm i electron-builder -g
 
       - name: build
-        run: npm run build:ts
+        run: npm run build
