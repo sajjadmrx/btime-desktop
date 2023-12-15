@@ -57,7 +57,7 @@ async function createWindow() {
       nodeIntegration: true,
       contextIsolation: true,
     },
-    height: 180,
+    height: 190,
     width: 170,
     frame: false,
     transparent: true,
