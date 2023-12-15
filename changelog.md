@@ -1,5 +1,11 @@
 # Changelog
 
+# v1.0.4
+
+- رفع شدن مشکل خارج شدن برنامه از صفحه هنگام جا به جا کردن [pull #17](https://github.com/sajjadmrx/btime-desktop/pull/17)
+- رفع شدن جا به جا(drag) کردن برنامه یا [#16](https://github.com/sajjadmrx/btime-desktop/issues/16)
+- اضافه شدن دنبال کردن تم سیستم
+
 # v1.0.3
 
 - بهبود border ها @ali0sam
