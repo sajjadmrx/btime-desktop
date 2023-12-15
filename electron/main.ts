@@ -188,8 +188,17 @@ function getContextMenu() {
     },
     {
       label: "Theme",
-      icon: getIcon("icons/theme.png"),
+      icon: getIcon("icons/theme.png").resize({ height: 19, width: 19 }),
       submenu: [
+        {
+          label: "System",
+          icon: currentTheme == "system" && getIcon("icons/checked.png"),
+          click: function () {
+            nativeTheme.themeSource = "system"
+            store.set("theme", "system")
+            createTray()
+          },
+        },
         {
           label: "Dark",
           icon: currentTheme == "dark" && getIcon("icons/checked.png"),
@@ -212,7 +221,7 @@ function getContextMenu() {
     },
     {
       label: "Options",
-      icon: getIcon("icons/options.png"),
+      icon: getIcon("icons/options.png").resize({ height: 19, width: 19 }),
       submenu: [
         {
           label: "AlwaysOnTop",
@@ -253,7 +262,7 @@ function getContextMenu() {
     },
     {
       label: "Website",
-      icon: getIcon("icons/link.png"),
+      icon: getIcon("icons/link.png").resize({ height: 19, width: 19 }),
       click: function () {
         shell.openExternal("https://github.com/sajjadmrx/btime-desktop");
       },
