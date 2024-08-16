@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { Slider } from "./components/slider";
-import { IconButton } from "@material-tailwind/react";
+import { Slider } from "../components/slider";
 
 function App() {
   const [showArrows, setShowArrows] = useState<boolean>(false);

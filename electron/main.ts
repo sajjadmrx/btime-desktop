@@ -1,185 +1,189 @@
-import { app, BrowserWindow, Menu, nativeImage, shell, Tray, nativeTheme, screen } from 'electron'
+import {
+  app,
+  BrowserWindow,
+  Menu,
+  nativeImage,
+  shell,
+  Tray,
+  nativeTheme,
+  screen,
+} from 'electron'
 import path from 'node:path'
-import { store } from './store';
-import { join } from "node:path";
-import { config } from "dotenv";
-import { getIconPath, getPublicFilePath } from '../shared/getIconPath';
-import os from "os";
-import { update } from './update';
-import isDev from "electron-is-dev";
-import { release } from "node:os";
-import { toggleStartUp } from './utils/startup.util';
+import { store } from './store'
+import { join } from 'node:path'
+import { config } from 'dotenv'
+import { getIconPath, getPublicFilePath } from '../shared/getIconPath'
+import os from 'os'
+import { update } from './update'
+import isDev from 'electron-is-dev'
+import { release } from 'node:os'
+import { toggleStartUp } from './utils/startup.util'
 
-config();
+config()
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 
-
-process.env.DIST_ELECTRON = join(__dirname, "../");
-process.env.DIST = join(process.env.DIST_ELECTRON, "./dist");
+process.env.DIST_ELECTRON = join(__dirname, '../')
+process.env.DIST = join(process.env.DIST_ELECTRON, './dist')
 process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
-  ? join(process.env.DIST_ELECTRON, "./public")
-  : process.env.DIST;
+  ? join(process.env.DIST_ELECTRON, './public')
+  : process.env.DIST
 
-
-let win: BrowserWindow | null;
-const icon = nativeImage.createFromPath(getIconPath());
+let mainWin: BrowserWindow | null
+const icon = nativeImage.createFromPath(getIconPath())
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 
+if (release().startsWith('6.1')) app.disableHardwareAcceleration()
 
-if (release().startsWith("6.1")) app.disableHardwareAcceleration();
-
-if (process.platform === "win32")
-  app.setAppUserModelId(app.getName());
-
+if (process.platform === 'win32') app.setAppUserModelId(app.getName())
 
 if (!app.requestSingleInstanceLock()) {
-  app.quit();
-  process.exit(0);
+  app.quit()
+  process.exit(0)
 }
 
-
-if (isDev)
-  Object.defineProperty(app, "isPackaged", {
+if (isDev) {
+  Object.defineProperty(app, 'isPackaged', {
     get() {
-      return true;
+      return true
     },
-  });
-const isWindoAndDrawin: boolean = ["darwin", "win32"].includes(process.platform)
-if (isWindoAndDrawin) {
-  toggleStartUp(app, store.get("startup"))
+  })
 }
 
-async function createWindow() {
-  win = new BrowserWindow({
+const isWindoAndDrawin: boolean = ['darwin', 'win32'].includes(process.platform)
+if (isWindoAndDrawin) {
+  toggleStartUp(app, store.get('startup'))
+}
+
+async function onAppReady() {
+  const calanderWin = await createWindow({
+    height: 190,
+    width: 170,
+    x: store.get('bounds').BTime.x,
+    y: store.get('bounds').BTime.y,
+    title: 'bTime',
+    html: 'index.html',
+    devTools: false,
+  })
+
+  const nerkhWindow = await createWindow({
+    height: 190,
+    width: 240,
+    x: store.get('bounds').NerkhYab.x,
+    y: store.get('bounds').NerkhYab.y,
+    title: 'nerkhYab',
+    html: 'rate.html',
+    devTools: true,
+  })
+
+  mainWin = calanderWin
+  onMoved(nerkhWindow)
+  onMoved(calanderWin)
+
+  createTray()
+  update(mainWin, app)
+}
+
+interface Window {
+  height: number
+  width: number
+  x: number
+  y: number
+  title: string
+  html: string
+  devTools: boolean
+}
+async function createWindow(payload: Window) {
+  const win = new BrowserWindow({
     icon: getIconPath(),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      devTools: false,
+      devTools: payload.devTools,
       nodeIntegration: true,
       contextIsolation: true,
     },
-    height: 190,
-    width: 170,
+    height: payload.height,
+    width: payload.width,
     frame: false,
     transparent: true,
     resizable: false,
-    alwaysOnTop: store.get("alwaysOnTop"),
+    alwaysOnTop: store.get('alwaysOnTop'),
     skipTaskbar: true,
 
     movable: true,
     center: true,
-    x: store.get("bounds").x,
-    y: store.get("bounds").y,
-    title: "bTime",
-    titleBarStyle: "hidden",
+    x: payload.x,
+    y: payload.y,
+    title: payload.title,
+    titleBarStyle: 'hidden',
   })
-  createTray()
-  win.on("moved", () => {
-    if (win) {
-      const { x, y } = win.getBounds()
-      store.set("bounds", { x, y })
-    }
-  });
 
-  if (os.platform() == "darwin") win.setWindowButtonVisibility(false);
+  if (os.platform() == 'darwin') win.setWindowButtonVisibility(false)
   win.webContents.on('did-finish-load', () => {
-    win?.webContents.send('main-process-message', (new Date).toLocaleString())
-    win.webContents.send("transparent_status", { newStatus: store.get("transparentStatus") })
+    win?.webContents.send('main-process-message', new Date().toLocaleString())
+    win.webContents.send('transparent_status', {
+      newStatus: store.get('transparentStatus'),
+    })
   })
 
-  if (VITE_DEV_SERVER_URL) {
-    win.loadURL(VITE_DEV_SERVER_URL)
-  } else {
-    win.loadFile(path.join(process.env.DIST, 'index.html'))
-  }
+  // if (VITE_DEV_SERVER_URL) {
+  win.loadURL(VITE_DEV_SERVER_URL + payload.html)
+  // } else {
+  //   win.loadFile(path.join(process.env.DIST, payload.html))
+  // }
 
-  nativeTheme.themeSource = store.get("theme")
-  win.on("moved", () => {
-    if (win) {
-      let { x, y } = win.getBounds();
-      const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  nativeTheme.themeSource = store.get('theme')
 
-      // Check if the window is out of bounds and adjust the position
-      if (x < 0) {
-        x = 0;
-      } else if (x + win.getBounds().width > width) {
-        x = width - win.getBounds().width;
-      }
-
-      if (y < 0) {
-        y = 0;
-      } else if (y + win.getBounds().height > height) {
-        y = height - win.getBounds().height;
-      }
-
-      // Set the new bounds if adjustments were made                    
-      win.setBounds({ x, y, width: win.getBounds().width, height: win.getBounds().height });
-
-      // Save the new position
-      store.set("bounds", { x, y });
-    }
-  });
-
-  update(win, app)
+  return win
 }
 
 app.on('window-all-closed', () => {
-
   if (process.platform !== 'darwin') {
     app.quit()
-    win = null
+    mainWin = null
   }
 })
 
-app.on("second-instance", () => {
-  if (win) {
-    if (win.isMinimized()) win.restore();
-    win.focus();
+app.on('second-instance', () => {
+  if (mainWin) {
+    if (mainWin.isMinimized()) mainWin.restore()
+    mainWin.focus()
   }
-});
-
+})
 
 app.on('activate', () => {
-
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
-
-
+    // createWindow(mainWin)
   }
-
-
 })
 
-app.whenReady().then(createWindow)
+app.whenReady().then(onAppReady)
 
 function getIcon(name: string) {
-  return nativeImage.createFromPath(
-    getPublicFilePath(name)
-  );
+  return nativeImage.createFromPath(getPublicFilePath(name))
 }
 
-let createdTray: Tray | null = null;
+let createdTray: Tray | null = null
 function createTray() {
-  if (createdTray)
-    createdTray.destroy()
+  if (createdTray) createdTray.destroy()
 
-  const appIcon = new Tray(icon);
+  const appIcon = new Tray(icon)
 
   const contextMenu = getContextMenu()
 
-  appIcon.on("double-click", function () {
-    win.show();
-  });
+  appIcon.on('double-click', function () {
+    mainWin.show()
+  })
 
-  appIcon.setToolTip("bTime");
+  appIcon.setToolTip('bTime')
 
-  appIcon.setContextMenu(contextMenu);
+  appIcon.setContextMenu(contextMenu)
   createdTray = appIcon
-  return appIcon;
+  return appIcon
 }
 
 function getContextMenu() {
-  const alwaysOnTop: boolean = store.get("alwaysOnTop")
-  const currentTheme = store.get("theme")
+  const alwaysOnTop: boolean = store.get('alwaysOnTop')
+  const currentTheme = store.get('theme')
   const contextMenu = Menu.buildFromTemplate([
     {
       label: `B Time | ${app.getVersion()}`,
@@ -187,95 +191,130 @@ function getContextMenu() {
       icon: icon.resize({ height: 19, width: 19 }),
     },
     {
-      label: "Theme",
-      icon: getIcon("icons/theme.png").resize({ height: 19, width: 19 }),
+      label: 'Theme',
+      icon: getIcon('icons/theme.png').resize({ height: 19, width: 19 }),
       submenu: [
         {
-          label: "System",
-          icon: currentTheme == "system" && getIcon("icons/checked.png"),
+          label: 'System',
+          icon: currentTheme == 'system' && getIcon('icons/checked.png'),
           click: function () {
-            nativeTheme.themeSource = "system"
-            store.set("theme", "system")
+            nativeTheme.themeSource = 'system'
+            store.set('theme', 'system')
             createTray()
           },
         },
         {
-          label: "Dark",
-          icon: currentTheme == "dark" && getIcon("icons/checked.png"),
+          label: 'Dark',
+          icon: currentTheme == 'dark' && getIcon('icons/checked.png'),
           click: function () {
-            nativeTheme.themeSource = "dark"
-            store.set("theme", "dark")
+            nativeTheme.themeSource = 'dark'
+            store.set('theme', 'dark')
             createTray()
           },
         },
         {
-          label: "Light",
-          icon: currentTheme == "light" && getIcon("icons/checked.png"),
+          label: 'Light',
+          icon: currentTheme == 'light' && getIcon('icons/checked.png'),
           click: function () {
-            nativeTheme.themeSource = "light"
-            store.set("theme", "light")
+            nativeTheme.themeSource = 'light'
+            store.set('theme', 'light')
             createTray()
           },
-        }
-      ]
+        },
+      ],
     },
     {
-      label: "Options",
-      icon: getIcon("icons/options.png").resize({ height: 19, width: 19 }),
+      label: 'Options',
+      icon: getIcon('icons/options.png').resize({ height: 19, width: 19 }),
       submenu: [
         {
-          label: "AlwaysOnTop",
-          icon: alwaysOnTop && getIcon("icons/checked.png"),
+          label: 'AlwaysOnTop',
+          icon: alwaysOnTop && getIcon('icons/checked.png'),
           click: function () {
-            store.set("alwaysOnTop", !alwaysOnTop)
+            store.set('alwaysOnTop', !alwaysOnTop)
             contextMenu.closePopup()
             createTray()
-            win.setAlwaysOnTop(!alwaysOnTop)
-          }
-        },
-        {
-          label: "Transparent",
-          icon: store.get("transparentStatus") && getIcon("icons/checked.png"),
-          click: function () {
-            const transparetStatus = store.get("transparentStatus")
-            const newValue = !transparetStatus
-            store.set("transparentStatus", newValue)
-            contextMenu.closePopup()
-            createTray()
-            win.webContents.send("transparent_status", { newStatus: newValue })
+            mainWin.setAlwaysOnTop(!alwaysOnTop)
           },
         },
         {
-          label: "Open at boot",
-          icon: store.get("startup") && getIcon("icons/checked.png"),
+          label: 'Transparent',
+          icon: store.get('transparentStatus') && getIcon('icons/checked.png'),
+          click: function () {
+            const transparetStatus = store.get('transparentStatus')
+            const newValue = !transparetStatus
+            store.set('transparentStatus', newValue)
+            contextMenu.closePopup()
+            createTray()
+            mainWin.webContents.send('transparent_status', {
+              newStatus: newValue,
+            })
+          },
+        },
+        {
+          label: 'Open at boot',
+          icon: store.get('startup') && getIcon('icons/checked.png'),
           visible: isWindoAndDrawin,
           click: function () {
-            const startupStatus = store.get("startup")
+            const startupStatus = store.get('startup')
             const newValue = !startupStatus
-            store.set("startup", newValue)
+            store.set('startup', newValue)
             toggleStartUp(app, newValue)
             contextMenu.closePopup()
             createTray()
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
     {
-      label: "Website",
-      icon: getIcon("icons/link.png").resize({ height: 19, width: 19 }),
+      label: 'Website',
+      icon: getIcon('icons/link.png').resize({ height: 19, width: 19 }),
       click: function () {
-        shell.openExternal("https://github.com/sajjadmrx/btime-desktop");
+        shell.openExternal('https://github.com/sajjadmrx/btime-desktop')
       },
     },
     {
-      label: "Quit bTime",
-      icon: getIcon("icons/power.png"),
+      label: 'Quit bTime',
+      icon: getIcon('icons/power.png'),
       click: function () {
-        app.exit(1);
+        app.exit(1)
       },
     },
-
-  ]);
+  ])
 
   return contextMenu
+}
+
+function onMoved(win: BrowserWindow) {
+  win.on('moved', () => {
+    if (win) {
+      let { x, y } = win.getBounds()
+      const { width, height } = screen.getPrimaryDisplay().workAreaSize
+
+      // Check if the window is out of bounds and adjust the position
+      if (x < 0) {
+        x = 0
+      } else if (x + win.getBounds().width > width) {
+        x = width - win.getBounds().width
+      }
+
+      if (y < 0) {
+        y = 0
+      } else if (y + win.getBounds().height > height) {
+        y = height - win.getBounds().height
+      }
+
+      // Set the new bounds if adjustments were made
+      win.setBounds({
+        x,
+        y,
+        width: win.getBounds().width,
+        height: win.getBounds().height,
+      })
+
+      // Save the new position
+      const key = win.getTitle()
+      store.set(`bounds.${key}`, { x, y })
+    }
+  })
 }
