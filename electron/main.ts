@@ -9,7 +9,7 @@ import {
   screen,
 } from 'electron'
 import path from 'node:path'
-import { store } from './store'
+import { store, widgetKey } from './store'
 import { join } from 'node:path'
 import { config } from 'dotenv'
 import { getIconPath, getPublicFilePath } from '../shared/getIconPath'
@@ -55,29 +55,34 @@ if (isWindoAndDrawin) {
 }
 
 async function onAppReady() {
+  const nerkhStore = store.get(widgetKey.NerkhYab)
+
   const calanderWin = await createWindow({
     height: 190,
     width: 170,
-    x: store.get('bounds').BTime.x,
-    y: store.get('bounds').BTime.y,
-    title: 'bTime',
+    x: store.get(widgetKey.BTime).bounds.x,
+    y: store.get(widgetKey.BTime).bounds.y,
+    title: widgetKey.BTime,
     html: 'index.html',
     devTools: false,
+    alwaysOnTop: store.get(widgetKey.BTime).alwaysOnTop,
   })
-
-  const nerkhWindow = await createWindow({
-    height: 190,
-    width: 240,
-    x: store.get('bounds').NerkhYab.x,
-    y: store.get('bounds').NerkhYab.y,
-    title: 'nerkhYab',
-    html: 'rate.html',
-    devTools: true,
-  })
-
   mainWin = calanderWin
-  onMoved(nerkhWindow)
   onMoved(calanderWin)
+
+  if (nerkhStore.enable) {
+    const nerkhWindow = await createWindow({
+      height: 190,
+      width: 240,
+      x: store.get(widgetKey.NerkhYab).bounds.x,
+      y: store.get(widgetKey.NerkhYab).bounds.y,
+      title: widgetKey.NerkhYab,
+      html: 'rate.html',
+      devTools: true,
+      alwaysOnTop: store.get(widgetKey.NerkhYab).alwaysOnTop,
+    })
+    onMoved(nerkhWindow)
+  }
 
   createTray()
   update(mainWin, app)
@@ -91,6 +96,7 @@ interface Window {
   title: string
   html: string
   devTools: boolean
+  alwaysOnTop: boolean
 }
 async function createWindow(payload: Window) {
   const win = new BrowserWindow({
@@ -106,7 +112,7 @@ async function createWindow(payload: Window) {
     frame: false,
     transparent: true,
     resizable: false,
-    alwaysOnTop: store.get('alwaysOnTop'),
+    alwaysOnTop: payload.alwaysOnTop,
     skipTaskbar: true,
 
     movable: true,
@@ -121,7 +127,7 @@ async function createWindow(payload: Window) {
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', new Date().toLocaleString())
     win.webContents.send('transparent_status', {
-      newStatus: store.get('transparentStatus'),
+      newStatus: store.get(widgetKey[payload.title]).transparentStatus,
     })
   })
 
@@ -131,7 +137,7 @@ async function createWindow(payload: Window) {
   //   win.loadFile(path.join(process.env.DIST, payload.html))
   // }
 
-  nativeTheme.themeSource = store.get('theme')
+  nativeTheme.themeSource = 'light' //store.get(widgetKey[payload.title]).theme
 
   return win
 }
@@ -182,90 +188,90 @@ function createTray() {
 }
 
 function getContextMenu() {
-  const alwaysOnTop: boolean = store.get('alwaysOnTop')
-  const currentTheme = store.get('theme')
+  // const alwaysOnTop: any = false // store.get('alwaysOnTop')
+  // const currentTheme: any = 'system' //store.get('theme')
   const contextMenu = Menu.buildFromTemplate([
     {
       label: `B Time | ${app.getVersion()}`,
       enabled: false,
       icon: icon.resize({ height: 19, width: 19 }),
     },
-    {
-      label: 'Theme',
-      icon: getIcon('icons/theme.png').resize({ height: 19, width: 19 }),
-      submenu: [
-        {
-          label: 'System',
-          icon: currentTheme == 'system' && getIcon('icons/checked.png'),
-          click: function () {
-            nativeTheme.themeSource = 'system'
-            store.set('theme', 'system')
-            createTray()
-          },
-        },
-        {
-          label: 'Dark',
-          icon: currentTheme == 'dark' && getIcon('icons/checked.png'),
-          click: function () {
-            nativeTheme.themeSource = 'dark'
-            store.set('theme', 'dark')
-            createTray()
-          },
-        },
-        {
-          label: 'Light',
-          icon: currentTheme == 'light' && getIcon('icons/checked.png'),
-          click: function () {
-            nativeTheme.themeSource = 'light'
-            store.set('theme', 'light')
-            createTray()
-          },
-        },
-      ],
-    },
-    {
-      label: 'Options',
-      icon: getIcon('icons/options.png').resize({ height: 19, width: 19 }),
-      submenu: [
-        {
-          label: 'AlwaysOnTop',
-          icon: alwaysOnTop && getIcon('icons/checked.png'),
-          click: function () {
-            store.set('alwaysOnTop', !alwaysOnTop)
-            contextMenu.closePopup()
-            createTray()
-            mainWin.setAlwaysOnTop(!alwaysOnTop)
-          },
-        },
-        {
-          label: 'Transparent',
-          icon: store.get('transparentStatus') && getIcon('icons/checked.png'),
-          click: function () {
-            const transparetStatus = store.get('transparentStatus')
-            const newValue = !transparetStatus
-            store.set('transparentStatus', newValue)
-            contextMenu.closePopup()
-            createTray()
-            mainWin.webContents.send('transparent_status', {
-              newStatus: newValue,
-            })
-          },
-        },
-        {
-          label: 'Open at boot',
-          icon: store.get('startup') && getIcon('icons/checked.png'),
-          visible: isWindoAndDrawin,
-          click: function () {
-            const startupStatus = store.get('startup')
-            const newValue = !startupStatus
-            store.set('startup', newValue)
-            toggleStartUp(app, newValue)
-            contextMenu.closePopup()
-            createTray()
-          },
-        },
-      ],
-    },
+    // {
+    //   label: 'Theme',
+    //   icon: getIcon('icons/theme.png').resize({ height: 19, width: 19 }),
+    //   submenu: [
+    //     {
+    //       label: 'System',
+    //       icon: currentTheme == 'system' && getIcon('icons/checked.png'),
+    //       click: function () {
+    //         nativeTheme.themeSource = 'system'
+    //         store.set('theme', 'system')
+    //         createTray()
+    //       },
+    //     },
+    //     {
+    //       label: 'Dark',
+    //       icon: currentTheme == 'dark' && getIcon('icons/checked.png'),
+    //       click: function () {
+    //         nativeTheme.themeSource = 'dark'
+    //         store.set('theme', 'dark')
+    //         createTray()
+    //       },
+    //     },
+    //     {
+    //       label: 'Light',
+    //       icon: currentTheme == 'light' && getIcon('icons/checked.png'),
+    //       click: function () {
+    //         nativeTheme.themeSource = 'light'
+    //         store.set('theme', 'light')
+    //         createTray()
+    //       },
+    //     },
+    //   ],
+    // },
+    // {
+    //   label: 'Options',
+    //   icon: getIcon('icons/options.png').resize({ height: 19, width: 19 }),
+    //   submenu: [
+    //     {
+    //       label: 'AlwaysOnTop',
+    //       icon: alwaysOnTop && getIcon('icons/checked.png'),
+    //       click: function () {
+    //         store.set('alwaysOnTop', !alwaysOnTop)
+    //         contextMenu.closePopup()
+    //         createTray()
+    //         mainWin.setAlwaysOnTop(!alwaysOnTop)
+    //       },
+    //     },
+    //     {
+    //       label: 'Transparent',
+    //       icon: store.get('transparentStatus') && getIcon('icons/checked.png'),
+    //       click: function () {
+    //         const transparetStatus = store.get('transparentStatus')
+    //         const newValue = !transparetStatus
+    //         store.set('transparentStatus', newValue)
+    //         contextMenu.closePopup()
+    //         createTray()
+    //         mainWin.webContents.send('transparent_status', {
+    //           newStatus: newValue,
+    //         })
+    //       },
+    //     },
+    //     {
+    //       label: 'Open at boot',
+    //       icon: store.get('startup') && getIcon('icons/checked.png'),
+    //       visible: isWindoAndDrawin,
+    //       click: function () {
+    //         const startupStatus = store.get('startup')
+    //         const newValue = !startupStatus
+    //         store.set('startup', newValue)
+    //         toggleStartUp(app, newValue)
+    //         contextMenu.closePopup()
+    //         createTray()
+    //       },
+    //     },
+    //   ],
+    // },
     {
       label: 'Website',
       icon: getIcon('icons/link.png').resize({ height: 19, width: 19 }),
@@ -314,7 +320,11 @@ function onMoved(win: BrowserWindow) {
 
       // Save the new position
       const key = win.getTitle()
-      store.set(`bounds.${key}`, { x, y })
+
+      store.set(widgetKey[key], {
+        ...store.get(widgetKey[key]),
+        bounds: { x, y },
+      })
     }
   })
 }

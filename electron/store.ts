@@ -1,41 +1,60 @@
 import electronStore from 'electron-store'
 
-const BoundsKey = {
-  NerkhYab: 'NerkhYab',
-  BTime: 'BTime',
+// type widgetKey = 'NerkhYab' | 'BTime'
+export enum widgetKey {
+  NerkhYab = 'NerkhYab',
+  BTime = 'BTime',
 }
-export interface StoreKey {
-  bounds: Record<
-    keyof typeof BoundsKey,
-    { x: number; y: number; width: number; height: number }
-  >
+
+interface windowSettings {
+  bounds: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
   alwaysOnTop: boolean
   transparentStatus: boolean
-  startup: true
   theme: 'system' | 'light' | 'dark'
+  enable: boolean
 }
 
+type StoreKey = {
+  [widgetKey.BTime]: windowSettings
+  [widgetKey.NerkhYab]: windowSettings & {
+    currencies: string[]
+  }
+  startup: boolean
+}
 export const store = new electronStore<StoreKey>({
   defaults: {
-    bounds: {
-      NerkhYab: {
+    BTime: {
+      enable: true,
+      bounds: {
         x: 0,
         y: 0,
-        height: 200,
-        width: 240,
-      },
-      BTime: {
-        x: 0,
-        y: 0,
-        height: 190,
         width: 170,
+        height: 190,
       },
+      alwaysOnTop: false,
+      transparentStatus: false,
+      theme: 'light',
     },
-
-    alwaysOnTop: false,
-    transparentStatus: false,
+    NerkhYab: {
+      enable: true,
+      bounds: {
+        x: 0,
+        y: 0,
+        width: 240,
+        height: 200,
+      },
+      alwaysOnTop: false,
+      transparentStatus: false,
+      theme: 'light',
+    },
     startup: true,
-    theme: 'light',
   },
-  name: 'bTime.2',
+  name: 'bTime-app-v1',
 })
+
+console.log(store.path)
