@@ -35,10 +35,10 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'warn', // Warn when 'any' type is used
     'prettier/prettier': 'warn', // Prettier-related warnings
     'react-refresh/only-export-components': 'warn', // React Fast Refresh plugin rule
-},
+  },
   settings: {
     react: {
       version: 'detect', // Automatically detect React version
     },
   },
-};
+}

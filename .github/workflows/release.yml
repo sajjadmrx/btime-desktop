@@ -1,14 +1,14 @@
 name: Release
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
     paths-ignore:
-      - "README.md"
-      - "*.md"
-      - ".github/ISSUE_TEMPLATE/*"
-      - ".github/assets/*"
-      - ".github/*"
-      - "*.md"
+      - 'README.md'
+      - '*.md'
+      - '.github/ISSUE_TEMPLATE/*'
+      - '.github/assets/*'
+      - '.github/*'
+      - '*.md'
 jobs:
   publish_on_linux:
     runs-on: ubuntu-latest

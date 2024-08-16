@@ -1,38 +1,38 @@
-import { useEffect, useState } from "react";
-import { Slider } from "../components/slider";
+import { useEffect, useState } from 'react'
+import { Slider } from '../components/slider'
 
 function App() {
-  const [showArrows, setShowArrows] = useState<boolean>(false);
+  const [showArrows, setShowArrows] = useState<boolean>(false)
 
   function onMouseEnter() {
-    setShowArrows(true);
+    setShowArrows(true)
   }
 
   function onMouseLave() {
-    setShowArrows(false);
+    setShowArrows(false)
   }
 
   useEffect(() => {
     const handleColorSchemeChange = (e) => {
-      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.remove('dark')
       if (e.matches) {
-        document.documentElement.classList.add("dark");
+        document.documentElement.classList.add('dark')
       }
-    };
+    }
 
     const colorSchemeMediaQuery = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    );
-    handleColorSchemeChange(colorSchemeMediaQuery);
+      '(prefers-color-scheme: dark)'
+    )
+    handleColorSchemeChange(colorSchemeMediaQuery)
 
-    colorSchemeMediaQuery.addEventListener("change", handleColorSchemeChange);
+    colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
     return () => {
       colorSchemeMediaQuery.removeEventListener(
-        "change",
+        'change',
         handleColorSchemeChange
-      );
-    };
-  }, []);
+      )
+    }
+  }, [])
 
   return (
     <>
@@ -44,7 +44,7 @@ function App() {
         <Slider showArrows={showArrows} />
       </div>
     </>
-  );
+  )
 }
 
-export default App;
+export default App
