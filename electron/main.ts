@@ -58,30 +58,34 @@ async function onAppReady() {
   const nerkhStore = store.get(widgetKey.NerkhYab)
 
   const calanderWin = await createWindow({
-    height: 190,
-    width: 170,
+    height: store.get(widgetKey.BTime).bounds.height,
+    width: store.get(widgetKey.BTime).bounds.width,
     x: store.get(widgetKey.BTime).bounds.x,
     y: store.get(widgetKey.BTime).bounds.y,
     title: widgetKey.BTime,
     html: 'index.html',
     devTools: false,
     alwaysOnTop: store.get(widgetKey.BTime).alwaysOnTop,
+    reziable: true,
   })
   mainWin = calanderWin
   onMoved(calanderWin)
+  onResized(calanderWin)
 
   if (nerkhStore.enable) {
     const nerkhWindow = await createWindow({
-      height: 190,
-      width: 240,
+      height: store.get(widgetKey.NerkhYab).bounds.height,
+      width: store.get(widgetKey.NerkhYab).bounds.width,
       x: store.get(widgetKey.NerkhYab).bounds.x,
       y: store.get(widgetKey.NerkhYab).bounds.y,
       title: widgetKey.NerkhYab,
       html: 'rate.html',
       devTools: true,
       alwaysOnTop: store.get(widgetKey.NerkhYab).alwaysOnTop,
+      reziable: true,
     })
     onMoved(nerkhWindow)
+    onResized(nerkhWindow)
   }
 
   createTray()
@@ -97,6 +101,7 @@ interface Window {
   html: string
   devTools: boolean
   alwaysOnTop: boolean
+  reziable: boolean
 }
 async function createWindow(payload: Window) {
   const win = new BrowserWindow({
@@ -111,7 +116,7 @@ async function createWindow(payload: Window) {
     width: payload.width,
     frame: false,
     transparent: true,
-    resizable: false,
+    resizable: payload.reziable,
     alwaysOnTop: payload.alwaysOnTop,
     skipTaskbar: true,
 
@@ -147,6 +152,10 @@ app.on('window-all-closed', () => {
     app.quit()
     mainWin = null
   }
+})
+
+app.on('quit', () => {
+  console.log('quit')
 })
 
 app.on('second-instance', () => {
@@ -323,7 +332,58 @@ function onMoved(win: BrowserWindow) {
 
       store.set(widgetKey[key], {
         ...store.get(widgetKey[key]),
-        bounds: { x, y },
+        bounds: {
+          x: win.getBounds().x,
+          y: win.getBounds().y,
+          width: win.getBounds().width,
+          height: win.getBounds().height,
+        },
+      })
+    }
+  })
+}
+function onResized(win: BrowserWindow) {
+  win.on('resize', () => {
+    if (win) {
+      const { width, height } = win.getBounds()
+      const key = win.getTitle()
+      console.log(key, width, height)
+
+      const filters: Record<
+        widgetKey,
+        {
+          minWidth: number
+          minHeight: number
+        }
+      > = {
+        [widgetKey.BTime]: {
+          minWidth: 180,
+          minHeight: 179,
+        },
+        [widgetKey.NerkhYab]: {
+          minWidth: 226,
+          minHeight: 120,
+        },
+      }
+      const filter = filters[key]
+      if (!filter) return
+      if (width < filter.minWidth) {
+        win.setSize(filter.minWidth, win.getBounds().height)
+      }
+
+      if (height < filter.minHeight) {
+        win.setSize(win.getBounds().width, filter.minHeight)
+      }
+
+      console.log(`Saving ${key} bounds: ${width}x${height}`)
+      store.set(widgetKey[key], {
+        ...store.get(widgetKey[key]),
+        bounds: {
+          x: win.getBounds().x,
+          y: win.getBounds().y,
+          width: win.getBounds().width,
+          height: win.getBounds().height,
+        },
       })
     }
   })
