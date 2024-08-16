@@ -61,21 +61,23 @@ function App() {
               {loading ? (
                 <div className="h-6 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-2.5"></div>
               ) : (
-                <h3 className="text-[1.5rem] text-[#737373]">{data.name}</h3>
+                <h3 className="text-[1.5rem] text-[#737373] dark:text-[#eee]">
+                  {data.name}
+                </h3>
               )}
               {/* <h6 className="text-[.7rem]  text-[#858585]">
                 پووف! خیلی گرونه 😁
               </h6> */}
             </div>
           </div>
-          <div className="flex flex-row items-center justify-around w-full">
-            <div className="flex flex-col">
+          <div className="flex flex-row items-center w-full">
+            <div className="flex flex-col ml-7">
               <div>
                 {/* <p className="text-2xl text-[#525252]">59,800</p> */}
                 {loading ? (
                   <div className="h-2 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-10 mb-2.5"></div>
                 ) : (
-                  <p className="text-2xl text-[#525252]">
+                  <p className="text-2xl text-[#525252] dark:text-[#d3d3d3]">
                     {data.todyPrice.toLocaleString()}
                   </p>
                 )}
@@ -85,13 +87,10 @@ function App() {
                 {loading ? (
                   <div className="h-2 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-5 mb-2.5"></div>
                 ) : (
-                  <p className="text-xs text-gray-500">1 USD</p>
+                  <p className="text-xs text-gray-500 dark:text-[#cbc9c9]">
+                    1 USD
+                  </p>
                 )}
-              </div>
-            </div>
-            <div className="ml-2">
-              <div className="not-moveable relative w-10 h-10 rounded-full bg-[#D9D9D9] flex justify-center items-center hover:bg-[#cfcfcf] cursor-pointer">
-                <img src="/public/icons/options.png" />
               </div>
             </div>
           </div>
