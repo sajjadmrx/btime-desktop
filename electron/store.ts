@@ -6,7 +6,7 @@ export enum widgetKey {
   BTime = 'BTime',
 }
 
-interface windowSettings {
+export interface windowSettings {
   bounds: {
     x: number
     y: number
@@ -19,7 +19,7 @@ interface windowSettings {
   enable: boolean
 }
 
-type StoreKey = {
+export type StoreKey = {
   [widgetKey.BTime]: windowSettings
   [widgetKey.NerkhYab]: windowSettings & {
     currencies: string[]
@@ -57,5 +57,3 @@ export const store = new electronStore<StoreKey>({
   },
   name: 'bTime-app-v1',
 })
-
-console.log(store.path)

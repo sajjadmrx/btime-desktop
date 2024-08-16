@@ -18,6 +18,7 @@ import { update } from './update'
 import isDev from 'electron-is-dev'
 import { release } from 'node:os'
 import { toggleStartUp } from './utils/startup.util'
+import { initIpcMain } from './ipc-main'
 
 config()
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
@@ -31,7 +32,7 @@ process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
 let mainWin: BrowserWindow | null
 const icon = nativeImage.createFromPath(getIconPath())
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
-
+initIpcMain()
 if (release().startsWith('6.1')) app.disableHardwareAcceleration()
 
 if (process.platform === 'win32') app.setAppUserModelId(app.getName())
@@ -122,8 +123,8 @@ async function createWindow(payload: Window) {
 
     movable: true,
     center: true,
-    x: payload.x,
-    y: payload.y,
+    x: payload.x || undefined,
+    y: payload.y || undefined,
     title: payload.title,
     titleBarStyle: 'hidden',
   })
@@ -136,11 +137,11 @@ async function createWindow(payload: Window) {
     })
   })
 
-  // if (VITE_DEV_SERVER_URL) {
-  win.loadURL(VITE_DEV_SERVER_URL + payload.html)
-  // } else {
-  //   win.loadFile(path.join(process.env.DIST, payload.html))
-  // }
+  if (VITE_DEV_SERVER_URL) {
+    win.loadURL(VITE_DEV_SERVER_URL + payload.html)
+  } else {
+    win.loadFile(path.join(process.env.DIST, payload.html))
+  }
 
   nativeTheme.themeSource = 'light' //store.get(widgetKey[payload.title]).theme
 
@@ -166,8 +167,11 @@ app.on('second-instance', () => {
 })
 
 app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    // createWindow(mainWin)
+  const allWindows = BrowserWindow.getAllWindows()
+  if (allWindows.length) {
+    allWindows[0].focus()
+  } else {
+    app.quit()
   }
 })
 
@@ -205,82 +209,44 @@ function getContextMenu() {
       enabled: false,
       icon: icon.resize({ height: 19, width: 19 }),
     },
-    // {
-    //   label: 'Theme',
-    //   icon: getIcon('icons/theme.png').resize({ height: 19, width: 19 }),
-    //   submenu: [
-    //     {
-    //       label: 'System',
-    //       icon: currentTheme == 'system' && getIcon('icons/checked.png'),
-    //       click: function () {
-    //         nativeTheme.themeSource = 'system'
-    //         store.set('theme', 'system')
-    //         createTray()
-    //       },
-    //     },
-    //     {
-    //       label: 'Dark',
-    //       icon: currentTheme == 'dark' && getIcon('icons/checked.png'),
-    //       click: function () {
-    //         nativeTheme.themeSource = 'dark'
-    //         store.set('theme', 'dark')
-    //         createTray()
-    //       },
-    //     },
-    //     {
-    //       label: 'Light',
-    //       icon: currentTheme == 'light' && getIcon('icons/checked.png'),
-    //       click: function () {
-    //         nativeTheme.themeSource = 'light'
-    //         store.set('theme', 'light')
-    //         createTray()
-    //       },
-    //     },
-    //   ],
-    // },
-    // {
-    //   label: 'Options',
-    //   icon: getIcon('icons/options.png').resize({ height: 19, width: 19 }),
-    //   submenu: [
-    //     {
-    //       label: 'AlwaysOnTop',
-    //       icon: alwaysOnTop && getIcon('icons/checked.png'),
-    //       click: function () {
-    //         store.set('alwaysOnTop', !alwaysOnTop)
-    //         contextMenu.closePopup()
-    //         createTray()
-    //         mainWin.setAlwaysOnTop(!alwaysOnTop)
-    //       },
-    //     },
-    //     {
-    //       label: 'Transparent',
-    //       icon: store.get('transparentStatus') && getIcon('icons/checked.png'),
-    //       click: function () {
-    //         const transparetStatus = store.get('transparentStatus')
-    //         const newValue = !transparetStatus
-    //         store.set('transparentStatus', newValue)
-    //         contextMenu.closePopup()
-    //         createTray()
-    //         mainWin.webContents.send('transparent_status', {
-    //           newStatus: newValue,
-    //         })
-    //       },
-    //     },
-    //     {
-    //       label: 'Open at boot',
-    //       icon: store.get('startup') && getIcon('icons/checked.png'),
-    //       visible: isWindoAndDrawin,
-    //       click: function () {
-    //         const startupStatus = store.get('startup')
-    //         const newValue = !startupStatus
-    //         store.set('startup', newValue)
-    //         toggleStartUp(app, newValue)
-    //         contextMenu.closePopup()
-    //         createTray()
-    //       },
-    //     },
-    //   ],
-    // },
+    {
+      label: 'Settings',
+      icon: getIcon('icons/settings.png').resize({ height: 19, width: 19 }),
+      click: async function () {
+        let settingWin = BrowserWindow.getAllWindows().find(
+          (win) => win.getTitle() === 'Setting'
+        )
+        if (settingWin) {
+          settingWin.show()
+        } else {
+          settingWin = await createWindow({
+            height: 600,
+            width: 400,
+            x: 0,
+            y: 0,
+            title: 'Setting',
+            html: 'setting.html',
+            devTools: true,
+            alwaysOnTop: true,
+            reziable: true,
+          })
+        }
+      },
+    },
+
+    {
+      label: 'Open at boot',
+      icon: store.get('startup') && getIcon('icons/checked.png'),
+      visible: isWindoAndDrawin,
+      click: function () {
+        const startupStatus = store.get('startup')
+        const newValue = !startupStatus
+        store.set('startup', newValue)
+        toggleStartUp(app, newValue)
+        contextMenu.closePopup()
+        createTray()
+      },
+    },
     {
       label: 'Website',
       icon: getIcon('icons/link.png').resize({ height: 19, width: 19 }),
@@ -387,4 +353,8 @@ function onResized(win: BrowserWindow) {
       })
     }
   })
+}
+
+function onClose(win: BrowserWindow) {
+  win.on('close', (e) => {})
 }

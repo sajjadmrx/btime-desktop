@@ -8,8 +8,9 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        index: path.join(__dirname, './src/index.html'), // <-----------------------------------------------------------------------
-        rate: path.join(__dirname, './src/rate.html'),
+        index: path.join(__dirname, './index.html'), // <-----------------------------------------------------------------------
+        rate: path.join(__dirname, './rate.html'),
+        setting: path.join(__dirname, './setting.html'),
       },
     },
   },

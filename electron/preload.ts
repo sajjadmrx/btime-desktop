@@ -1,4 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { contextBridge, ipcRenderer } from 'electron'
+import { store, StoreKey, widgetKey } from './store'
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer))
@@ -117,3 +121,19 @@ window.onmessage = (ev) => {
 }
 
 setTimeout(removeLoading, 4999)
+
+export const storePreload = {
+  get: <T extends keyof StoreKey | keyof typeof widgetKey>(key: T) =>
+    store.get<T>(key as any),
+  set: <T extends keyof StoreKey | keyof typeof widgetKey>(
+    key: T,
+    value: StoreKey[T] | (typeof widgetKey)[T]
+  ) => store.set<T>(key, value as any),
+}
+
+export const ipcPreload = {
+  reOpen: () => ipcRenderer.send('reOpen'),
+}
+
+contextBridge.exposeInMainWorld('store', storePreload)
+contextBridge.exposeInMainWorld('ipcMain', ipcPreload)

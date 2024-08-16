@@ -55,14 +55,14 @@ function App() {
                 {loading ? (
                   <div className="h-10 w-10 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700"></div>
                 ) : (
-                  <img src={`/public/assets/countries/usa.png`} />
+                  <img src={`./assets/countries/usa.png`} />
                 )}
               </div>
               <div className="flex flex-col w-32 justify items-end truncate">
                 {loading ? (
                   <div className="h-5 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-2.5"></div>
                 ) : (
-                  <h3 className="text-[1.2rem] text-[#737373] dark:text-[#eee] truncate">
+                  <h3 className="text-[1.2rem] text-gray-600 text-gray-trasnparent dark:text-[#eee] truncate">
                     {data.name}
                   </h3>
                 )}
@@ -77,7 +77,7 @@ function App() {
                   {loading ? (
                     <div className="h-2 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-10 mb-2.5"></div>
                   ) : (
-                    <p className="text-2xl text-[#525252] dark:text-[#d3d3d3]">
+                    <p className="text-2xl text-gray-600 text-gray-trasnparent dark:text-[#d3d3d3]">
                       {data.todyPrice.toLocaleString()}
                     </p>
                   )}
@@ -86,7 +86,7 @@ function App() {
                   {loading ? (
                     <div className="h-2 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-5 mb-2.5"></div>
                   ) : (
-                    <p className="text-xs text-gray-500 dark:text-[#cbc9c9]">
+                    <p className="text-xs text-gray-600 text-gray-trasnparent dark:text-[#cbc9c9]">
                       1 USD
                     </p>
                   )}

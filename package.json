@@ -33,7 +33,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.21",
+    "@types/react": "18.2.9",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
