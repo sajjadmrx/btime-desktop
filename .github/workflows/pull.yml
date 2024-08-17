@@ -21,7 +21,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Install electron-builder
         run: npm i electron-builder -g
@@ -41,7 +41,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Install electron-builder
         run: npm i electron-builder -g
@@ -61,7 +61,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Install dmg-license
         run: npm i dmg-license
