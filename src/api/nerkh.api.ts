@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const nerkhApi = axios.create({
-  baseURL: 'http://localhost:3000/arz',
+  baseURL: 'https://btime.liara.run/arz',
 })
 
 export interface CurrencyData {
