@@ -15,7 +15,6 @@ export interface windowSettings {
   }
   alwaysOnTop: boolean
   transparentStatus: boolean
-  theme: 'system' | 'light' | 'dark'
   enable: boolean
 }
 
@@ -25,6 +24,7 @@ export type StoreKey = {
     currencies: string[]
   }
   startup: boolean
+  theme: 'system' | 'light' | 'dark'
 }
 export const store = new electronStore<StoreKey>({
   defaults: {
@@ -38,7 +38,6 @@ export const store = new electronStore<StoreKey>({
       },
       alwaysOnTop: false,
       transparentStatus: false,
-      theme: 'light',
     },
     NerkhYab: {
       enable: true,
@@ -50,10 +49,10 @@ export const store = new electronStore<StoreKey>({
       },
       alwaysOnTop: false,
       transparentStatus: false,
-      theme: 'light',
       currencies: ['usd'],
     },
     startup: true,
+    theme: 'system',
   },
   name: 'bTime-app-v1',
 })

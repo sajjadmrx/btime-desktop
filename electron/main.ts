@@ -89,6 +89,7 @@ async function onAppReady() {
     onResized(nerkhWindow)
   }
 
+  nativeTheme.themeSource = store.get('theme')
   createTray()
   update(mainWin, app)
 }
@@ -142,8 +143,6 @@ async function createWindow(payload: Window) {
   } else {
     win.loadFile(path.join(process.env.DIST, payload.html))
   }
-
-  nativeTheme.themeSource = 'light' //store.get(widgetKey[payload.title]).theme
 
   return win
 }
@@ -201,8 +200,6 @@ function createTray() {
 }
 
 function getContextMenu() {
-  // const alwaysOnTop: any = false // store.get('alwaysOnTop')
-  // const currentTheme: any = 'system' //store.get('theme')
   const contextMenu = Menu.buildFromTemplate([
     {
       label: `B Time | ${app.getVersion()}`,
@@ -220,8 +217,8 @@ function getContextMenu() {
           settingWin.show()
         } else {
           settingWin = await createWindow({
-            height: 600,
-            width: 400,
+            height: 650,
+            width: 420,
             x: 0,
             y: 0,
             title: 'Setting',
@@ -353,8 +350,4 @@ function onResized(win: BrowserWindow) {
       })
     }
   })
-}
-
-function onClose(win: BrowserWindow) {
-  win.on('close', (e) => {})
 }
