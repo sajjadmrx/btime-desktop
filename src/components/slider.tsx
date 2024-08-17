@@ -1,23 +1,23 @@
-import moment from "jalali-moment";
-import { useEffect, useState } from "react";
-import { Carousel, IconButton } from "@material-tailwind/react";
-import { JalaliSlider } from "./sliders/jalali/slider";
-import { GregorianSlider } from "./sliders/gregorian/slider";
+import moment from 'jalali-moment'
+import { useEffect, useState } from 'react'
+import { Carousel, IconButton } from '@material-tailwind/react'
+import { JalaliSlider } from './sliders/jalali/slider'
+import { GregorianSlider } from './sliders/gregorian/slider'
 interface Prop {
-  showArrows: boolean;
+  showArrows: boolean
 }
 export function Slider(prop: Prop) {
-  const [currentTime, setCurrentTime] = useState(moment());
-  const { showArrows } = prop;
+  const [currentTime, setCurrentTime] = useState(moment())
+  const { showArrows } = prop
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTime(moment());
-    }, 60000);
+      setCurrentTime(moment())
+    }, 60000)
 
     return () => {
-      clearInterval(interval);
-    };
-  }, []);
+      clearInterval(interval)
+    }
+  }, [])
 
   return (
     <>
@@ -31,7 +31,7 @@ export function Slider(prop: Prop) {
             color="blue-gray"
             onClick={handlePrev}
             className={`!absolute top-2/4 dark:text-white arrow_btn left-4 -translate-y-2/4  ${
-              !showArrows && "hidden"
+              !showArrows && 'hidden'
             } `}
           >
             <svg
@@ -60,7 +60,7 @@ export function Slider(prop: Prop) {
             color="blue-gray"
             onClick={handleNext}
             className={`!absolute top-2/4 dark:text-white arrow_btn !right-4 -translate-y-2/4  ${
-              !showArrows && "hidden"
+              !showArrows && 'hidden'
             } `}
           >
             <svg
@@ -85,14 +85,14 @@ export function Slider(prop: Prop) {
         navigation={({ setActiveIndex, activeIndex, length }) => (
           <div
             className={`absolute bottom-4 left-2/4 z-50 flex -translate-x-2/4 gap-2 ${
-              !showArrows && "hidden"
+              !showArrows && 'hidden'
             }`}
           >
-            {new Array(length).fill("").map((_, i) => (
+            {new Array(length).fill('').map((_, i) => (
               <span
                 key={i}
                 className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${
-                  activeIndex === i ? "w-8 bg-gray-600" : "w-4 bg-white/50"
+                  activeIndex === i ? 'w-8 bg-gray-600' : 'w-4 bg-white/50'
                 }`}
                 onClick={() => setActiveIndex(i)}
               />
@@ -104,5 +104,5 @@ export function Slider(prop: Prop) {
         <GregorianSlider currentTime={currentTime} />
       </Carousel>
     </>
-  );
+  )
 }

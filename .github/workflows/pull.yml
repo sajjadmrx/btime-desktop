@@ -5,8 +5,8 @@ on:
       - opened
       - synchronize
     paths-ignore:
-      - "*.md"
-      - ".github/*"
+      - '*.md'
+      - '.github/*'
 jobs:
   build_on_linux:
     runs-on: ubuntu-latest

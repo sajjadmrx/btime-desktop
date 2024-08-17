@@ -2,27 +2,39 @@ import { defineConfig } from 'vite'
 import path from 'node:path'
 import electron from 'vite-plugin-electron/simple'
 import react from '@vitejs/plugin-react'
-import renderer from "vite-plugin-electron-renderer";
+import renderer from 'vite-plugin-electron-renderer'
 
-// https://vitejs.dev/config/
 export default defineConfig({
-
+  build: {
+    rollupOptions: {
+      input: {
+        index: path.join(__dirname, './index.html'), // <-----------------------------------------------------------------------
+        rate: path.join(__dirname, './rate.html'),
+        setting: path.join(__dirname, './setting.html'),
+      },
+    },
+  },
   plugins: [
     react(),
     electron({
       main: {
-        // Shortcut of `build.lib.entry`.
-        entry: 'electron/main.ts',
+        entry: 'electron/main.ts', // Entry point for Electron main process
       },
       preload: {
-        // Shortcut of `build.rollupOptions.input`.
-        // Preload scripts may contain Web assets, so use the `build.rollupOptions.input` instead `build.lib.entry`.
-        input: path.join(__dirname, 'electron/preload.ts'),
+        input: path.join(__dirname, 'electron/preload.ts'), // Preload script for Electron
       },
-      // Ployfill the Electron and Node.js built-in modules for Renderer process.
-      // See 👉 https://github.com/electron-vite/vite-plugin-electron-renderer
-      renderer: {},
+      renderer: {}, // Handles polyfills for renderer process
     }),
     renderer(),
   ],
+  server: {
+    // headers: {
+    //   'Content-Security-Policy': [
+    //     "default-src 'self' 'unsafe-inline' data:;",
+    //     "script-src 'self' 'unsafe-eval' 'unsafe-inline' data:;",
+    //     "img-src 'self' blob: data: https://via.placeholder.com",
+    //   ].join(' '),
+    // },
+  },
+  define: {},
 })

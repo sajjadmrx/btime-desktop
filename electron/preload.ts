@@ -1,4 +1,8 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { contextBridge, ipcRenderer } from 'electron'
+import { store, StoreKey, widgetKey } from './store'
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer))
@@ -23,8 +27,10 @@ function withPrototype(obj: Record<string, any>) {
 }
 
 // --------- Preload scripts loading ---------
-function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
-  return new Promise(resolve => {
+function domReady(
+  condition: DocumentReadyState[] = ['complete', 'interactive']
+) {
+  return new Promise((resolve) => {
     if (condition.includes(document.readyState)) {
       resolve(true)
     } else {
@@ -39,12 +45,12 @@ function domReady(condition: DocumentReadyState[] = ['complete', 'interactive'])
 
 const safeDOM = {
   append(parent: HTMLElement, child: HTMLElement) {
-    if (!Array.from(parent.children).find(e => e === child)) {
+    if (!Array.from(parent.children).find((e) => e === child)) {
       parent.appendChild(child)
     }
   },
   remove(parent: HTMLElement, child: HTMLElement) {
-    if (Array.from(parent.children).find(e => e === child)) {
+    if (Array.from(parent.children).find((e) => e === child)) {
       parent.removeChild(child)
     }
   },
@@ -110,8 +116,24 @@ function useLoading() {
 const { appendLoading, removeLoading } = useLoading()
 domReady().then(appendLoading)
 
-window.onmessage = ev => {
+window.onmessage = (ev) => {
   ev.data.payload === 'removeLoading' && removeLoading()
 }
 
 setTimeout(removeLoading, 4999)
+
+export const storePreload = {
+  get: <T extends keyof StoreKey | keyof typeof widgetKey>(key: T) =>
+    store.get<T>(key as any),
+  set: <T extends keyof StoreKey | keyof typeof widgetKey>(
+    key: T,
+    value: StoreKey[T] | (typeof widgetKey)[T]
+  ) => store.set<T>(key, value as any),
+}
+
+export const ipcPreload = {
+  reOpen: () => ipcRenderer.send('reOpen'),
+}
+
+contextBridge.exposeInMainWorld('store', storePreload)
+contextBridge.exposeInMainWorld('ipcMain', ipcPreload)

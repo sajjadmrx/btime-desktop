@@ -5,26 +5,13 @@
 @font-face {
   font-family: Vazir;
 
-  src: url("./assets/fonts/vazir/Vazirmatn-FD-Medium.eot");
+  src: url('./assets/fonts/vazir/Vazirmatn-FD-Medium.eot');
 
-  src: url("./assets/fonts/vazir/Vazirmatn-FD-Medium.eot?#iefix")
-      format("embedded-opentype"),
-    url("./assets/fonts/vazir/Vazirmatn-FD-Medium.woff2") format("woff2"),
-    url("./assets/fonts/vazir/Vazirmatn-FD-Medium.ttf") format("truetype");
-
-  font-weight: normal;
-
-  font-style: normal;
-}
-@font-face {
-  font-family: Vazir;
-
-  src: url("./assets/fonts/vazir/Vazirmatn-FD-Bold.eot");
-
-  src: url("./assets/fonts/vazir/Vazirmatn-FD-Bold.eot?#iefix")
-      format("embedded-opentype"),
-    url("./assets/fonts/vazir/Vazirmatn-FD-Bold.woff2") format("woff2"),
-    url("./assets/fonts/vazir/Vazirmatn-FD-Bold.ttf") format("truetype");
+  src:
+    url('./assets/fonts/vazir/Vazirmatn-FD-Medium.eot?#iefix')
+      format('embedded-opentype'),
+    url('./assets/fonts/vazir/Vazirmatn-FD-Medium.woff2') format('woff2'),
+    url('./assets/fonts/vazir/Vazirmatn-FD-Medium.ttf') format('truetype');
 
   font-weight: normal;
 
@@ -34,12 +21,29 @@
 @font-face {
   font-family: Vazir;
 
-  src: url("./assets/fonts/vazir/Vazirmatn-FD-Black.eot");
+  src: url('./assets/fonts/vazir/Vazirmatn-FD-Bold.eot');
 
-  src: url("./assets/fonts/vazir/Vazirmatn-FD-Black.eot?#iefix")
-      format("embedded-opentype"),
-    url("./assets/fonts/vazir/Vazirmatn-FD-Black.woff2") format("woff2"),
-    url("./assets/fonts/vazir/Vazirmatn-FD-Black.ttf") format("truetype");
+  src:
+    url('./assets/fonts/vazir/Vazirmatn-FD-Bold.eot?#iefix')
+      format('embedded-opentype'),
+    url('./assets/fonts/vazir/Vazirmatn-FD-Bold.woff2') format('woff2'),
+    url('./assets/fonts/vazir/Vazirmatn-FD-Bold.ttf') format('truetype');
+
+  font-weight: normal;
+
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Vazir;
+
+  src: url('./assets/fonts/vazir/Vazirmatn-FD-Black.eot');
+
+  src:
+    url('./assets/fonts/vazir/Vazirmatn-FD-Black.eot?#iefix')
+      format('embedded-opentype'),
+    url('./assets/fonts/vazir/Vazirmatn-FD-Black.woff2') format('woff2'),
+    url('./assets/fonts/vazir/Vazirmatn-FD-Black.ttf') format('truetype');
 
   font-weight: 900;
 
@@ -49,7 +53,7 @@
 @font-face {
   font-family: balooTamma;
 
-  src: url("./assets/fonts/BalooTamma/BalooTamma2-Bold.ttf");
+  src: url('./assets/fonts/BalooTamma/BalooTamma2-Bold.ttf');
 }
 
 .h-screen {
@@ -68,10 +72,15 @@ body {
   -webkit-app-region: drag;
 }
 
+.not-moveable {
+  -webkit-app-region: none;
+}
+
 @media (prefers-color-scheme: dark) {
   .h-screen {
     background: #333;
   }
+
   body.transparent-active .h-screen {
     background: #33333330;
   }
@@ -87,9 +96,11 @@ body {
   body.transparent-active .h-screen {
     background: #dddddd30;
   }
+
   body.transparent-active .text-gray-trasnparent {
     color: #e0e0e0;
   }
+
   body.transparent-active .arrow_btn {
     color: #e0e0e0;
   }
