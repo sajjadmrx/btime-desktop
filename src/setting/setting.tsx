@@ -6,19 +6,39 @@ import { widgetKey, windowSettings } from '../../electron/store'
 import { useEffect, useState } from 'react'
 
 function App() {
+  useEffect(() => {
+    const handleColorSchemeChange = (e) => {
+      document.documentElement.classList.remove('dark')
+      if (e.matches) {
+        document.documentElement.classList.add('dark')
+      }
+    }
+
+    const colorSchemeMediaQuery = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    )
+    handleColorSchemeChange(colorSchemeMediaQuery)
+
+    colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
+    return () => {
+      colorSchemeMediaQuery.removeEventListener(
+        'change',
+        handleColorSchemeChange
+      )
+    }
+  }, [])
   interface Setting {
     btime: {
       enable: boolean
       transparent: boolean
       alwaysOnTop: boolean
-      dark: boolean
     }
     rate: {
       enable: boolean
       transparent: boolean
       alwaysOnTop: boolean
-      dark: boolean
     }
+    theme: 'system' | 'light' | 'dark'
   }
 
   const [setting, setSetting] = useState<Setting>(null)
@@ -27,20 +47,19 @@ function App() {
       'NerkhYab' as widgetKey.NerkhYab
     )
     const BTime: windowSettings = window.store.get('BTime')
-
+    const theme = window.store.get('theme')
     setSetting({
       btime: {
         enable: BTime.enable,
         transparent: BTime.transparentStatus,
         alwaysOnTop: BTime.alwaysOnTop,
-        dark: BTime.theme === 'dark',
       },
       rate: {
         enable: NerkhYab.enable,
         transparent: NerkhYab.transparentStatus,
         alwaysOnTop: NerkhYab.alwaysOnTop,
-        dark: NerkhYab.theme === 'dark',
       },
+      theme,
     })
   }, [])
 
@@ -56,11 +75,11 @@ function App() {
     if (!setting.btime.enable) {
       return alert('ویجت تاریخ رو نمیشه غیر فعال کرد')
     }
+
     window.store.set('BTime', {
       enable: setting.btime.enable,
       transparentStatus: setting.btime.transparent,
       alwaysOnTop: setting.btime.alwaysOnTop,
-      theme: setting.btime.dark ? 'dark' : 'light',
       bounds: BTimeStore.bounds,
     })
 
@@ -68,22 +87,24 @@ function App() {
       enable: setting.rate.enable,
       transparentStatus: setting.rate.transparent,
       alwaysOnTop: setting.rate.alwaysOnTop,
-      theme: setting.rate.dark ? 'dark' : 'light',
       bounds: NerkhYabStore.bounds,
       currencies: NerkhYabStore.currencies,
     })
 
-    //todo reload app
+    window.store.set('theme', setting.theme)
     window.ipcMain.reOpen()
   }
 
   return (
     <>
-      <div className="h-screen w-screen  moveable">
-        <div className="py-3 px-0 h-full">
-          <div className="flex flex-col gap-6 h-full justify-around items-center">
-            <div className="flex flex-col items-center justify-between  w-full flex-wrap gap-2">
-              <div className="w-full p-5 text-right" dir="rtl">
+      <div className="h-screen w-screen  moveable overflow-hidden">
+        <div className="py-3 px-0 h-full ">
+          <div className="flex flex-col h-full justify-around items-center ">
+            <div className="flex flex-col items-center justify-between  w-full flex-wrap gap-5">
+              <div
+                className="w-full px-5 text-right text-gray-600  dark:text-[#eee]"
+                dir="rtl"
+              >
                 ویجت تاریخ
                 <div className="flex flex-col mt-2 justify-around gap-3 not-moveable">
                   <div className="flex flex-row items-center justify-between w-full gap-2">
@@ -102,14 +123,14 @@ function App() {
                           <Typography
                             variant={'h5'}
                             color="blue-gray"
-                            className="dark:text-gray-400 text-[13px] font-[Vazir] flex flex-row items-center mr-3"
+                            className="text-gray-600  dark:text-[#c7c7c7] text-[13px] font-[Vazir] flex flex-row items-center mr-3"
                           >
                             فعال سازی
                           </Typography>
                           <Typography
                             variant="h5"
                             color="gray"
-                            className="dark:text-gray-600 text-[12px] font-[Vazir] mr-3"
+                            className="dark:text-gray-500 text-[12px] font-[Vazir] mr-3"
                           >
                             فعالسازی ویجت نمایش تاریخ
                           </Typography>
@@ -135,14 +156,14 @@ function App() {
                           <Typography
                             variant={'h5'}
                             color="blue-gray"
-                            className="dark:text-gray-400 text-[13px] font-[Vazir] flex flex-row items-center "
+                            className="dark:text-[#c7c7c7] text-gray-600  text-[13px] font-[Vazir] flex flex-row items-center "
                           >
                             شفاف
                           </Typography>
                           <Typography
                             variant="h5"
                             color="gray"
-                            className="dark:text-gray-600 text-[12px] font-[Vazir]"
+                            className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir]"
                           >
                             استفاده از پس زمینه شفاف
                           </Typography>
@@ -168,14 +189,14 @@ function App() {
                           <Typography
                             variant={'h5'}
                             color="blue-gray"
-                            className="dark:text-gray-400 text-[13px] font-[Vazir] flex flex-row items-center "
+                            className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] flex flex-row items-center "
                           >
                             اولویت بالا
                           </Typography>
                           <Typography
                             variant="h5"
                             color="gray"
-                            className="dark:text-gray-600 text-[12px] font-[Vazir]"
+                            className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir]"
                           >
                             اولویت بالایی برای نمایش
                           </Typography>
@@ -188,9 +209,12 @@ function App() {
                   </div>
                 </div>
               </div>
-              <div className="w-full p-5 text-right" dir="rtl">
+              <div
+                className="w-full px-5 text-right dark:text-gray-200 text-gray-600"
+                dir="rtl"
+              >
                 ویجت نرخ ارز
-                <div className="flex flex-col mt-2  justify-around gap-3 not-moveable">
+                <div className="flex flex-col mt-4 justify-around gap-3 not-moveable">
                   <div className="flex flex-row items-center justify-between w-full gap-2">
                     <Switch
                       id={'nerkh-startUp'}
@@ -207,14 +231,14 @@ function App() {
                           <Typography
                             variant={'h5'}
                             color="blue-gray"
-                            className="dark:text-gray-400 text-[13px] font-[Vazir] flex flex-row items-center mr-3"
+                            className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] flex flex-row items-center mr-3"
                           >
                             فعال سازی
                           </Typography>
                           <Typography
                             variant="h5"
                             color="gray"
-                            className="dark:text-gray-600 text-[12px] font-[Vazir] mr-3"
+                            className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir] mr-3"
                           >
                             فعالسازی ویجت نمایش نرخ ارز
                           </Typography>
@@ -240,14 +264,14 @@ function App() {
                           <Typography
                             variant={'h5'}
                             color="blue-gray"
-                            className="dark:text-gray-400 text-[13px] font-[Vazir] flex flex-row items-center "
+                            className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] flex flex-row items-center "
                           >
                             شفاف
                           </Typography>
                           <Typography
                             variant="h5"
                             color="gray"
-                            className="dark:text-gray-600 text-[12px] font-[Vazir]"
+                            className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir]"
                           >
                             استفاده از پس زمینه شفاف
                           </Typography>
@@ -258,7 +282,7 @@ function App() {
                       }}
                     />
                   </div>
-                  <div className="flex flex-row items-center justify-between w-full gap-2">
+                  <div className="flex flex-row items-center justify-between w-full">
                     <Checkbox
                       ripple={true}
                       onClick={() =>
@@ -273,14 +297,14 @@ function App() {
                           <Typography
                             variant={'h5'}
                             color="blue-gray"
-                            className="dark:text-gray-400 text-[13px] font-[Vazir] flex flex-row items-center "
+                            className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] flex flex-row items-center "
                           >
                             اولویت بالا
                           </Typography>
                           <Typography
                             variant="h5"
                             color="gray"
-                            className="dark:text-gray-600 text-[12px] font-[Vazir]"
+                            className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir]"
                           >
                             اولویت بالایی برای نمایش
                           </Typography>
@@ -294,15 +318,31 @@ function App() {
                 </div>
               </div>
             </div>
-
-            {/* <Button
-              color="green"
-              ripple={true}
-              className="w-6/12 font-[Vazir] not-moveable hover:bg-green-700"
-              onClick={() => onApplyChanges()}
-            >
-              اعمال تغییرات
-            </Button> */}
+            <div className="w-full px-5 text-right not-moveable " dir="rtl">
+              <div className="flex flex-col dark:text-gray-400 text-gray-600">
+                تم
+                <div className="w-full flex flex-row justify-around px-3 gap-4 transition ">
+                  <div
+                    className={`w-20 flex flex-row transition active:outline-none  ${setting?.theme === 'light' ? 'border border-[#3f3fc9dd]' : 'hover:bg-[#3f3fc975] bg-opacity-10 hover:text-gray-200'} p-2 rounded-lg items-center justify-center`}
+                    onClick={() => setSettingValue('theme', 'light')}
+                  >
+                    <p className="text-[13px] font-[Vazir]">روشن</p>
+                  </div>
+                  <div
+                    className={`w-20 flex flex-row transition active:outline-none ${setting?.theme === 'dark' ? 'border border-[#3f3fc9dd]' : 'hover:bg-[#3f3fc975] bg-opacity-10 hover:text-gray-200'} p-2 rounded-lg items-center justify-center`}
+                    onClick={() => setSettingValue('theme', 'dark')}
+                  >
+                    <p className="text-[13px] font-[Vazir]">تاریک</p>
+                  </div>
+                  <div
+                    className={`w-20 flex flex-row transition active:outline-none ${setting?.theme === 'system' ? 'border border-[#3f3fc9dd]' : 'hover:bg-[#3f3fc975] bg-opacity-10 hover:text-gray-200'} p-2 rounded-lg items-center justify-center`}
+                    onClick={() => setSettingValue('theme', 'system')}
+                  >
+                    خودکار
+                  </div>
+                </div>
+              </div>
+            </div>
             <div className="flex flex-row-reverse gap-3 w-full px-5">
               <Button
                 color="green"

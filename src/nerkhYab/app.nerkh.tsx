@@ -62,7 +62,7 @@ function App() {
                 {loading ? (
                   <div className="h-5 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-2.5"></div>
                 ) : (
-                  <h3 className="text-[1.2rem] text-gray-600 text-gray-trasnparent dark:text-[#eee] truncate">
+                  <h3 className="text-[1.2rem]  text-gray-600 text-gray-trasnparent dark:text-[#eee] truncate">
                     {data.name}
                   </h3>
                 )}
@@ -77,7 +77,7 @@ function App() {
                   {loading ? (
                     <div className="h-2 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-10 mb-2.5"></div>
                   ) : (
-                    <p className="text-2xl text-gray-600 text-gray-trasnparent dark:text-[#d3d3d3]">
+                    <p className="text-[1.2rem]  text-gray-600 text-gray-trasnparent dark:text-[#d3d3d3]">
                       {data.todyPrice.toLocaleString()}
                     </p>
                   )}
