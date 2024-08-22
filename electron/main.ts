@@ -267,19 +267,34 @@ function onMoved(win: BrowserWindow) {
   win.on('moved', () => {
     if (win) {
       let { x, y } = win.getBounds()
-      const { width, height } = screen.getPrimaryDisplay().workAreaSize
+      const displays = screen.getAllDisplays()
+
+      // Find the display the window is currently on
+      const currentDisplay =
+        displays.find((display) => {
+          const { x: dx, y: dy, width, height } = display.workArea
+          return x >= dx && x < dx + width && y >= dy && y < dy + height
+        }) || screen.getPrimaryDisplay()
+
+      const { width, height } = currentDisplay.workArea
 
       // Check if the window is out of bounds and adjust the position
-      if (x < 0) {
-        x = 0
-      } else if (x + win.getBounds().width > width) {
-        x = width - win.getBounds().width
+      if (x < currentDisplay.workArea.x) {
+        x = currentDisplay.workArea.x
+      } else if (
+        x + win.getBounds().width >
+        currentDisplay.workArea.x + width
+      ) {
+        x = currentDisplay.workArea.x + width - win.getBounds().width
       }
 
-      if (y < 0) {
-        y = 0
-      } else if (y + win.getBounds().height > height) {
-        y = height - win.getBounds().height
+      if (y < currentDisplay.workArea.y) {
+        y = currentDisplay.workArea.y
+      } else if (
+        y + win.getBounds().height >
+        currentDisplay.workArea.y + height
+      ) {
+        y = currentDisplay.workArea.y + height - win.getBounds().height
       }
 
       // Set the new bounds if adjustments were made
