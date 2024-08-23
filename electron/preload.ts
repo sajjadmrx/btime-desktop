@@ -123,8 +123,7 @@ window.onmessage = (ev) => {
 setTimeout(removeLoading, 4999)
 
 export const storePreload = {
-  get: <T extends keyof StoreKey | keyof typeof widgetKey>(key: T) =>
-    store.get<T>(key as any),
+  get: <T>(key: T) => store.get<T>(key as any),
   set: <T extends keyof StoreKey | keyof typeof widgetKey>(
     key: T,
     value: StoreKey[T] | (typeof widgetKey)[T]
@@ -133,6 +132,8 @@ export const storePreload = {
 
 export const ipcPreload = {
   reOpen: () => ipcRenderer.send('reOpen'),
+  changeTheme: (theme: StoreKey['theme']) =>
+    ipcRenderer.send('changeTheme', theme),
 }
 
 contextBridge.exposeInMainWorld('store', storePreload)

@@ -18,13 +18,18 @@ export interface windowSettings {
   enable: boolean
 }
 
+export interface BtimeSettingStore extends windowSettings {}
+export interface NerkhYabSettingStore extends windowSettings {
+  currencies: string[]
+}
+
+export type Theme = 'system' | 'light' | 'dark'
+
 export type StoreKey = {
-  [widgetKey.BTime]: windowSettings
-  [widgetKey.NerkhYab]: windowSettings & {
-    currencies: string[]
-  }
+  [widgetKey.BTime]: BtimeSettingStore
+  [widgetKey.NerkhYab]: NerkhYabSettingStore
   startup: boolean
-  theme: 'system' | 'light' | 'dark'
+  theme: Theme
 }
 export const store = new electronStore<StoreKey>({
   defaults: {
