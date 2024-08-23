@@ -217,15 +217,15 @@ function getContextMenu() {
           settingWin.show()
         } else {
           settingWin = await createWindow({
-            height: 650,
-            width: 420,
+            height: 432,
+            width: 595,
             x: 0,
             y: 0,
             title: 'Setting',
             html: 'setting.html',
             devTools: true,
             alwaysOnTop: true,
-            reziable: true,
+            reziable: false,
           })
         }
       },
