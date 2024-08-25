@@ -11,6 +11,7 @@ export default defineConfig({
         index: path.join(__dirname, './index.html'), // <-----------------------------------------------------------------------
         rate: path.join(__dirname, './rate.html'),
         setting: path.join(__dirname, './setting.html'),
+        arzchand: path.join(__dirname, './arzchand.html'),
       },
     },
   },

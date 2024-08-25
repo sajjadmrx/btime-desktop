@@ -39,7 +39,7 @@ export function CurrencyInfoCard() {
 
   return (
     <div
-      className="flex flex-col gap-6 h-full justify-around items-center"
+      className="flex flex-col gap-6 h-full justify-around items-center relative"
       dir="ltr"
     >
       <div className="flex flex-row items-center justify-around  w-full flex-wrap gap-2">
@@ -71,7 +71,7 @@ export function CurrencyInfoCard() {
           )}
         </div>
       </div>
-      <div className="flex flex-row w-full justify-around items-center">
+      <div className="flex flex-row w-full  items-center">
         <div className="flex flex-col">
           <div>
             {loading ? (
@@ -92,7 +92,6 @@ export function CurrencyInfoCard() {
             )}
           </div>
         </div>
-        <div style={{ visibility: 'hidden' }}>aaaaaaaaa</div>
       </div>
     </div>
   )
