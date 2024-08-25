@@ -57,36 +57,69 @@ if (isWindoAndDrawin) {
 
 async function onAppReady() {
   const nerkhStore = store.get(widgetKey.NerkhYab)
+  const btimeStore = store.get(widgetKey.BTime)
+  const arzChandStore = store.get(widgetKey.ArzChand)
 
-  const calanderWin = await createWindow({
-    height: store.get(widgetKey.BTime).bounds.height,
-    width: store.get(widgetKey.BTime).bounds.width,
-    x: store.get(widgetKey.BTime).bounds.x,
-    y: store.get(widgetKey.BTime).bounds.y,
-    title: widgetKey.BTime,
-    html: 'index.html',
-    devTools: false,
-    alwaysOnTop: store.get(widgetKey.BTime).alwaysOnTop,
-    reziable: true,
-  })
-  mainWin = calanderWin
-  onMoved(calanderWin)
-  onResized(calanderWin)
+  // Btime widget
+  if (btimeStore.enable) {
+    const btime = await createWindow({
+      height: btimeStore.bounds.height,
+      width: btimeStore.bounds.width,
+      x: btimeStore.bounds.x,
+      y: btimeStore.bounds.y,
+      title: widgetKey.BTime,
+      html: 'index.html',
+      devTools: false,
+      alwaysOnTop: btimeStore.alwaysOnTop,
+      reziable: true,
+    })
+    mainWin = btime
+    onMoved(btime)
+    onResized(btime)
+  }
 
+  // NerkhYab widget
   if (nerkhStore.enable) {
     const nerkhWindow = await createWindow({
-      height: store.get(widgetKey.NerkhYab).bounds.height,
-      width: store.get(widgetKey.NerkhYab).bounds.width,
-      x: store.get(widgetKey.NerkhYab).bounds.x,
-      y: store.get(widgetKey.NerkhYab).bounds.y,
+      height: nerkhStore.bounds.height,
+      width: nerkhStore.bounds.width,
+      x: nerkhStore.bounds.x,
+      y: nerkhStore.bounds.y,
       title: widgetKey.NerkhYab,
       html: 'rate.html',
       devTools: true,
-      alwaysOnTop: store.get(widgetKey.NerkhYab).alwaysOnTop,
+      alwaysOnTop: nerkhStore.alwaysOnTop,
       reziable: true,
     })
     onMoved(nerkhWindow)
     onResized(nerkhWindow)
+    if (!mainWin) {
+      mainWin = nerkhWindow
+    }
+  }
+
+  // ArzChand widget
+  if (arzChandStore.enable) {
+    const arzChandWindow = await createWindow({
+      height: arzChandStore.bounds.height,
+      width: arzChandStore.bounds.width,
+      x: arzChandStore.bounds.x,
+      y: arzChandStore.bounds.y,
+      title: widgetKey.ArzChand,
+      html: 'arzchand.html',
+      devTools: true,
+      alwaysOnTop: arzChandStore.alwaysOnTop,
+      reziable: true,
+    })
+    onMoved(arzChandWindow)
+    onResized(arzChandWindow)
+    if (!mainWin) {
+      mainWin = arzChandWindow
+    }
+  }
+
+  if (!mainWin) {
+    mainWin = await createSettingWindow()
   }
 
   nativeTheme.themeSource = store.get('theme')
@@ -143,7 +176,6 @@ async function createWindow(payload: Window) {
   } else {
     win.loadFile(path.join(process.env.DIST, payload.html))
   }
-
   return win
 }
 
@@ -152,10 +184,6 @@ app.on('window-all-closed', () => {
     app.quit()
     mainWin = null
   }
-})
-
-app.on('quit', () => {
-  console.log('quit')
 })
 
 app.on('second-instance', () => {
@@ -216,17 +244,7 @@ function getContextMenu() {
         if (settingWin) {
           settingWin.show()
         } else {
-          settingWin = await createWindow({
-            height: 432,
-            width: 595,
-            x: 0,
-            y: 0,
-            title: 'Setting',
-            html: 'setting.html',
-            devTools: true,
-            alwaysOnTop: true,
-            reziable: false,
-          })
+          settingWin = await createSettingWindow()
         }
       },
     },
@@ -261,6 +279,20 @@ function getContextMenu() {
   ])
 
   return contextMenu
+}
+
+async function createSettingWindow() {
+  return await createWindow({
+    height: 432,
+    width: 595,
+    x: 0,
+    y: 0,
+    title: 'Setting',
+    html: 'setting.html',
+    devTools: true,
+    alwaysOnTop: true,
+    reziable: false,
+  })
 }
 
 function onMoved(win: BrowserWindow) {
@@ -325,7 +357,6 @@ function onResized(win: BrowserWindow) {
     if (win) {
       const { width, height } = win.getBounds()
       const key = win.getTitle()
-      console.log(key, width, height)
 
       const filters: Record<
         widgetKey,
@@ -341,6 +372,10 @@ function onResized(win: BrowserWindow) {
         [widgetKey.NerkhYab]: {
           minWidth: 226,
           minHeight: 120,
+        },
+        [widgetKey.ArzChand]: {
+          minWidth: 320,
+          minHeight: 210,
         },
       }
       const filter = filters[key]
