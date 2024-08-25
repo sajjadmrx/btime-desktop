@@ -1,26 +1,41 @@
 import { Checkbox, Switch, Typography } from '@material-tailwind/react'
 import { NerkhYabSettingStore, widgetKey } from 'electron/store'
 import { useEffect, useState } from 'react'
+import {
+  getSupportedCurrencies,
+  SupportedCurrencies,
+} from '../../api/nerkh.api'
 
 export function NerkhYabSetting() {
   const [setting, setSetting] = useState<NerkhYabSettingStore>(null)
+  const [supportedCurrencies, setSupportedCurrencies] =
+    useState<SupportedCurrencies>(null)
 
   useEffect(() => {
     const NerkhYab: NerkhYabSettingStore = window.store.get(
       'NerkhYab' as widgetKey.NerkhYab
     )
-    console.log(NerkhYab)
     setSetting(NerkhYab)
+
+    function fetchSupportedCurrencies() {
+      getSupportedCurrencies().then((data) => {
+        setSupportedCurrencies(data)
+      })
+    }
+
+    fetchSupportedCurrencies()
   }, [])
 
   function setSettingValue<T extends keyof NerkhYabSettingStore>(
     key: T,
     value: NerkhYabSettingStore[T]
   ) {
-    setSetting((prev) => ({ ...prev, [key]: value }))
+    setting[key] = value
+    setSetting({ ...setting })
+    applyChanges()
   }
 
-  function onApplyChanges() {
+  function applyChanges() {
     window.store.set('NerkhYab', {
       alwaysOnTop: setting.alwaysOnTop,
       enable: setting.enable,
@@ -39,7 +54,9 @@ export function NerkhYabSetting() {
               id={'nerkhyaab-enable'}
               color={'blue'}
               defaultChecked={setting.enable}
-              onClick={() => setSettingValue('enable', !setting.enable)}
+              onClick={() =>
+                setSettingValue('enable', setting.enable ? false : true)
+              }
               label={
                 <div>
                   <Typography
@@ -148,58 +165,15 @@ export function NerkhYabSetting() {
                 }
                 value={setting.currencies[0]}
               >
-                <option value="usd" className="font-light">
-                  دلار امریکا
-                </option>
-                <option value="eur" className="font-light">
-                  یورو
-                </option>
-                <option value="gbp" className="font-light">
-                  پوند انگلیس
-                </option>
-                <option value="cad" className="font-light">
-                  دلار کانادا
-                </option>
-                <option value="aud" className="font-light">
-                  دلار استرالیا
-                </option>
-                <option value="nzd" className="font-light">
-                  دلار نیوزلند
-                </option>
-                <option value="hkd" className="font-light">
-                  دلار هنگ کنگ
-                </option>
-                <option value="sgd" className="font-light">
-                  دلار سنگاپور
-                </option>
-                <option value="inr" className="font-light">
-                  دلار هند
-                </option>
-                <option value="jpy" className="font-light">
-                  دلار ژاپن
-                </option>
-                <option value="cny" className="font-light">
-                  دلار چین
-                </option>
-                <option value="krw" className="font-light">
-                  دلار کره جنوبی
-                </option>
+                {supportedCurrencies &&
+                  Object.keys(supportedCurrencies).map((key) => (
+                    <option key={key} value={key} className="font-light">
+                      {supportedCurrencies[key].label}
+                    </option>
+                  ))}
               </select>
             </div>
           </div>
-        </div>
-
-        <div className="flex flex-row justify-center mt-7">
-          <button
-            type="button"
-            className="bg-blue-500 text-white rounded-md px-4 py-2 mt-4 w-40 
-            transition duration-300 ease-in-out transform hover:bg-blue-600 focus:bg-blue-700
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 hover:scale-105
-            "
-            onClick={onApplyChanges}
-          >
-            ذخیره
-          </button>
         </div>
       </div>
     </>

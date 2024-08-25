@@ -17,15 +17,17 @@ export function BtimeSetting() {
     key: T,
     value: BtimeSettingStore[T]
   ) {
-    setSetting((prev) => ({ ...prev, [key]: value }))
+    setting[key] = value
+    setSetting({ ...setting })
+    applyChanges()
   }
 
-  function onApplyChanges() {
+  function applyChanges() {
     window.store.set('BTime' as widgetKey.BTime, {
       alwaysOnTop: setting.alwaysOnTop,
       enable: setting.enable,
       transparentStatus: setting.transparentStatus,
-      bounds: window.store.get('Btime' as widgetKey.BTime).bounds,
+      bounds: window.store.get('BTime' as widgetKey.BTime).bounds,
     })
   }
   if (!setting) return null
@@ -39,7 +41,9 @@ export function BtimeSetting() {
               id={'time-startUp'}
               color={'blue'}
               defaultChecked={setting.enable}
-              onClick={() => setSettingValue('enable', !setting.enable)}
+              onClick={() =>
+                setSettingValue('enable', setting.enable ? false : true)
+              }
               label={
                 <div>
                   <Typography
@@ -123,18 +127,6 @@ export function BtimeSetting() {
               }}
             />
           </div>
-        </div>
-        <div className="flex flex-row justify-center mt-7">
-          <button
-            type="button"
-            className="bg-blue-500 text-white rounded-md px-4 py-2 mt-4 w-40 
-            transition duration-300 ease-in-out transform hover:bg-blue-600 focus:bg-blue-700
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 hover:scale-105
-            "
-            onClick={onApplyChanges}
-          >
-            ذخیره
-          </button>
         </div>
       </div>
     </>

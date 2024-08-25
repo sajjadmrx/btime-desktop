@@ -14,6 +14,7 @@ import { useEffect } from 'react'
 import { BtimeSetting } from './widgets/btime.setting'
 import { NerkhYabSetting } from './widgets/nerkhYab.setting'
 import { AppSetting } from './widgets/app.setting'
+import { ArzChandSetting } from './widgets/arzChand.setting'
 
 function App() {
   useEffect(() => {
@@ -80,6 +81,27 @@ function App() {
         </svg>
       ),
       element: <NerkhYabSetting />,
+    },
+    {
+      label: 'ویجت ارز چند؟',
+      value: 'arzChand',
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-4 dark:text-[#e8e7e7] text-gray-600"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M14.25 7.756a4.5 4.5 0 1 0 0 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+          />
+        </svg>
+      ),
+      element: <ArzChandSetting />,
     },
     {
       label: 'تنظیمات کلی',
@@ -161,15 +183,25 @@ function App() {
                           آیا مطمئن هستید؟
                         </Typography>
                         <Typography className="font-[Vazir] text-gray-600 dark:text-[#e8e7e7]">
-                          بعد از خروج، برنامه یک بار راه اندازی مجدد می شود.
+                          برای اعمال تغییرات نیاز به کلیک بر روی "خروج و اعمال
+                          تغییرات" دارید.
                         </Typography>
 
-                        <button
-                          className="bg-red-500 text-white font-[Vazir] font-light rounded-md px-4 py-2 mt-4 w-40 transition duration-300 ease-in-out transform hover:bg-red-600 focus:bg-red-700"
-                          onClick={() => window.ipcMain.reOpen()}
-                        >
-                          خروج
-                        </button>
+                        <div className="flex flex-row gap-4  items-center">
+                          <button
+                            className="bg-red-500 text-white font-[Vazir] font-light rounded-md px-4 py-2 mt-4 w-full transition duration-300 ease-in-out transform hover:bg-red-600 focus:bg-red-700"
+                            onClick={() => window.ipcMain.reOpen()}
+                          >
+                            خروج و اعمال تغییرات
+                          </button>
+
+                          <button
+                            className="bg-blue-500 text-white font-[Vazir] font-light rounded-md px-4 py-2 mt-4 w-32 transition duration-300 ease-in-out transform hover:bg-blue-600 focus:bg-blue-700"
+                            onClick={() => window.close()}
+                          >
+                            انصراف
+                          </button>
+                        </div>
                       </div>
                     </TabPanel>
                   ) : (
