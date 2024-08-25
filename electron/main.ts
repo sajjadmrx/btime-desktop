@@ -64,6 +64,8 @@ async function onAppReady() {
   if (btimeStore.enable) {
     const btime = await createWindow({
       height: btimeStore.bounds.height,
+      minHeight: 150,
+      minWidth: 150,
       width: btimeStore.bounds.width,
       x: btimeStore.bounds.x,
       y: btimeStore.bounds.y,
@@ -82,6 +84,8 @@ async function onAppReady() {
   if (nerkhStore.enable) {
     const nerkhWindow = await createWindow({
       height: nerkhStore.bounds.height,
+      minHeight: 120,
+      minWidth: 226,
       width: nerkhStore.bounds.width,
       x: nerkhStore.bounds.x,
       y: nerkhStore.bounds.y,
@@ -102,6 +106,8 @@ async function onAppReady() {
   if (arzChandStore.enable) {
     const arzChandWindow = await createWindow({
       height: arzChandStore.bounds.height,
+      minHeight: 210,
+      minWidth: 320,
       width: arzChandStore.bounds.width,
       x: arzChandStore.bounds.x,
       y: arzChandStore.bounds.y,
@@ -129,7 +135,9 @@ async function onAppReady() {
 
 interface Window {
   height: number
+  minHeight: number
   width: number
+  minWidth: number
   x: number
   y: number
   title: string
@@ -149,6 +157,8 @@ async function createWindow(payload: Window) {
     },
     height: payload.height,
     width: payload.width,
+    minHeight: payload.minHeight,
+    minWidth: payload.minWidth,
     frame: false,
     transparent: true,
     resizable: payload.reziable,
@@ -285,6 +295,8 @@ async function createSettingWindow() {
   return await createWindow({
     height: 432,
     width: 595,
+    minHeight: 432,
+    minWidth: 595,
     x: 0,
     y: 0,
     title: 'Setting',
@@ -357,36 +369,6 @@ function onResized(win: BrowserWindow) {
     if (win) {
       const { width, height } = win.getBounds()
       const key = win.getTitle()
-
-      const filters: Record<
-        widgetKey,
-        {
-          minWidth: number
-          minHeight: number
-        }
-      > = {
-        [widgetKey.BTime]: {
-          minWidth: 180,
-          minHeight: 179,
-        },
-        [widgetKey.NerkhYab]: {
-          minWidth: 226,
-          minHeight: 120,
-        },
-        [widgetKey.ArzChand]: {
-          minWidth: 320,
-          minHeight: 210,
-        },
-      }
-      const filter = filters[key]
-      if (!filter) return
-      if (width < filter.minWidth) {
-        win.setSize(filter.minWidth, win.getBounds().height)
-      }
-
-      if (height < filter.minHeight) {
-        win.setSize(win.getBounds().width, filter.minHeight)
-      }
 
       console.log(`Saving ${key} bounds: ${width}x${height}`)
       store.set(widgetKey[key], {
