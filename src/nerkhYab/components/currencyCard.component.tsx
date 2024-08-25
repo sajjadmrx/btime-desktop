@@ -45,10 +45,9 @@ export function CurrencyInfoCard() {
       <div className="flex flex-row items-center justify-around  w-full flex-wrap gap-2">
         <div
           className={`
-            w-10 h-10 absolute rounded-full dark:bg-gray-700 filter blur-xl z-0
-          left-1`}
+           w-24 h-24 absolute rounded-full z-0 -left-7 blur-lg`}
           style={{
-            background: `radial-gradient(circle, ${imgColor} 0%, ${imgColor + '00'} 100%)`,
+            backgroundImage: `radial-gradient(50% 50% at 50% 50%, ${imgColor} 35%, ${imgColor + '00'} 30%)`,
           }}
         ></div>
         <div>
@@ -59,10 +58,9 @@ export function CurrencyInfoCard() {
               className={`w-10 h-10 relative flex rounded-full overflow-hidden`}
               style={{
                 backdropFilter: 'blur(100px)',
-                boxShadow: `0px 0px 3px 1px ${imgColor}`,
               }}
             >
-              <img src={currencyData.icon} className="object-fill" />
+              <img src={currencyData.icon} className="object-cover" />
             </div>
           )}
         </div>
