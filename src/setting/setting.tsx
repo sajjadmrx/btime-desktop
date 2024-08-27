@@ -183,8 +183,8 @@ function App() {
                           آیا مطمئن هستید؟
                         </Typography>
                         <Typography className="font-[Vazir] text-gray-600 dark:text-[#e8e7e7]">
-                          برای اعمال تغییرات نیاز به کلیک بر روی "خروج و اعمال
-                          تغییرات" دارید.
+                          برای اعمال تغییرات نیاز به کلیک بر روی &quot;خروج و
+                          اعمال تغییرات&quot; دارید.
                         </Typography>
 
                         <div className="flex flex-row gap-4  items-center">

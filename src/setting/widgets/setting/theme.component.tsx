@@ -25,7 +25,7 @@ export function ThemeComponent({
       onClick={() => setThemeValue(theme)}
     >
       <img
-        src={`./public/assets/${icon}`}
+        src={`../assets/${icon}`}
         alt="light"
         className={`w-12 h-12 absolute left-16 top-10 z-0 ${themeState === theme ? 'opacity-50' : 'opacity-10'}`}
       />
@@ -33,5 +33,3 @@ export function ThemeComponent({
     </div>
   )
 }
-/// +
-//   (themeState === theme ? 'opacity-0' : 'opacity-0')

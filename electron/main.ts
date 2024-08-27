@@ -182,9 +182,9 @@ async function createWindow(payload: Window) {
   })
 
   if (VITE_DEV_SERVER_URL) {
-    win.loadURL(VITE_DEV_SERVER_URL + payload.html)
+    win.loadURL(`${VITE_DEV_SERVER_URL}/html/${payload.html}`)
   } else {
-    win.loadFile(path.join(process.env.DIST, payload.html))
+    win.loadFile(path.join(process.env.DIST, '/html', payload.html))
   }
   return win
 }
