@@ -39,7 +39,7 @@ jobs:
       - name: ⚙️ Install additional tools
         run: |
           if [[ "${{ matrix.os }}" == 'macOS-latest' ]]; then
-            npm install dmg-license -g
+            npm install -D dmg-license -f
           fi
           npm install electron-builder -g
 
