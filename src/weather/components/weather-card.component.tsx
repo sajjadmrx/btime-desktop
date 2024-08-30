@@ -4,7 +4,6 @@ import { extractMainColorFromImage } from '../../utils/colorUtils'
 
 interface WeatherComponentProps {
   weather: WeatherResponse
-  iconColor: string
 }
 export function WeatherComponent({ weather }: WeatherComponentProps) {
   const [iconColor, setIconColor] = useState('')
