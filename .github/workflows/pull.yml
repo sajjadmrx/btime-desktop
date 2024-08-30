@@ -34,10 +34,14 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: 📚 Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: ⚙️ Install additional tools
-        run: npm install electron-builder -g
+        run: |
+          if [[ "${{ matrix.os }}" == 'macOS-latest' ]]; then
+            npm install dmg-license -g
+          fi
+          npm install electron-builder -g
 
       - name: 🏗️ Build the project
         run: npm run build
