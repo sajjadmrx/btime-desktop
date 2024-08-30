@@ -35,26 +35,34 @@ jobs:
       - name: 📚 Install dependencies
         run: npm ci
 
-      - name: ⚙️ Install additional tools
-        run: |
-          if [[ "${{ matrix.os }}" == 'macOS-latest' ]]; then
+      - name: ⚙️ Install additional tools (mac)
+        if: matrix.os == 'macOS-latest'
+        run: |  
             brew install python@3.11 python-setuptools
             brew install libtool automake autoconf
             sudo xcode-select --reset
             npm install -g node-gyp
-          fi
 
       - name: 🚀 Install electron-builder
         run: npm install -g electron-builder
 
-      - name: 🏗️ Publish the application
+      - name: 🏗️ Publish the application (win)
+        if: matrix.os == 'windows-latest'
         env:
           GH_TOKEN: ${{ secrets.TOKEN }}
-        run: |
-          if [[ "${{ matrix.os }}" == 'ubuntu-latest' ]]; then
-            npm run publish:linux
-          elif [[ "${{ matrix.os }}" == 'windows-latest' ]]; then
-            npm run publish:win
-          elif [[ "${{ matrix.os }}" == 'macOS-latest' ]]; then
-            npm run publish:mac
-          fi
+        run: npm run publish:win
+
+      - name: 🏗️ Publish the application (linux)
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          GH_TOKEN: ${{ secrets.TOKEN }}
+        run: npm run publish:linux
+
+      - name: 🏗️ Publish the application (mac)
+        if: matrix.os == 'macOS-latest'
+        env:
+          GH_TOKEN: ${{ secrets.TOKEN }}
+        run: npm run publish:mac
+        
+            
+
