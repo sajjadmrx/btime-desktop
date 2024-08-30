@@ -47,7 +47,7 @@ export function ArzChandSetting() {
   if (!setting) return null
   return (
     <>
-      <div className="mt-2 justify-around  not-moveable font-[Vazir]">
+      <div className="p-2 mt-2 h-full not-moveable font-[Vazir]">
         <div className="flex flex-col gap-3">
           <div className="flex flex-row items-center justify-between w-full gap-2">
             <Switch
@@ -146,7 +146,7 @@ export function ArzChandSetting() {
             dir="rtl"
           >
             <div
-              className="flex flex-col justify-between w-full gap-2"
+              className="flex flex-col justify-between w-96 gap-2 "
               dir="rtl"
             >
               <label
@@ -163,7 +163,7 @@ export function ArzChandSetting() {
                     supportedCurrencies
                   )}
                   isMultiple={true}
-                  limit={3}
+                  limit={10}
                   onChange={(values) => setSettingValue('currencies', values)}
                   color={'blue'}
                 />
@@ -217,8 +217,6 @@ const MultiSelectDropdown = ({
   limit,
   onChange,
 }: MultiSelectDropdownProps) => {
-  console.log('selectedValue', values)
-  console.log()
   const handleChange = (selectedValue) => {
     if (!selectedValue) return []
     if (limit && selectedValue?.length > limit) return values
@@ -230,19 +228,6 @@ const MultiSelectDropdown = ({
     <Select
       onChange={handleChange}
       value={values}
-      classNames={{
-        menu: 'dark:text-gray-500 text-gray-600 dark:bg-[#2d2d2d] bg-white',
-        menuButton: ({ isDisabled }) =>
-          `dark:text-gray-200 text-gray-600 bg-gray-200 dark:bg-[#3e3e3e] h-12 rounded w-full ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'} mt-2 pr-1`,
-        tagItem() {
-          return `dark:bg-gray-500/20 dark:text-gray-500 hover:text-gray-600 bg-gray-300  h-8 rounded-full flex items-center justify-center px-2 `
-        },
-        closeIcon: 'bg-gray-600',
-        tagItemIcon: 'w-3 h-3 bg-transparent hover:bg-gray-200',
-        listGroupLabel:
-          'dark:text-gray-500 text-gray-600 dark:bg-[#2d2d2d] bg-white',
-        list: 'dark:text-gray-500 text-gray-600 dark:bg-[#2d2d2d] bg-white overflow-y-scroll h-32 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-300',
-      }}
       isMultiple={isMultiple}
       primaryColor={color}
       options={options}

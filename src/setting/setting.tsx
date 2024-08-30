@@ -12,9 +12,9 @@ import {
 
 import { useEffect } from 'react'
 import { BtimeSetting } from './widgets/btime/btime.setting'
-import { NerkhYabSetting } from './widgets/nerkhYab.setting'
+import { NerkhYabSetting } from './widgets/nerkhyab/nerkhYab.setting'
 import { AppSetting } from './widgets/setting/app.setting'
-import { ArzChandSetting } from './widgets/arzChand.setting'
+import { ArzChandSetting } from './widgets/arzChand/arzChand.setting'
 import { WeatherSetting } from './widgets/weather/weather.setting'
 
 function App() {
@@ -196,7 +196,7 @@ function App() {
                   </Tab>
                 ))}
               </TabsHeader>
-              <TabsBody className="p-2 w-screen h-screen">
+              <TabsBody className="w-screen">
                 {data.map(({ value, element, isExit }) =>
                   isExit ? (
                     <TabPanel key={value} value={value}>
@@ -227,7 +227,7 @@ function App() {
                       </div>
                     </TabPanel>
                   ) : (
-                    <TabPanel key={value} value={value}>
+                    <TabPanel key={value} value={value} className="h-screen">
                       {element}
                     </TabPanel>
                   )

@@ -84,7 +84,7 @@ export function WeatherSetting() {
   if (!setting) return null
   return (
     <>
-      <div className="mt-2 justify-around  not-moveable font-[Vazir]">
+      <div className="p-2 mt-2 h-full not-moveable font-[Vazir]">
         <div className="flex flex-col gap-3">
           <div className="flex flex-row items-center justify-between w-full gap-2">
             <Switch

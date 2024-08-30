@@ -36,7 +36,7 @@ export function AppSetting() {
   ]
   return (
     <>
-      <div className="mt-2 justify-around  not-moveable font-[Vazir]">
+      <div className="p-2 mt-2 h-full not-moveable font-[Vazir]">
         <div className="w-full px-5 text-right not-moveable " dir="rtl">
           <div className="flex flex-col dark:text-gray-400 text-gray-600">
             تم
