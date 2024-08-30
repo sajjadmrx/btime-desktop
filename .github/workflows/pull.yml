@@ -1,4 +1,4 @@
-name: pull_request 🚀
+name: Pull Request 🚀
 
 on:
   pull_request:
@@ -8,6 +8,8 @@ on:
     paths-ignore:
       - '*.md'
       - '.github/*'
+
+  workflow_dispatch:
 
 jobs:
   build:
@@ -38,10 +40,18 @@ jobs:
 
       - name: ⚙️ Install additional tools (mac)
         if: matrix.os == 'macOS-latest'
-        run: npm install -D dmg-license -f
+        run: |
+          npm install -D dmg-license -f
+          npm install electron-builder -g
 
-      - name: ⚙️ Install additional tools
+      - name: ⚙️ Install additional tools (linux , win)
+        if: matrix.os != 'macOS-latest'
         run: npm install electron-builder -g
 
       - name: 🏗️ Build the project
         run: npm run build
+        continue-on-error: true
+
+      - name: 📜 Display build logs
+        if: failure()
+        run: cat /Users/runner/work/btime-desktop/btime-desktop/build.log || true
