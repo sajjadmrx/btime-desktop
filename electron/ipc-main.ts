@@ -17,7 +17,6 @@ export function initIpcMain() {
   })
 
   ipcMain.on('open-url', (event, url: string) => {
-    console.log('open-url', url)
     shell.openExternal(url)
   })
 }

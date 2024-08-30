@@ -83,15 +83,13 @@ export function AboutUs() {
               </h1>
               <div className="flex flex-row gap-2 flex-wrap h-20 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-500 dark:scrollbar-track-gray-300">
                 {sponsores.map((sponsor, index) => (
-                  <a
+                  <div
                     key={index}
-                    href={sponsor.url}
-                    target="_blank"
-                    rel="noreferrer"
                     className="hover:underline text-blue-500"
+                    onClick={() => window.ipcMain.openUrl(sponsor.url)}
                   >
                     {sponsor.description}
-                  </a>
+                  </div>
                 ))}
               </div>
             </div>
