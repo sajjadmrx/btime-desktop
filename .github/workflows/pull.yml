@@ -9,8 +9,6 @@ on:
       - '*.md'
       - '.github/*'
 
-  workflow_dispatch:
-
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -41,8 +39,13 @@ jobs:
       - name: ⚙️ Install additional tools (mac)
         if: matrix.os == 'macOS-latest'
         run: |
+          brew install python@3.11 python-setuptools
+          brew install libtool automake autoconf
+          sudo xcode-select --reset
+          npm install -g node-gyp
           npm install -D dmg-license -f
           npm install electron-builder -g
+
 
       - name: ⚙️ Install additional tools (linux , win)
         if: matrix.os != 'macOS-latest'
@@ -50,8 +53,3 @@ jobs:
 
       - name: 🏗️ Build the project
         run: npm run build
-        continue-on-error: true
-
-      - name: 📜 Display build logs
-        if: failure()
-        run: cat /Users/runner/work/btime-desktop/btime-desktop/build.log || true
