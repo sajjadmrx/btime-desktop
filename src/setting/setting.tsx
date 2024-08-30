@@ -11,7 +11,7 @@ import {
 } from '@material-tailwind/react'
 
 import { useEffect } from 'react'
-import { BtimeSetting } from './widgets/btime.setting'
+import { BtimeSetting } from './widgets/btime/btime.setting'
 import { NerkhYabSetting } from './widgets/nerkhYab.setting'
 import { AppSetting } from './widgets/setting/app.setting'
 import { ArzChandSetting } from './widgets/arzChand.setting'

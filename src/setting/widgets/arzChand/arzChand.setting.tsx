@@ -1,7 +1,7 @@
 import { Checkbox, Switch, Typography } from '@material-tailwind/react'
 import { ArzChandSettingStore, widgetKey } from 'electron/store'
 import { useEffect, useState } from 'react'
-import { getSupportedCurrencies, SupportedCurrencies } from '../../api/api'
+import { getSupportedCurrencies, SupportedCurrencies } from '../../../api/api'
 import Select from 'react-tailwindcss-select'
 
 export function ArzChandSetting() {
