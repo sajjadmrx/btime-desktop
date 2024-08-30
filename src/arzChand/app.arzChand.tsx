@@ -4,10 +4,10 @@ import { widgetKey } from 'electron/store'
 import { extractMainColorFromImage } from '../utils/colorUtils'
 
 function App() {
-  // const [loading, setLoading] = useState(true)
   const [currencies, setCurrencies] = useState<
     (CurrencyData & { imgColor; code })[]
   >([])
+  const [hoveredCurrency, setHoveredCurrency] = useState<boolean>(null)
 
   useEffect(() => {
     const handleColorSchemeChange = (e) => {
@@ -74,22 +74,25 @@ function App() {
   }, [])
 
   return (
-    <div className="h-screen w-screen overflow-hidden">
-      <div className="moveable py-3 px-0 h-full">
-        <div className="flex flex-col gap-6 h-full justify-around items-center">
+    <div className="moveable h-screen w-screen overflow-hidden">
+      <div className="h-full">
+        <div className="flex flex-col p-2 h-full  items-center">
           <div
-            className=" flex flex-col items-center justify-around w-full px-2 gap-5 h-64"
+            className="flex flex-col items-center w-full px-2  h-64 overflow-y-scroll
+            scrollbar-thin not-moveable"
             style={{ maxHeight: '80vh' }}
             dir="rtl"
+            onMouseEnter={() => setHoveredCurrency(true)}
+            onMouseLeave={() => setHoveredCurrency(false)}
           >
             {currencies.map((currency, index) => (
               <div
                 key={index}
-                className="flex flex-row items-center justify-around w-full flex-wrap gap-2 "
+                className="flex flex-row items-center  justify-around  w-full flex-wrap gap-2"
               >
-                <div className="flex flex-row gap-1 w-52 justify items-end truncate">
+                <div className="flex-1 flex flex-row gap-1 w-52 justify items-end truncate ">
                   <div className="text-[.9rem] flex flex-col text-gray-600 text-gray-trasnparent  dark:text-[#eee] truncate">
-                    <div className="flex flex-row w-52 items-center justify-end mt-1 p-2 rounded-full  ">
+                    <div className="flex-1 flex flex-row w-52 items-center justify-end mt-1 p-2 rounded-full truncate ">
                       <div>
                         <div
                           className={`w-8 h-8 relative  flex rounded-full overflow-hidden`}
@@ -98,14 +101,14 @@ function App() {
                             boxShadow: `0px 0px 4px 1px ${currency.imgColor}`,
                           }}
                         >
-                          <img src={currency.icon} className="object-center" />
+                          <img src={currency.icon} className="object-cover" />
                         </div>
                       </div>
                       <p className="mr-3 truncate w-40">{currency.name}</p>
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col justify items-end truncate">
+                <div className="flex-2 flex flex-col justify items-end truncate ">
                   <p className="text-[1rem] text-gray-600 text-gray-trasnparent dark:text-[#d3d3d3]">
                     {currency.todyPrice.toLocaleString()}
                   </p>
@@ -119,6 +122,15 @@ function App() {
               </div>
             ))}
           </div>
+          {hoveredCurrency && (
+            <div
+              className="text-gray-600 text-gray-trasnparent dark:text-[#cbc9c9] font-light text-xs mt-2 transition-all duration-300 ease-in-out px-5"
+              dir="rtl"
+            >
+              برای جابجایی این ویجت، این قسمت را کلیک کرده و نگه دارید و سپس به
+              مکان مورد نظر بکشید
+            </div>
+          )}
         </div>
       </div>
     </div>
