@@ -59,6 +59,7 @@ async function onAppReady() {
   const nerkhStore = store.get(widgetKey.NerkhYab)
   const btimeStore = store.get(widgetKey.BTime)
   const arzChandStore = store.get(widgetKey.ArzChand)
+  const weatherStore = store.get(widgetKey.Weather)
 
   // Btime widget
   if (btimeStore.enable) {
@@ -121,6 +122,28 @@ async function onAppReady() {
     onResized(arzChandWindow)
     if (!mainWin) {
       mainWin = arzChandWindow
+    }
+  }
+
+  // Weather widget
+  if (weatherStore.enable) {
+    const weatherWindow = await createWindow({
+      height: weatherStore.bounds.height,
+      minWidth: 183,
+      minHeight: 203,
+      width: weatherStore.bounds.width,
+      x: weatherStore.bounds.x,
+      y: weatherStore.bounds.y,
+      title: widgetKey.Weather,
+      html: 'weather.html',
+      devTools: true,
+      alwaysOnTop: weatherStore.alwaysOnTop,
+      reziable: true,
+    })
+    onMoved(weatherWindow)
+    onResized(weatherWindow)
+    if (!mainWin) {
+      mainWin = weatherWindow
     }
   }
 
@@ -291,7 +314,15 @@ function getContextMenu() {
   return contextMenu
 }
 
-async function createSettingWindow() {
+export async function createSettingWindow() {
+  const isExist = BrowserWindow.getAllWindows().find(
+    (win) => win.getTitle() === 'Setting'
+  )
+  if (isExist) {
+    isExist.show()
+    return isExist
+  }
+
   return await createWindow({
     height: 432,
     width: 595,

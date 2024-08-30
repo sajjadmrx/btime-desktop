@@ -16,6 +16,7 @@ export default defineConfig(() => {
           rate: path.join(__dirname, './html/rate.html'),
           setting: path.join(__dirname, './html/setting.html'),
           arzchand: path.join(__dirname, './html/arzchand.html'),
+          weather: path.join(__dirname, './html/weather.html'),
         },
       },
     },
@@ -33,6 +34,5 @@ export default defineConfig(() => {
       renderer(),
     ],
     server: {},
-    define: {},
   }
 })

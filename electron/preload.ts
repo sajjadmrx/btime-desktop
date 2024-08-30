@@ -134,6 +134,7 @@ export const ipcPreload = {
   reOpen: () => ipcRenderer.send('reOpen'),
   changeTheme: (theme: StoreKey['theme']) =>
     ipcRenderer.send('changeTheme', theme),
+  openSettingWindow: () => ipcRenderer.send('openSettingWindow'),
 }
 
 contextBridge.exposeInMainWorld('store', storePreload)

@@ -5,6 +5,7 @@ export enum widgetKey {
   NerkhYab = 'NerkhYab',
   BTime = 'BTime',
   ArzChand = 'ArzChand',
+  Weather = 'Weather',
 }
 
 export interface windowSettings {
@@ -28,12 +29,21 @@ export interface ArzChandSettingStore extends windowSettings {
   currencies: string[]
 }
 
+export interface WeatherSettingStore extends windowSettings {
+  city: {
+    lat: number
+    lon: number
+    name: string
+  }
+}
+
 export type Theme = 'system' | 'light' | 'dark'
 
 export type StoreKey = {
   [widgetKey.BTime]: BtimeSettingStore
   [widgetKey.NerkhYab]: NerkhYabSettingStore
   [widgetKey.ArzChand]: ArzChandSettingStore
+  [widgetKey.Weather]: WeatherSettingStore
   startup: boolean
   theme: Theme
 }
@@ -73,6 +83,18 @@ export const store = new electronStore<StoreKey>({
       alwaysOnTop: false,
       transparentStatus: false,
       currencies: ['usd', 'eur'],
+    },
+    Weather: {
+      enable: false,
+      bounds: {
+        x: 0,
+        y: 0,
+        width: 183,
+        height: 203,
+      },
+      alwaysOnTop: false,
+      transparentStatus: false,
+      city: null,
     },
     startup: true,
     theme: 'system',

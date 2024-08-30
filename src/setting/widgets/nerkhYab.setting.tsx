@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import {
   getSupportedCurrencies,
   SupportedCurrencies,
-} from '../../api/nerkh.api'
+} from '../../api/api'
 
 export function NerkhYabSetting() {
   const [setting, setSetting] = useState<NerkhYabSettingStore>(null)

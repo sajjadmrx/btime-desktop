@@ -15,6 +15,7 @@ import { BtimeSetting } from './widgets/btime.setting'
 import { NerkhYabSetting } from './widgets/nerkhYab.setting'
 import { AppSetting } from './widgets/setting/app.setting'
 import { ArzChandSetting } from './widgets/arzChand.setting'
+import { WeatherSetting } from './widgets/weather/weather.setting'
 
 function App() {
   useEffect(() => {
@@ -102,6 +103,27 @@ function App() {
         </svg>
       ),
       element: <ArzChandSetting />,
+    },
+    {
+      label: 'ویجت آب و هوا',
+      value: 'weather',
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-4 dark:text-[#e8e7e7] text-gray-600"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      ),
+      element: <WeatherSetting />,
     },
     {
       label: 'تنظیمات کلی',

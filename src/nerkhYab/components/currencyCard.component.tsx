@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CurrencyData, getRateByCurrency } from '../../api/nerkh.api'
+import { CurrencyData, getRateByCurrency } from '../../api/api'
 import { widgetKey } from 'electron/store'
 import { extractMainColorFromImage } from '../../utils/colorUtils'
 

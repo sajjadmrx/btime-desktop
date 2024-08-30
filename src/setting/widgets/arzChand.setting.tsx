@@ -1,10 +1,7 @@
 import { Checkbox, Switch, Typography } from '@material-tailwind/react'
 import { ArzChandSettingStore, widgetKey } from 'electron/store'
 import { useEffect, useState } from 'react'
-import {
-  getSupportedCurrencies,
-  SupportedCurrencies,
-} from '../../api/nerkh.api'
+import { getSupportedCurrencies, SupportedCurrencies } from '../../api/api'
 import Select from 'react-tailwindcss-select'
 
 export function ArzChandSetting() {
@@ -236,7 +233,7 @@ const MultiSelectDropdown = ({
       classNames={{
         menu: 'dark:text-gray-500 text-gray-600 dark:bg-[#2d2d2d] bg-white',
         menuButton: ({ isDisabled }) =>
-          `dark:text-gray-200 text-gray-600 bg-gray-200 dark:bg-[#2d2d2d] h-12 rounded w-full ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'} mt-2 pr-1`,
+          `dark:text-gray-200 text-gray-600 bg-gray-200 dark:bg-[#3e3e3e] h-12 rounded w-full ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'} mt-2 pr-1`,
         tagItem() {
           return `dark:bg-gray-500/20 dark:text-gray-500 hover:text-gray-600 bg-gray-300  h-8 rounded-full flex items-center justify-center px-2 `
         },
