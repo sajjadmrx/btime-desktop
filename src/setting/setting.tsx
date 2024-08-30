@@ -11,11 +11,11 @@ import {
 } from '@material-tailwind/react'
 
 import { useEffect } from 'react'
-import { BtimeSetting } from './widgets/btime/btime.setting'
-import { NerkhYabSetting } from './widgets/nerkhyab/nerkhYab.setting'
-import { AppSetting } from './widgets/setting/app.setting'
-import { ArzChandSetting } from './widgets/arzChand/arzChand.setting'
-import { WeatherSetting } from './widgets/weather/weather.setting'
+import { BtimeSetting } from './pages/btime/btime.setting'
+import { NerkhYabSetting } from './pages/nerkhyab/nerkhYab.setting'
+import { AppSetting } from './pages/setting/app.setting'
+import { ArzChandSetting } from './pages/arzChand/arzChand.setting'
+import { WeatherSetting } from './pages/weather/weather.setting'
 
 function App() {
   useEffect(() => {
