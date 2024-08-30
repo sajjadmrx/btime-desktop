@@ -70,7 +70,7 @@ function App() {
             {weather ? (
               <WeatherComponent weather={weather} isDarkMode={isDarkMode} />
             ) : weatherStore.city ? (
-              <div className="flex flex-col items-center justify-center w-full h-64">
+              <div className="flex flex-col items-center justify-center w-full h-64 text-gray-600 dark:text-[#eee] font-light text-center  rounded-md p-2">
                 لطفا صبر کنید ...
               </div>
             ) : (
