@@ -2,16 +2,19 @@ import { useEffect, useState } from 'react'
 import { getWeatherByLatLon } from '../api/api'
 import { WeatherResponse } from '../api/weather.interface'
 import ms from 'ms'
-import { extractMainColorFromImage } from '../utils/colorUtils'
 import { widgetKey } from '../../electron/store'
 import { WeatherComponent } from './components/weather-card.component'
 
 function App() {
   const [weather, setWeather] = useState<WeatherResponse>(null)
   const weatherStore = window.store.get('Weather' as widgetKey.Weather)
+  const [isDarkMode, setIsDarkMode] = useState(
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+  )
 
   useEffect(() => {
     const handleColorSchemeChange = (e: MediaQueryListEvent) => {
+      setIsDarkMode(e.matches)
       document.documentElement.classList.remove('dark')
       if (e.matches) {
         document.documentElement.classList.add('dark')
@@ -65,7 +68,7 @@ function App() {
             dir="rtl"
           >
             {weather ? (
-              <WeatherComponent weather={weather} />
+              <WeatherComponent weather={weather} isDarkMode={isDarkMode} />
             ) : weatherStore.city ? (
               <div className="flex flex-col items-center justify-center w-full h-64">
                 لطفا صبر کنید ...
