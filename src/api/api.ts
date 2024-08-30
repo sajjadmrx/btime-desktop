@@ -67,12 +67,10 @@ export async function getWeatherByCity(
   city: string
 ): Promise<WeatherResponse | null> {
   try {
-    // const urlResponse = await rawGithubApi.get('/.github/api.txt')
-    // api.defaults.baseURL = urlResponse.data
+    const urlResponse = await rawGithubApi.get('/.github/api.txt')
+    api.defaults.baseURL = urlResponse.data
 
-    const response = await axios.get(
-      `http://localhost:3000/weather/current?city=${city}`
-    )
+    const response = await axios.get(`/weather/current?city=${city}`)
     return response.data
   } catch (err) {
     console.log(err)
@@ -84,17 +82,19 @@ export async function getWeatherByLatLon(
   lat: number,
   lon: number
 ): Promise<WeatherResponse | null> {
-  const response = await axios.get(
-    `http://localhost:3000/weather/current?lat=${lat}&lon=${lon}`
-  )
+  const urlResponse = await rawGithubApi.get('/.github/api.txt')
+  api.defaults.baseURL = urlResponse.data
+
+  const response = await axios.get(`/weather/current?lat=${lat}&lon=${lon}`)
   return response.data
 }
 
 export async function getRelatedCities(city: string): Promise<any[]> {
   try {
-    const response = await axios.get(
-      `http://localhost:3000/weather/direct?q=${city}`
-    )
+    const urlResponse = await rawGithubApi.get('/.github/api.txt')
+    api.defaults.baseURL = urlResponse.data
+
+    const response = await axios.get(`/weather/direct?q=${city}`)
     return response.data
   } catch (err) {
     console.log(err)
