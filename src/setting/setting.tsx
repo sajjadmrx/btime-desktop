@@ -16,6 +16,7 @@ import { NerkhYabSetting } from './pages/nerkhyab/nerkhYab.setting'
 import { AppSetting } from './pages/setting/app.setting'
 import { ArzChandSetting } from './pages/arzChand/arzChand.setting'
 import { WeatherSetting } from './pages/weather/weather.setting'
+import { AboutUs } from './pages/about-us/aboutUs'
 
 function App() {
   useEffect(() => {
@@ -147,6 +148,32 @@ function App() {
       element: <AppSetting />,
     },
     {
+      label: 'درباره ما',
+      value: 'about',
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-4 dark:text-[#e8e7e7] text-gray-600"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 14l9-5-9-5-9 5 9 5z"
+          />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 14l9-5-9-5-9 5 9 5z"
+          />
+        </svg>
+      ),
+      element: <AboutUs />,
+    },
+    {
       label: 'خروج',
       value: 'ts',
       icon: (
@@ -176,7 +203,7 @@ function App() {
           <div className="flex flex-row h-screen">
             <Tabs value="btime" orientation="vertical">
               <TabsHeader
-                className="w-36 gap-10 h-full not-moveable dark:bg-[#1d1d1d5b] bg-white py-5"
+                className="w-36 h-full not-moveable dark:bg-[#1d1d1d5b] bg-white py-5"
                 indicatorProps={{
                   className: 'bg-white dark:bg-[#1d1d1d]',
                 }}
@@ -185,7 +212,7 @@ function App() {
                   <Tab
                     key={value}
                     value={value}
-                    className="hover:bg-gray-100 transition-colors duration-200 rounded dark:hover:bg-[#1d1d1d]"
+                    className="hover:bg-gray-100 mt-2 transition-colors duration-200 rounded dark:hover:bg-[#1d1d1d]"
                   >
                     <div className="flex flex-row gap-2 items-center">
                       {icon}

@@ -40,7 +40,6 @@ function App() {
 
   useEffect(() => {
     const fetchWeather = () => {
-      console.log(weatherStore.city)
       getWeatherByLatLon(weatherStore.city.lat, weatherStore.city.lon)
         .then((data) => {
           if (!data) return

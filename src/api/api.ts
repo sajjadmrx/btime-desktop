@@ -70,7 +70,7 @@ export async function getWeatherByCity(
     const urlResponse = await rawGithubApi.get('/.github/api.txt')
     api.defaults.baseURL = urlResponse.data
 
-    const response = await axios.get(`/weather/current?city=${city}`)
+    const response = await api.get(`/weather/current?city=${city}`)
     return response.data
   } catch (err) {
     console.log(err)
@@ -85,7 +85,7 @@ export async function getWeatherByLatLon(
   const urlResponse = await rawGithubApi.get('/.github/api.txt')
   api.defaults.baseURL = urlResponse.data
 
-  const response = await axios.get(`/weather/current?lat=${lat}&lon=${lon}`)
+  const response = await api.get(`/weather/current?lat=${lat}&lon=${lon}`)
   return response.data
 }
 
@@ -94,10 +94,18 @@ export async function getRelatedCities(city: string): Promise<any[]> {
     const urlResponse = await rawGithubApi.get('/.github/api.txt')
     api.defaults.baseURL = urlResponse.data
 
-    const response = await axios.get(`/weather/direct?q=${city}`)
+    const response = await api.get(`/weather/direct?q=${city}`)
     return response.data
   } catch (err) {
     console.log(err)
     return []
   }
+}
+
+export async function getSponsors() {
+  const urlResponse = await rawGithubApi.get('/.github/api.txt')
+  api.defaults.baseURL = urlResponse.data
+
+  const response = await api.get('/sponsors')
+  return response.data
 }

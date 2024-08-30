@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import pkg from './package.json'
 import path from 'node:path'
 import electron from 'vite-plugin-electron/simple'
 import react from '@vitejs/plugin-react'
@@ -34,5 +35,8 @@ export default defineConfig(() => {
       renderer(),
     ],
     server: {},
+    define: {
+      'import.meta.env.PACKAGE_VERSION': JSON.stringify(pkg.version),
+    },
   }
 })
