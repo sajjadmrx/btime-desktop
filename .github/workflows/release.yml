@@ -77,6 +77,9 @@ jobs:
     - name: Update node-gyp
       run: npm install -g node-gyp
 
+    - name: Install dmglicense
+      run: npm install -g dmg-license
+
     - name: Install dependencies
       run: npm install
 
