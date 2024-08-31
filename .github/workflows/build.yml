@@ -1,28 +1,37 @@
-name: BuildCode
+name: BuildCode 🚀
 
 on:
   push:
     paths-ignore:
       - '*.yml'
       - '.github/*'
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Node v18
+      - name: 🔧 Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: npm
+          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm install
+      - name: 📦 Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-      - name: Install electron-builder
-        run: npm i electron-builder -g
+      - name: 📚 Install dependencies
+        run: npm ci
 
-      - name: Build
+      - name: ⚙️ Install electron-builder globally
+        run: npm install -g electron-builder
+
+      - name: 🏗️ Build the project
         run: npm run build:ts
