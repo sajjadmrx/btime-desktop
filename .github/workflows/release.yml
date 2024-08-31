@@ -1,4 +1,5 @@
-name: Release
+name: Release 🚀
+
 on:
   push:
     branches: ["main"]
@@ -6,84 +7,62 @@ on:
       - "README.md"
       - "README-*.md"
       - ".github/ISSUE_TEMPLATE/*"
+
 jobs:
-  publish_on_linux:
-    runs-on: ubuntu-latest
+  publish:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Node v20
+      - name: 🔧 Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: npm
+          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm install
-      
-      - name: Install electron-builder
-        run: npm i electron-builder -g
-
-      - name: Publish
-        env:
-          GH_TOKEN: ${{ secrets.TOKEN }}
-        run: npm run publish:linux
-  publish_on_win:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Install Node v20
-        uses: actions/setup-node@v3
+      - name: 📦 Cache node_modules
+        uses: actions/cache@v3
         with:
-          node-version: 20
-          cache: npm
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-      - name: Install dependencies
-        run: npm install
+      - name: 📚 Install dependencies
+        run: npm ci
 
-      - name: Install electron-builder
-        run: npm i electron-builder -g
+      - name: ⚙️ Install additional tools (mac)
+        if: matrix.os == 'macOS-latest'
+        run: |  
+            brew install python@3.11 python-setuptools
+            brew install libtool automake autoconf
+            sudo xcode-select --reset
+            npm install -g node-gyp
 
-      - name: Publish
+      - name: 🚀 Install electron-builder
+        run: npm install -g electron-builder
+
+      - name: 🏗️ Publish the application (win)
+        if: matrix.os == 'windows-latest'
         env:
           GH_TOKEN: ${{ secrets.TOKEN }}
         run: npm run publish:win
-  publish_on_macos:
-    runs-on: macOS-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
 
-    - name: Install Node v20
-      uses: actions/setup-node@v3
-      with:
-        node-version: 20
-        cache: npm
+      - name: 🏗️ Publish the application (linux)
+        if: matrix.os == 'ubuntu-latest'
+        env:
+          GH_TOKEN: ${{ secrets.TOKEN }}
+        run: npm run publish:linux
 
-    - name: Install Python
-      run: brew install python@3.11
-    
-    - name: "Install Python setuptools"
-      run: brew install python-setuptools
+      - name: 🏗️ Publish the application (mac)
+        if: matrix.os == 'macOS-latest'
+        env:
+          GH_TOKEN: ${{ secrets.TOKEN }}
+        run: npm run publish:mac
+        
+            
 
-    - name: Install Build Tools
-      run: |
-        brew install libtool automake autoconf
-        sudo xcode-select --reset
-
-    - name: Update node-gyp
-      run: npm install -g node-gyp
-
-    - name: Install dependencies
-      run: npm install
-
-    - name: Install electron-builder
-      run: npm i electron-builder -g
-
-    - name: Publish
-      env:
-        GH_TOKEN: ${{ secrets.TOKEN }}
-      run: npm run publish:mac

@@ -1,4 +1,5 @@
-name: pull_request
+name: Pull Request 🚀
+
 on:
   pull_request:
     types:
@@ -7,67 +8,48 @@ on:
     paths-ignore:
       - '*.md'
       - '.github/*'
+
 jobs:
-  build_on_linux:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Node v18
+      - name: 🔧 Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: npm
+          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Install electron-builder
-        run: npm i electron-builder -g
-
-      - name: build
-        run: npm run build
-  build_on_win:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Install Node v18
-        uses: actions/setup-node@v3
+      - name: 📦 Cache node_modules
+        uses: actions/cache@v3
         with:
-          node-version: 18
-          cache: npm
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-      - name: Install dependencies
+      - name: 📚 Install dependencies
         run: npm install
 
-      - name: Install electron-builder
-        run: npm i electron-builder -g
+      - name: ⚙️ Install additional tools (mac)
+        if: matrix.os == 'macOS-latest'
+        run: |
+          brew install python@3.11 python-setuptools
+          brew install libtool automake autoconf
+          sudo xcode-select --reset
+          npm install -g node-gyp
+          npm install -D dmg-license -f
+          npm install electron-builder -g
 
-      - name: build
-        run: npm run build
-  build_on_macos:
-    runs-on: macOS-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
 
-      - name: Install Node v18
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: npm
+      - name: ⚙️ Install additional tools (linux , win)
+        if: matrix.os != 'macOS-latest'
+        run: npm install electron-builder -g
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Install dmg-license
-        run: npm i dmg-license
-
-      - name: Install electron-builder
-        run: npm i electron-builder -g
-
-      - name: build
+      - name: 🏗️ Build the project
         run: npm run build
