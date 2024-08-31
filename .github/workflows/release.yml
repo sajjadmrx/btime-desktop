@@ -77,11 +77,11 @@ jobs:
     - name: Update node-gyp
       run: npm install -g node-gyp
 
-    - name: Install dmglicense
-      run: npm install -g dmg-license
-
     - name: Install dependencies
       run: npm install
+
+    - name: Install dmglicense
+      run: npm install dmg-license -f
 
     - name: Install electron-builder
       run: npm i electron-builder -g
