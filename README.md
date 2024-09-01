@@ -9,14 +9,16 @@
          <img src="https://discordapp.com/api/guilds/1088561568272367777/widget.png?style=banner2" alt="total" >
     </a>
     <br/>
-<a href="https://coffeebede.com/dnschanger.github.io"><img  width=100 src="https://coffeebede.ir/DashboardTemplateV2/app-assets/images/banner/default-yellow.svg" /></a>
 <br/>
     <img src="https://img.shields.io/github/languages/top/sajjadmrx/btime-desktop" alt="languages" >
     <img src="https://img.shields.io/github/stars/sajjadmrx/btime-desktop" alt="stars">
     <img src="https://img.shields.io/github/downloads/sajjadmrx/btime-desktop/total.svg" alt="total" >
     <img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square" alt="prettier" >
     <img src="https://img.shields.io/badge/antivirus-PASS-green" alt="antivirus" >
+<br/>
+<a href="https://daramet.com/sajjadmrx"  target="_blank"><img  width=100 src="https://github.com/user-attachments/assets/60f38bfe-1353-4518-8c96-d1b9cfdfc797" /></a>
 </p>
+
 
 لیستی از ویجت ها (نمایش تاریخ، قیمت ارز، آب و هوا ) برای سیستم عامل های ویندوز،مک، لینوکس
 
