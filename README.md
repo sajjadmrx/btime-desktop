@@ -18,10 +18,10 @@
     <img src="https://img.shields.io/badge/antivirus-PASS-green" alt="antivirus" >
 </p>
 
-ویجت نمایش تاریخ و آب و هوا برای سیستم عامل های ویندوز،مک، لینوکس
+لیستی از ویجت ها (نمایش تاریخ، قیمت ارز، آب و هوا ) برای سیستم عامل های ویندوز،مک، لینوکس
 
 <p align="center">
-    <img src="https://github.com/sajjadmrx/btime-desktop/assets/66132114/de33b023-7fb3-4ada-b989-a431d39c68fa" alt="gif" >
+    <img src="https://github.com/user-attachments/assets/6c12a011-5143-4218-93b7-a363928cf31a" alt="gif" >
 </p>
 
 - [✍ معرفی](#-معرفی)
