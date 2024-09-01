@@ -68,7 +68,7 @@ export function NerkhYabSetting() {
                     color="gray"
                     className="dark:text-gray-500 text-[12px] font-[Vazir] mr-3"
                   >
-                    فعالسازی ویجت نمایش تاریخ
+                    فعالسازی ویجت نرخ یاب
                   </Typography>
                 </div>
               }

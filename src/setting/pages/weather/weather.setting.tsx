@@ -108,7 +108,7 @@ export function WeatherSetting() {
                     color="gray"
                     className="dark:text-gray-500 text-[12px] font-[Vazir] mr-3"
                   >
-                    فعالسازی ویجت نمایش تاریخ
+                    فعالسازی ویجت آب و هوا
                   </Typography>
                 </div>
               }
