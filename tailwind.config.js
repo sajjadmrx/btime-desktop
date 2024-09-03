@@ -8,12 +8,10 @@ module.exports = withMT({
   darkMode: 'class',
   theme: {
     screens: {
-      xs: '200px',
-      sm: '226px',
-      md: '300px',
-      lg: '400px',
-      xl: '500px',
-      '2xl': '600px',
+      xs: { min: '0px', max: '200px' },
+      sm: { min: '200px', max: '400px' },
+      md: { min: '400px', max: '600px' },
+      lg: { min: '600px' },
     },
     extend: {
       colors: {},
