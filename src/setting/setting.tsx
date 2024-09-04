@@ -204,7 +204,7 @@ function App() {
   return (
     <>
       <div className="h-screen w-screen  moveable overflow-hidden ">
-        <div className="w-full h-7 flex dark:bg-[#14141495]">
+        <div className="w-full h-7 flex dark:bg-[#14141495] bg-white/65">
           <button
             className="w-7 h-7 ml-5 flex items-center not-moveable group justify-center hover:bg-red-400 dark:hover:bg-[#b94a4aad] transition-colors duration-200 rounded
             "
