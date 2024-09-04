@@ -41,6 +41,11 @@ function App() {
     }
   }, [])
 
+  function onExitButtonClick() {
+    const x = data.find((x) => x.isExit)
+    document.querySelector(`[data-value="${x.value}"]`).click()
+  }
+
   const data = [
     {
       label: 'ویجت تاریخ',
@@ -198,70 +203,90 @@ function App() {
 
   return (
     <>
-      <div className="h-screen w-screen  moveable overflow-hidden">
-        <div className="h-full " dir="rtl">
-          <div className="flex flex-row h-screen">
-            <Tabs value="btime" orientation="vertical">
-              <TabsHeader
-                className="w-36 h-full not-moveable dark:bg-[#1d1d1d5b] bg-white py-5"
-                indicatorProps={{
-                  className: 'bg-white dark:bg-[#1d1d1d]',
-                }}
-              >
-                {data.map(({ label, value, icon }) => (
-                  <Tab
-                    key={value}
-                    value={value}
-                    className="hover:bg-gray-100 mt-2 transition-colors duration-200 rounded dark:hover:bg-[#1d1d1d]"
-                  >
-                    <div className="flex flex-row gap-2 items-center">
-                      {icon}
-                      <Typography className="font-[Vazir] font-semibold text-xs dark:text-[#e8e7e7] text-gray-600">
-                        {label}
+      <div className="h-screen w-screen  moveable overflow-hidden ">
+        <div className="w-full h-7 flex dark:bg-[#14141495]">
+          <button
+            className="w-7 h-7 ml-5 flex items-center not-moveable group justify-center hover:bg-red-400 dark:hover:bg-[#b94a4aad] transition-colors duration-200 rounded
+            "
+            onClick={() => onExitButtonClick()}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-4 dark:text-[#9d9d9d] text-gray-600 group-hover:text-gray-100"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+        <div className="flex flex-row h-full pb-5" dir="rtl">
+          <Tabs value="btime" orientation="vertical">
+            <TabsHeader
+              className="w-36 h-full not-moveable dark:bg-[#1d1d1d5b] rounded-none  bg-white py-5"
+              indicatorProps={{
+                className: 'bg-white dark:bg-[#1d1d1d]',
+              }}
+            >
+              {data.map(({ label, value, icon }) => (
+                <Tab
+                  key={value}
+                  value={value}
+                  className="hover:bg-gray-100 transition-colors duration-200 rounded dark:hover:bg-[#1d1d1d]"
+                >
+                  <div className="flex flex-row gap-2 items-center">
+                    {icon}
+                    <Typography className="font-[Vazir] font-semibold text-xs dark:text-[#e8e7e7] text-gray-600">
+                      {label}
+                    </Typography>
+                  </div>
+                </Tab>
+              ))}
+            </TabsHeader>
+            <TabsBody className="w-screen">
+              {data.map(({ value, element, isExit }) =>
+                isExit ? (
+                  <TabPanel key={value} value={value}>
+                    <div className="flex flex-col items-center justify-center h-full">
+                      <Typography className="font-[Vazir] font-bold text-gray-600 dark:text-[#e8e7e7]">
+                        آیا مطمئن هستید؟
                       </Typography>
-                    </div>
-                  </Tab>
-                ))}
-              </TabsHeader>
-              <TabsBody className="w-screen">
-                {data.map(({ value, element, isExit }) =>
-                  isExit ? (
-                    <TabPanel key={value} value={value}>
-                      <div className="flex flex-col items-center justify-center h-full">
-                        <Typography className="font-[Vazir] font-bold text-gray-600 dark:text-[#e8e7e7]">
-                          آیا مطمئن هستید؟
-                        </Typography>
-                        <Typography className="font-[Vazir] text-gray-600 dark:text-[#e8e7e7]">
-                          برای اعمال تغییرات نیاز به کلیک بر روی &quot;خروج و
-                          اعمال تغییرات&quot; دارید.
-                        </Typography>
+                      <Typography className="font-[Vazir] text-gray-600 dark:text-[#e8e7e7]">
+                        برای اعمال تغییرات نیاز به کلیک بر روی &quot;خروج و
+                        اعمال تغییرات&quot; دارید.
+                      </Typography>
 
-                        <div className="flex flex-row gap-4  items-center">
-                          <button
-                            className="bg-red-500 text-white font-[Vazir] font-light rounded-md px-4 py-2 mt-4 w-full transition duration-300 ease-in-out transform hover:bg-red-600 focus:bg-red-700"
-                            onClick={() => window.ipcMain.reOpen()}
-                          >
-                            خروج و اعمال تغییرات
-                          </button>
+                      <div className="flex flex-row gap-4  items-center">
+                        <button
+                          className="bg-red-500 text-white font-[Vazir] font-light rounded-md px-4 py-2 mt-4 w-full transition duration-300 ease-in-out transform hover:bg-red-600 focus:bg-red-700"
+                          onClick={() => window.ipcMain.reOpen()}
+                        >
+                          خروج و اعمال تغییرات
+                        </button>
 
-                          <button
-                            className="bg-blue-500 text-white font-[Vazir] font-light rounded-md px-4 py-2 mt-4 w-32 transition duration-300 ease-in-out transform hover:bg-blue-600 focus:bg-blue-700"
-                            onClick={() => window.close()}
-                          >
-                            انصراف
-                          </button>
-                        </div>
+                        <button
+                          className="bg-blue-500 text-white font-[Vazir] font-light rounded-md px-4 py-2 mt-4 w-32 transition duration-300 ease-in-out transform hover:bg-blue-600 focus:bg-blue-700"
+                          onClick={() => window.close()}
+                        >
+                          انصراف
+                        </button>
                       </div>
-                    </TabPanel>
-                  ) : (
-                    <TabPanel key={value} value={value} className="h-screen">
-                      {element}
-                    </TabPanel>
-                  )
-                )}
-              </TabsBody>
-            </Tabs>
-          </div>
+                    </div>
+                  </TabPanel>
+                ) : (
+                  <TabPanel key={value} value={value} className="h-screen">
+                    {element}
+                  </TabPanel>
+                )
+              )}
+            </TabsBody>
+          </Tabs>
         </div>
       </div>
     </>
