@@ -136,6 +136,8 @@ export const ipcPreload = {
     ipcRenderer.send('changeTheme', theme),
   openSettingWindow: () => ipcRenderer.send('openSettingWindow'),
   openUrl: (url: string) => ipcRenderer.send('open-url', url),
+  toggleTransparent: (windowKey: string) =>
+    ipcRenderer.send('toggle-transparent', windowKey),
 }
 
 contextBridge.exposeInMainWorld('store', storePreload)

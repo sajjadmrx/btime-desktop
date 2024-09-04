@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { getWeatherByLatLon } from '../api/api'
 import { WeatherResponse } from '../api/weather.interface'
 import ms from 'ms'
-import { widgetKey } from '../../electron/store'
 import { WeatherComponent } from './components/weather-card.component'
+import { widgetKey } from '../../shared/widgetKey'
 
 function App() {
   const [weather, setWeather] = useState<WeatherResponse>(null)

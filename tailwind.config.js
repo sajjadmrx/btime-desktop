@@ -12,6 +12,7 @@ module.exports = withMT({
       sm: { min: '200px', max: '400px' },
       md: { min: '400px', max: '600px' },
       lg: { min: '600px' },
+      'h-xs': { raw: '(max-height: 150px)' },
     },
     extend: {
       colors: {},

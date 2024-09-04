@@ -1,9 +1,10 @@
 import { Checkbox, Spinner, Switch, Typography } from '@material-tailwind/react'
-import { WeatherSettingStore, widgetKey } from 'electron/store'
+import { WeatherSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
 import { getRelatedCities } from '../../../api/api'
 import { RelatedCitiy } from './interface'
 import { RelatedCityComponent } from './relatedCity'
+import { widgetKey } from '../../../../shared/widgetKey'
 
 export function WeatherSetting() {
   const [setting, setSetting] = useState<WeatherSettingStore>(null)

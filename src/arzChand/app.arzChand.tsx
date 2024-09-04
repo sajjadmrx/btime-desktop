@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { CurrencyData, getRateByCurrency } from '../api/api'
-import { widgetKey } from 'electron/store'
 import { extractMainColorFromImage } from '../utils/colorUtils'
+import { widgetKey } from '../../shared/widgetKey'
 
 function App() {
   const [currencies, setCurrencies] = useState<

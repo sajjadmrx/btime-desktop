@@ -1,7 +1,8 @@
 import { Checkbox, Switch, Typography } from '@material-tailwind/react'
-import { NerkhYabSettingStore, widgetKey } from 'electron/store'
+import { NerkhYabSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
 import { getSupportedCurrencies, SupportedCurrencies } from '../../../api/api'
+import { widgetKey } from '../../../../shared/widgetKey'
 
 export function NerkhYabSetting() {
   const [setting, setSetting] = useState<NerkhYabSettingStore>(null)

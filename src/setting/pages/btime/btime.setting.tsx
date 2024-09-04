@@ -1,6 +1,7 @@
 import { Checkbox, Switch, Typography } from '@material-tailwind/react'
-import { BtimeSettingStore, widgetKey } from 'electron/store'
+import { BtimeSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
+import { widgetKey } from '../../../../shared/widgetKey'
 
 export function BtimeSetting() {
   const [setting, setSetting] = useState<BtimeSettingStore>(null)
@@ -20,6 +21,9 @@ export function BtimeSetting() {
     setting[key] = value
     setSetting({ ...setting })
     applyChanges()
+    if (key == 'transparentStatus') {
+      window.ipcRenderer.send('toggle-transparent', widgetKey.BTime)
+    }
   }
 
   function applyChanges() {

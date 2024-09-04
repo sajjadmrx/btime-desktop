@@ -3,16 +3,19 @@ import { useEffect, useState } from 'react'
 import { Carousel, IconButton } from '@material-tailwind/react'
 import { JalaliSlider } from './sliders/jalali/slider'
 import { GregorianSlider } from './sliders/gregorian/slider'
+import ms from 'ms'
 interface Prop {
   showArrows: boolean
 }
 export function Slider(prop: Prop) {
-  const [currentTime, setCurrentTime] = useState(moment())
+  const [currentDate, setCurrentTime] = useState(moment())
   const { showArrows } = prop
   useEffect(() => {
+    setCurrentTime(moment())
+
     const interval = setInterval(() => {
       setCurrentTime(moment())
-    }, 60000)
+    }, ms('1h')) // Update every hour
 
     return () => {
       clearInterval(interval)
@@ -100,8 +103,8 @@ export function Slider(prop: Prop) {
           </div>
         )}
       >
-        <JalaliSlider currentTime={currentTime} />
-        <GregorianSlider currentTime={currentTime} />
+        <JalaliSlider currentDate={currentDate} />
+        <GregorianSlider currentTime={currentDate} />
       </Carousel>
     </>
   )

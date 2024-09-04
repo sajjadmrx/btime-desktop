@@ -37,7 +37,7 @@ function App() {
   return (
     <>
       <div
-        className="h-screen w-screen"
+        className="h-screen w-screen overflow-hidden"
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLave}
       >

@@ -9,7 +9,7 @@ import {
   screen,
 } from 'electron'
 import path from 'node:path'
-import { store, widgetKey } from './store'
+import { store } from './store'
 import { join } from 'node:path'
 import { config } from 'dotenv'
 import { getIconPath, getPublicFilePath } from '../shared/getIconPath'
@@ -19,6 +19,7 @@ import isDev from 'electron-is-dev'
 import { release } from 'node:os'
 import { toggleStartUp } from './utils/startup.util'
 import { initIpcMain } from './ipc-main'
+import { widgetKey } from '../shared/widgetKey'
 
 config()
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
@@ -72,7 +73,7 @@ async function onAppReady() {
       y: btimeStore.bounds.y,
       title: widgetKey.BTime,
       html: 'index.html',
-      devTools: false,
+      devTools: true,
       alwaysOnTop: btimeStore.alwaysOnTop,
       reziable: true,
     })

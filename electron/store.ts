@@ -1,12 +1,5 @@
 import electronStore from 'electron-store'
-
-// type widgetKey = 'NerkhYab' | 'BTime'
-export enum widgetKey {
-  NerkhYab = 'NerkhYab',
-  BTime = 'BTime',
-  ArzChand = 'ArzChand',
-  Weather = 'Weather',
-}
+import { widgetKey } from '../shared/widgetKey'
 
 export interface windowSettings {
   bounds: {
