@@ -112,7 +112,7 @@ function ForecastComponent({ weather }: ForecastComponentProps) {
         src={weather.icon}
         className="xs:w-4 xs:h-4 sm:w-6 sm:h-6 md:w-8 md:h-w-8 lg:w-10 lg:h-10"
       />
-      <p className="text-[.60rem] w-10">
+      <p className="text-[.80rem] w-10">
         {weather.temp.toFixed(0)}
         <sup className="font-[balooTamma] text-[.50rem]">°</sup>
       </p>
