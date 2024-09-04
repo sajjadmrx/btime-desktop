@@ -17,11 +17,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 // Remove Preload scripts loading
 postMessage({ payload: 'removeLoading' }, '*')
 
-// Use contextBridge
-window.ipcRenderer.on('main-process-message', (_event, message) => {
-  console.log(message)
-})
-
 window.ipcRenderer.on('transparent_status', function (evt, message) {
   const bodyElement = document.body
   if (message.newStatus) {

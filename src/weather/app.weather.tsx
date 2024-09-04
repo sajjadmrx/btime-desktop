@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
-import { getWeatherByLatLon } from '../api/api'
-import { WeatherResponse } from '../api/weather.interface'
+import { getWeatherByLatLon, getWeatherForecastByLatLon } from '../api/api'
+import { ForecastResponse, WeatherResponse } from '../api/weather.interface'
 import ms from 'ms'
 import { WeatherComponent } from './components/weather-card.component'
 import { widgetKey } from '../../shared/widgetKey'
 
 function App() {
   const [weather, setWeather] = useState<WeatherResponse>(null)
+  const [forecast, setForecast] = useState<ForecastResponse[]>([])
   const weatherStore = window.store.get('Weather' as widgetKey.Weather)
   const [isDarkMode, setIsDarkMode] = useState(
     window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -58,6 +59,22 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+    function fetch() {
+      getWeatherForecastByLatLon(
+        weatherStore.city.lat,
+        weatherStore.city.lon
+      ).then((data) => {
+        setForecast([...new Set(data)])
+      })
+    }
+    if (weather) {
+      fetch()
+    }
+
+    return () => {}
+  }, [weather])
+
   return (
     <div className="h-screen w-screen overflow-hidden">
       <div className="moveable px-0 h-full">
@@ -67,7 +84,11 @@ function App() {
             dir="rtl"
           >
             {weather ? (
-              <WeatherComponent weather={weather} isDarkMode={isDarkMode} />
+              <WeatherComponent
+                weather={weather}
+                isDarkMode={isDarkMode}
+                forecast={forecast}
+              />
             ) : weatherStore.city ? (
               <div className="flex flex-col items-center justify-center w-full h-64 text-gray-600 dark:text-[#eee] font-light text-center  rounded-md p-2">
                 لطفا صبر کنید ...

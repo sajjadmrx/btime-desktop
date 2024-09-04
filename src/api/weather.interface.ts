@@ -26,3 +26,9 @@ export interface WeatherResponse {
     }
   }
 }
+
+export interface ForecastResponse {
+  temp: number
+  icon: string
+  date: string
+}

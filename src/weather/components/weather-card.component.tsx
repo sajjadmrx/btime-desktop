@@ -1,20 +1,39 @@
 import { useEffect, useState } from 'react'
-import { WeatherResponse } from '../../api/weather.interface'
+import { ForecastResponse, WeatherResponse } from '../../api/weather.interface'
 import { extractMainColorFromImage } from '../../utils/colorUtils'
 
 interface WeatherComponentProps {
   weather: WeatherResponse
+  forecast: ForecastResponse[]
   isDarkMode: boolean
 }
 export function WeatherComponent({
   weather,
   isDarkMode,
+  forecast,
 }: WeatherComponentProps) {
   const [iconColor, setIconColor] = useState('')
-  const isActiveTransparent =
+  const [isTransparent, setIsTransparent] = useState(
     document.body.classList.contains('transparent-active')
+  )
 
   useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsTransparent(document.body.classList.contains('transparent-active'))
+    })
+
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class'],
+    })
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
+
+  useEffect(() => {
+    console.log(forecast)
     if (weather) {
       extractMainColorFromImage(weather.weather.icon.url).then((color) => {
         setIconColor(color)
@@ -38,7 +57,7 @@ export function WeatherComponent({
             className="z-10 text-gray-trasnparent dark:text-[#eee]"
             style={{
               color:
-                isActiveTransparent && !isDarkMode
+                isTransparent && !isDarkMode
                   ? ''
                   : adjustColorBasedOnTheme(
                       iconColor,
@@ -47,7 +66,7 @@ export function WeatherComponent({
             }}
           >
             <span className="text-3xl">
-              {weather.weather.temperature.temp.toFixed(0)}
+              {Math.floor(weather.weather.temperature.temp)}
             </span>
             <sup className="font-[balooTamma] text-lg">°</sup>
           </div>
@@ -57,21 +76,10 @@ export function WeatherComponent({
         <div className="w-auto truncate font-normal text-center text-gray-600 text-gray-trasnparent dark:text-[#e7e4e4] xs:text-xs sm:text-sm">
           {weather.weather.temperature.temp_description}
         </div>
-        <div className="flex flex-row mt-2 justify-around font-light rounded-md py-2 w-40">
-          <div className="flex flex-col justify-center items-center">
-            <div className="mb-2 h-5 overflow-clip">
-              <img src="../assets/wind.png" width={20} height={20} />
-            </div>
-            <div dir="ltr">
-              {weather.weather.temperature.wind_speed.toFixed(0)} <sup>k/h</sup>
-            </div>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <div className="mb-2 h-5 overflow-clip">
-              <img src="../assets/clouds.png" width={20} height={20} />
-            </div>
-            <div>{weather.weather.temperature.clouds.toFixed(0)}%</div>
-          </div>
+        <div className="flex flex-row mt-2 justify-around font-light rounded-md py-2 xs:w-40 sm:w-52 md:w-80 lg:w-96 ">
+          {forecast.map((item, index) => {
+            return <ForecastComponent weather={item} key={index} />
+          })}
         </div>
       </div>
 
@@ -81,6 +89,33 @@ export function WeatherComponent({
           background: `linear-gradient(to bottom, ${iconColor} 0%, ${iconColor + '00'} 0%, ${iconColor} 100%)`,
         }}
       ></div>
+    </div>
+  )
+}
+interface ForecastComponentProps {
+  weather: {
+    temp: number
+    icon: string
+    date: string
+  }
+}
+function ForecastComponent({ weather }: ForecastComponentProps) {
+  const time = weather.date.split(' ')[1]
+  const h = time.split(':')[0]
+  const m = time.split(':')[1]
+  return (
+    <div className="flex flex-col items-center justify-around w-full  h-10 gap-1 p-1 sm:h-12 sm:w-16 md:h-20 md:px-4 md:w-full  lg:h-16 lg:w-60">
+      <p className="xs:text-[.60rem] sm:text-[.70rem] md:text-[.90rem] lg:text-[.90rem] xs:w-10 sm:w-14">
+        {h}:{m}
+      </p>
+      <img
+        src={weather.icon}
+        className="xs:w-4 xs:h-4 sm:w-6 sm:h-6 md:w-8 md:h-w-8 lg:w-10 lg:h-10"
+      />
+      <p className="text-[.60rem] w-10">
+        {weather.temp.toFixed(0)}
+        <sup className="font-[balooTamma] text-[.50rem]">°</sup>
+      </p>
     </div>
   )
 }

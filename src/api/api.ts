@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { WeatherResponse } from './weather.interface'
+import { ForecastResponse, WeatherResponse } from './weather.interface'
 
 const api = axios.create()
 const rawGithubApi = axios.create({
@@ -83,6 +83,20 @@ export async function getWeatherByLatLon(
 
   const response = await api.get(`/weather/current?lat=${lat}&lon=${lon}`)
   return response.data
+}
+
+export async function getWeatherForecastByLatLon(
+  lat: number,
+  lon: number
+): Promise<ForecastResponse[]> {
+  try {
+    api.defaults.baseURL = await getMainApi()
+
+    const response = await api.get(`/weather/forecast?lat=${lat}&lon=${lon}`)
+    return response.data
+  } catch {
+    return []
+  }
 }
 
 export async function getRelatedCities(city: string): Promise<any[]> {
