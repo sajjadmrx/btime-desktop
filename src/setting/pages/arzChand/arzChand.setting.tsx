@@ -33,6 +33,10 @@ export function ArzChandSetting() {
     setting[key] = value
     setSetting({ ...setting })
     applyChanges()
+
+    if (key == 'transparentStatus') {
+      window.ipcRenderer.send('toggle-transparent', widgetKey.ArzChand)
+    }
   }
 
   function applyChanges() {

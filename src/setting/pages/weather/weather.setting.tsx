@@ -26,6 +26,9 @@ export function WeatherSetting() {
     setting[key] = value
     setSetting({ ...setting })
     applyChanges()
+    if (key == 'transparentStatus') {
+      window.ipcRenderer.send('toggle-transparent', widgetKey.Weather)
+    }
   }
 
   // when click to document, close the related cities

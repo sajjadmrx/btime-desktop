@@ -31,6 +31,9 @@ export function NerkhYabSetting() {
     setting[key] = value
     setSetting({ ...setting })
     applyChanges()
+    if (key == 'transparentStatus') {
+      window.ipcRenderer.send('toggle-transparent', widgetKey.NerkhYab)
+    }
   }
 
   function applyChanges() {
