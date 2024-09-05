@@ -148,6 +148,20 @@ async function onAppReady() {
     }
   }
 
+  await createWindow({
+    height: 150,
+    width: 150,
+    minHeight: 150,
+    minWidth: 150,
+    x: 0,
+    y: 0,
+    title: 'Clock',
+    html: 'clock.html',
+    devTools: true,
+    alwaysOnTop: true,
+    reziable: true,
+  })
+
   if (!mainWin) {
     mainWin = await createSettingWindow()
   }

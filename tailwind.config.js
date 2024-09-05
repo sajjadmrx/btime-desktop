@@ -25,9 +25,24 @@ module.exports = withMT({
             opacity: '1',
           },
         },
+        'flip-top': {
+          '0%, 100%': { transform: 'rotateX(0deg)' },
+          '100%': { transform: 'rotateX(-90deg)' },
+        },
+        'flip-bottom': {
+          '0%': { transform: 'rotateX(90deg)' },
+          '100%': { transform: 'rotateX(0deg)' },
+        },
       },
       animation: {
         fadeIn: 'fadeIn 0.3s ease-in-out',
+        'flip-top':
+          'flip-top 0.3s cubic-bezier(0.455, 0.030, 0.515, 0.955) both',
+        'flip-bottom':
+          'flip-bottom 0.3s cubic-bezier(0.455, 0.030, 0.515, 0.955) both',
+      },
+      transitionDuration: {
+        900: '900ms',
       },
     },
   },
