@@ -67,7 +67,7 @@ function App() {
     fetchData()
 
     return () => {
-      setCurrencies(undefined)
+      setCurrencies([])
     }
   }, [])
 
@@ -83,7 +83,7 @@ function App() {
             onMouseEnter={() => setHoveredCurrency(true)}
             onMouseLeave={() => setHoveredCurrency(false)}
           >
-            {currencies.length
+            {currencies?.length
               ? currencies.map((currency, index) => (
                   <CurrencyComponent currency={currency} key={index} />
                 ))
