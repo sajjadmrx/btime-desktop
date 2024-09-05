@@ -125,7 +125,7 @@ function DayComponent({
   if (isHolidayDay) {
     textColor = isTransparent
       ? 'dark:text-red-400 text-gray-100/50'
-      : 'dark:text-red-400 text-gray-600/70'
+      : 'dark:text-red-400 text-red-600/70'
   }
 
   let isCurrentDayColor = isTransparent
@@ -161,7 +161,7 @@ function WeekDayComponent({ day, isTransparent, index }: WeekDayProp) {
   if (index === 6) {
     textColor = isTransparent
       ? ' dark:text-red-400 text-gray-100/40'
-      : ' dark:text-red-400 text-gray-600/70'
+      : ' dark:text-red-400 text-red-600/70'
   }
 
   return (
