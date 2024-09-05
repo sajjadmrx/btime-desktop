@@ -6,8 +6,9 @@ export function AboutUs() {
 
   useEffect(() => {
     async function fetchSponsores() {
-      const data = await getSponsors()
-      setSponsores(data)
+      getSponsors().then((data) => {
+        setSponsores(data)
+      })
     }
 
     fetchSponsores()
@@ -19,9 +20,9 @@ export function AboutUs() {
 
   return (
     <div className="p-2 mt-2 h-full flex flex-col justify-between not-moveable font-[Vazir]">
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col">
         <div className="flex flex-row items-center justify-between w-full gap-2">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col space-y-2">
             <div className="text-2xl font-bold text-gray-600 dark:text-[#c7c7c7]">
               درباره ما
             </div>
@@ -81,7 +82,7 @@ export function AboutUs() {
               <h1 className="text-xl font-bold text-gray-600 dark:text-[#c7c7c7]">
                 حامیان
               </h1>
-              <div className="flex flex-row gap-2 flex-wrap h-20 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-500 dark:scrollbar-track-gray-300">
+              <div className="flex flex-row gap-2 flex-wrap h-20  overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-500 dark:scrollbar-track-gray-300">
                 {sponsores.map((sponsor, index) => (
                   <div
                     key={index}
@@ -95,11 +96,11 @@ export function AboutUs() {
             </div>
           </div>
         </div>
+        <div className="text-xs text-gray-600 dark:text-[#c7c7c7]">
+          با تشکر از همه کسانی که تو این پروژه مشارکت دارند. ☕💚 | نسخه{' '}
+          {import.meta.env.PACKAGE_VERSION}
+        </div>
       </div>
-      <footer className="text-xs text-gray-600 dark:text-[#c7c7c7]">
-        با تشکر از همه کسانی که تو این پروژه مشارکت دارند. ☕💚 | نسخه{' '}
-        {import.meta.env.PACKAGE_VERSION}
-      </footer>
     </div>
   )
 }

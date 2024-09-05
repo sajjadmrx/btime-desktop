@@ -10,7 +10,7 @@ export function BtimeSetting() {
     const btime: BtimeSettingStore = window.store.get(
       'BTime' as widgetKey.BTime
     )
-    console.log(btime)
+
     setSetting(btime)
   }, [])
 

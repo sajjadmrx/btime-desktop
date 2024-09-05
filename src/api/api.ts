@@ -57,7 +57,7 @@ export async function getSupportedCurrencies(): Promise<SupportedCurrencies> {
     return response.data.countryFlagMapping
   } catch (err) {
     console.log(err)
-    return null
+    return {}
   }
 }
 
