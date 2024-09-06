@@ -136,6 +136,16 @@ export async function getMonthEvents(): Promise<MonthEvent[]> {
   }
 }
 
+export async function getNotifications() {
+  try {
+    api.defaults.baseURL = await getMainApi()
+    const response = await api.get('/notifications')
+    return response.data
+  } catch {
+    return null
+  }
+}
+
 async function getMainApi(): Promise<string> {
   if (import.meta.env.VITE_API) {
     return import.meta.env.VITE_API

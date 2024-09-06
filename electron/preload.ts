@@ -140,5 +140,12 @@ export const ipcPreload = {
     ipcRenderer.send('toggle-transparent', windowKey),
 }
 
+export const electronAPI = {
+  onUpdateDetails: (callback: (details: any) => void) =>
+    ipcRenderer.on('update-details', (_event, details) => callback(details)),
+}
+
 contextBridge.exposeInMainWorld('store', storePreload)
 contextBridge.exposeInMainWorld('ipcMain', ipcPreload)
+
+contextBridge.exposeInMainWorld('electronAPI', electronAPI)

@@ -39,6 +39,7 @@ export type StoreKey = {
   [widgetKey.Weather]: WeatherSettingStore
   startup: boolean
   theme: Theme
+  currenctVersion: string
 }
 export const store = new electronStore<StoreKey>({
   defaults: {
@@ -91,6 +92,7 @@ export const store = new electronStore<StoreKey>({
     },
     startup: true,
     theme: 'system',
+    currenctVersion: '1.2.0',
   },
   name: 'bTime-app-v1',
 })
