@@ -1,4 +1,10 @@
-import { Checkbox, Spinner, Switch, Typography } from '@material-tailwind/react'
+import {
+  Checkbox,
+  Slider,
+  Spinner,
+  Switch,
+  Typography,
+} from '@material-tailwind/react'
 import { WeatherSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
 import { getRelatedCities } from '../../../api/api'
@@ -10,11 +16,9 @@ export function WeatherSetting() {
   const [setting, setSetting] = useState<WeatherSettingStore>(null)
   const [relatedCities, setRelatedCities] = useState<RelatedCitiy[]>([])
   const [loading, setLoading] = useState(false)
-
   useEffect(() => {
-    const Weather: WeatherSettingStore = window.store.get(
-      'Weather' as widgetKey.Weather
-    )
+    const Weather: WeatherSettingStore = window.store.get(widgetKey.Weather)
+    Weather.borderRaduis = Weather.borderRaduis || 28
     setSetting(Weather)
     setRelatedCities([])
   }, [])
@@ -47,12 +51,13 @@ export function WeatherSetting() {
   }, [])
 
   function applyChanges() {
-    window.store.set('Weather', {
+    window.store.set(widgetKey.Weather, {
       alwaysOnTop: setting.alwaysOnTop,
       enable: setting.enable,
       transparentStatus: setting.transparentStatus,
       bounds: window.store.get('Weather' as widgetKey.Weather).bounds,
       city: setting.city,
+      borderRaduis: setting.borderRaduis,
     })
   }
 
@@ -85,10 +90,21 @@ export function WeatherSetting() {
     applyChanges()
   }
 
+  async function onSliderChange(value: number) {
+    const fixedValue = Math.floor(value)
+
+    await window.ipcRenderer.invoke(
+      'setBorderRadius',
+      widgetKey.Weather,
+      `${fixedValue}px`
+    )
+    setSettingValue('borderRaduis', fixedValue)
+  }
+
   if (!setting) return null
   return (
     <>
-      <div className="p-2 mt-2 h-full not-moveable font-[Vazir]">
+      <div className="p-2 mt-2 h-80 not-moveable font-[Vazir] overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-500 dark:scrollbar-track-gray-800">
         <div className="flex flex-col gap-3">
           <div className="flex flex-row items-center justify-between w-full gap-2">
             <Switch
@@ -180,6 +196,28 @@ export function WeatherSetting() {
                 className: '-mt-5 mr-2',
               }}
             />
+          </div>
+
+          <div className="flex flex-col justify-between w-full ">
+            <label
+              htmlFor="currency-select"
+              className="text-gray-600 dark:text-[#eee] font-semibold text-sm"
+            >
+              حاشیه ها
+            </label>
+            <div className="flex items-center gap-2 w-36 h-fit rounded px-2 py-2">
+              <Slider
+                size="md"
+                color="blue"
+                defaultValue={setting.borderRaduis}
+                onChange={(change) =>
+                  onSliderChange(Number(change.target.value))
+                }
+              />
+              <div className="flex flex-row justify-between w-full text-gray-600 dark:text-[#eee]">
+                {setting.borderRaduis}px
+              </div>
+            </div>
           </div>
 
           <div

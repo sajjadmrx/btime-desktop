@@ -1,16 +1,13 @@
-import { Checkbox, Switch, Typography } from '@material-tailwind/react'
+import { Checkbox, Slider, Switch, Typography } from '@material-tailwind/react'
 import { BtimeSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
 
 export function BtimeSetting() {
   const [setting, setSetting] = useState<BtimeSettingStore>(null)
-
   useEffect(() => {
-    const btime: BtimeSettingStore = window.store.get(
-      'BTime' as widgetKey.BTime
-    )
-
+    const btime: BtimeSettingStore = window.store.get(widgetKey.BTime)
+    btime.borderRaduis = btime.borderRaduis || 28
     setSetting(btime)
   }, [])
 
@@ -32,8 +29,21 @@ export function BtimeSetting() {
       enable: setting.enable,
       transparentStatus: setting.transparentStatus,
       bounds: window.store.get('BTime' as widgetKey.BTime).bounds,
+      borderRaduis: setting.borderRaduis,
     })
   }
+
+  async function onSliderChange(value: number) {
+    const fixedValue = Math.floor(value)
+
+    await window.ipcRenderer.invoke(
+      'setBorderRadius',
+      'BTime',
+      `${fixedValue}px`
+    )
+    setSettingValue('borderRaduis', fixedValue)
+  }
+
   if (!setting) return null
 
   return (
@@ -130,6 +140,27 @@ export function BtimeSetting() {
                 className: '-mt-5 mr-2',
               }}
             />
+          </div>
+          <div className="flex flex-col justify-between w-full gap-2">
+            <label
+              htmlFor="currency-select"
+              className="text-gray-600 dark:text-[#eee] font-semibold text-sm"
+            >
+              حاشیه ها
+            </label>
+            <div className="flex items-center gap-2 w-36 h-fit rounded px-2 py-2">
+              <Slider
+                size="md"
+                color="blue"
+                defaultValue={setting.borderRaduis}
+                onChange={(change) =>
+                  onSliderChange(Number(change.target.value))
+                }
+              />
+              <div className="flex flex-row justify-between w-full text-gray-600 dark:text-[#eee]">
+                {setting.borderRaduis}px
+              </div>
+            </div>
           </div>
         </div>
       </div>

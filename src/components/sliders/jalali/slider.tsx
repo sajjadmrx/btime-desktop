@@ -10,7 +10,7 @@ export function JalaliSlider(prop: Prop) {
 
   return (
     <div className="flex h-screen items-center justify-center flex-row-reverse overflow-hidden">
-      <div className="flex flex-col items-center justify-center gap-4 moveable  w-[40%]">
+      <div className="flex flex-col items-center justify-center gap-4 moveable w-[40%]">
         <div className="select-none text-gray-600 text-gray-trasnparent dark:text-[#eee]">
           {currentTime.locale('fa').format('dddd')}
         </div>

@@ -123,11 +123,13 @@ window.onmessage = (ev) => {
 setTimeout(removeLoading, 4999)
 
 export const storePreload = {
-  get: <T>(key: T) => store.get<T>(key as any),
+  // get: <T>(key: T & keyof StoreKey) => store.get<T>(key),
+  get: <T extends keyof StoreKey | keyof typeof widgetKey>(key: T) =>
+    store.get<T>(key as T),
   set: <T extends keyof StoreKey | keyof typeof widgetKey>(
     key: T,
-    value: StoreKey[T] | (typeof widgetKey)[T]
-  ) => store.set<T>(key, value as any),
+    value: (typeof widgetKey)[T]
+  ) => store.set<T>(key, value as T),
 }
 
 export const ipcPreload = {
@@ -138,6 +140,9 @@ export const ipcPreload = {
   openUrl: (url: string) => ipcRenderer.send('open-url', url),
   toggleTransparent: (windowKey: string) =>
     ipcRenderer.send('toggle-transparent', windowKey),
+
+  send: (channel: string, ...args: any[]) =>
+    ipcRenderer.invoke(channel, ...args),
 }
 
 export const electronAPI = {

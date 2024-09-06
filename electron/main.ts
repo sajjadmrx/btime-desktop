@@ -218,6 +218,10 @@ async function createWindow(payload: Window) {
     win.webContents.send('transparent_status', {
       newStatus: store.get(widgetKey[payload.title]).transparentStatus,
     })
+    const borderRaduis = store.get(widgetKey[payload.title]).borderRaduis
+    win.webContents.send('border-radius', {
+      raduis: borderRaduis ? `${borderRaduis}px` : '28px',
+    })
   })
 
   if (VITE_DEV_SERVER_URL) {

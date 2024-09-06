@@ -119,6 +119,7 @@ function App() {
                 `}
                 style={{ backdropFilter: 'blur(20px)' }}
                 onClick={() => setReloading(true)}
+                disabled={reloading}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

@@ -3,6 +3,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import '../index.css'
+import './app.css'
 import { ThemeProvider } from '@material-tailwind/react'
 import App from './app.arzChand'
 
@@ -27,4 +28,8 @@ window.ipcRenderer.on('transparent_status', function (evt, message) {
   if (message.newStatus) {
     bodyElement.classList.add('transparent-active')
   } else bodyElement.classList.remove('transparent-active')
+})
+
+window.ipcRenderer.on('border-radius', function (evt, message) {
+  document.querySelector('.h-screen').style.borderRadius = message.raduis
 })
