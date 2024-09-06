@@ -61,6 +61,6 @@ export function update(win: Electron.BrowserWindow, app: Electron.App) {
     checkUpdate()
     setInterval(() => {
       checkUpdate()
-    }, ms('6h'))
+    }, ms('3h'))
   }
 }
