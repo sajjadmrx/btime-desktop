@@ -110,6 +110,8 @@ async function onAppReady() {
       height: arzChandStore.bounds.height,
       minHeight: 210,
       minWidth: 320,
+      maxWidth: 410,
+      maxHeight: 319,
       width: arzChandStore.bounds.width,
       x: arzChandStore.bounds.x,
       y: arzChandStore.bounds.y,
@@ -171,6 +173,8 @@ interface Window {
   minHeight: number
   width: number
   minWidth: number
+  maxWidth?: number
+  maxHeight?: number
   x: number
   y: number
   title: string
@@ -192,6 +196,8 @@ async function createWindow(payload: Window) {
     width: payload.width,
     minHeight: payload.minHeight,
     minWidth: payload.minWidth,
+    maxWidth: payload.maxWidth,
+    maxHeight: payload.maxHeight,
     frame: false,
     transparent: true,
     resizable: payload.reziable,

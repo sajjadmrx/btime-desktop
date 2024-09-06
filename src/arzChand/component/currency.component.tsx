@@ -20,7 +20,7 @@ export function CurrencyComponent({ currency }: Prop) {
     return () => {
       fetchColor()
     }
-  }, [])
+  }, [currency?.icon])
 
   return (
     <div className="flex flex-row items-center  justify-around  w-full flex-wrap gap-2">

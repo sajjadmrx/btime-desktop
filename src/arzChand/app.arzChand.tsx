@@ -7,7 +7,11 @@ function App() {
   const [currencies, setCurrencies] = useState<
     (CurrencyData & { imgColor; code })[]
   >([])
-  const [hoveredCurrency, setHoveredCurrency] = useState<boolean>(null)
+  const [reloading, setReloading] = useState(true)
+
+  const [isTransparent, setIsTransparent] = useState<boolean>(
+    document.body.classList.contains('transparent-active')
+  )
 
   useEffect(() => {
     const handleColorSchemeChange = (e) => {
@@ -21,6 +25,13 @@ function App() {
       '(prefers-color-scheme: dark)'
     )
     handleColorSchemeChange(colorSchemeMediaQuery)
+    const observer = new MutationObserver(() => {
+      setIsTransparent(document.body.classList.contains('transparent-active'))
+    })
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class'],
+    })
 
     colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
     return () => {
@@ -28,10 +39,15 @@ function App() {
         'change',
         handleColorSchemeChange
       )
+      observer.disconnect()
     }
   }, [])
 
   useEffect(() => {
+    if (reloading) {
+      setCurrencies([])
+    }
+
     const currencyStore = window.store.get('ArzChand' as widgetKey.ArzChand)
 
     async function fetchData() {
@@ -62,14 +78,13 @@ function App() {
 
         return uniqueCurrencies
       })
+      setReloading(false)
     }
 
-    fetchData()
-
-    return () => {
-      setCurrencies([])
+    if (reloading) {
+      fetchData()
     }
-  }, [])
+  }, [reloading])
 
   return (
     <div className="moveable h-screen w-screen overflow-hidden">
@@ -80,8 +95,6 @@ function App() {
             scrollbar-thin not-moveable"
             style={{ maxHeight: '80vh' }}
             dir="rtl"
-            onMouseEnter={() => setHoveredCurrency(true)}
-            onMouseLeave={() => setHoveredCurrency(false)}
           >
             {currencies?.length
               ? currencies.map((currency, index) => (
@@ -91,15 +104,39 @@ function App() {
                   <CurrencyComponent currency={null} key={index} />
                 ))}
           </div>
-          {hoveredCurrency && (
+          {
             <div
-              className="text-gray-600 text-gray-trasnparent dark:text-[#cbc9c9] font-light text-xs mt-2 transition-all duration-300 ease-in-out px-5"
+              className="flex w-full p-2 h-10 items-center overflow-clip mt-2 transition-all duration-300 ease-in-out"
               dir="rtl"
             >
-              برای جابجایی این ویجت، این قسمت را کلیک کرده و نگه دارید و سپس به
-              مکان مورد نظر بکشید
+              <button
+                className={`w-8 h-8 not-moveable flex justify-center items-center rounded-full 
+                cursor-pointer  hover:bg-gray-500 hover:text-gray-300 dark:hover:bg-[#3c3c3c8a] dark:text-gray-400/90
+                dark:bg-transparent
+                 ${isTransparent ? 'text-gray-300' : 'text-gray-500'} 
+                bg-gray-300/20
+                ${reloading ? 'animate-spin' : 'animate-none'}
+                `}
+                style={{ backdropFilter: 'blur(20px)' }}
+                onClick={() => setReloading(true)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                  />
+                </svg>
+              </button>
             </div>
-          )}
+          }
         </div>
       </div>
     </div>
@@ -107,3 +144,4 @@ function App() {
 }
 
 export default App
+//bg-gray-400/50
