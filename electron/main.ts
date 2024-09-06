@@ -203,7 +203,7 @@ async function createWindow(payload: Window) {
     resizable: payload.reziable,
     alwaysOnTop: payload.alwaysOnTop,
     skipTaskbar: true,
-
+    fullscreenable: false,
     movable: true,
     center: true,
     x: payload.x || undefined,
