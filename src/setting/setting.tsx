@@ -293,7 +293,11 @@ function App() {
                         </button>
 
                         <button
-                          className="bg-blue-500 text-white font-[Vazir] font-light rounded-md px-4 py-2 mt-4 w-32 transition duration-300 ease-in-out transform hover:bg-blue-600 focus:bg-blue-700"
+                          className="dark:text-gray-300 text-gray-600 font-[Vazir] font-light rounded-md px-4 py-2 mt-4 w-32 transition duration-300 ease-in-out transform 
+                          hover:bg-blue-600/30
+                          hover:dark:text-gray-100
+                          hover:text-gray-100
+                          focus:bg-blue-700"
                           onClick={() => window.close()}
                         >
                           انصراف
