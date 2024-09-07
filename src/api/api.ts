@@ -10,12 +10,6 @@ export interface CurrencyData {
   name: string
   icon: string
   todyPrice: number
-  buyPercentage: number
-  rate: number
-  convertRate: number
-  priceChange: number
-  rateChange: number
-  history: History[]
 }
 
 export interface History {
