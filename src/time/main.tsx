@@ -30,7 +30,6 @@ window.ipcRenderer.on('transparent_status', function (evt, message) {
   } else bodyElement.classList.remove('transparent-active')
 })
 
-
 window.ipcRenderer.on('border-radius', function (evt, message) {
   document.querySelector('.h-screen').style.borderRadius = message.raduis
 })
