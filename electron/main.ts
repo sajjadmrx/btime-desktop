@@ -283,13 +283,13 @@ function createTray() {
 function getContextMenu() {
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: `B Time | ${app.getVersion()}`,
+      label: `Widgetify(B Time) | ${app.getVersion()}`,
       enabled: false,
       icon: icon.resize({ height: 19, width: 19 }),
     },
     {
       label: 'Settings',
-      icon: getIcon('icons/settings.png').resize({ height: 19, width: 19 }),
+      icon: getIcon('icons/setting.png').resize({ height: 19, width: 19 }),
       click: async function () {
         let settingWin = BrowserWindow.getAllWindows().find(
           (win) => win.getTitle() === 'Setting'
@@ -320,6 +320,14 @@ function getContextMenu() {
       icon: getIcon('icons/link.png').resize({ height: 19, width: 19 }),
       click: function () {
         shell.openExternal('https://github.com/sajjadmrx/btime-desktop')
+      },
+    },
+    {
+      label: 'Restart',
+      icon: getIcon('icons/restart.png'),
+      click: function () {
+        app.relaunch()
+        app.exit(0)
       },
     },
     {
