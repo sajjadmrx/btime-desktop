@@ -266,6 +266,12 @@ const MultiSelectDropdown = ({
       isMultiple={isMultiple}
       primaryColor={color}
       options={options}
+      classNames={{
+        searchBox: `w-full h-10 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`,
+        searchIcon: `hidden`,
+      }}
+      searchInputPlaceholder={'جستجو'}
+      isSearchable={true}
     />
   )
 }
