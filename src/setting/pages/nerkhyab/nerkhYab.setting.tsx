@@ -81,7 +81,7 @@ export function NerkhYabSetting() {
                   <Typography
                     variant="h5"
                     color="gray"
-                    className="dark:text-gray-500 text-[12px] font-[Vazir] mr-3"
+                    className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir] mr-3"
                   >
                     فعالسازی ویجت نرخ یاب
                   </Typography>
