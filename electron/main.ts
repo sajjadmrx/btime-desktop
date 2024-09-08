@@ -184,6 +184,14 @@ interface Window {
   reziable: boolean
 }
 async function createWindow(payload: Window) {
+  //validate x and y
+  const isValdiate = isPointWithinDisplay(payload.x, payload.y)
+  if (!isValdiate) {
+    const displays = screen.getAllDisplays()
+    const { x, y } = displays[0].workArea
+    payload.x = x
+    payload.y = y
+  }
   const win = new BrowserWindow({
     icon: getIconPath(),
     webPreferences: {
@@ -441,4 +449,19 @@ function onResized(win: BrowserWindow) {
       })
     }
   })
+}
+
+function isPointWithinDisplay(x: number, y: number) {
+  const allDisplays = screen.getAllDisplays()
+  let isValdiate = false
+
+  for (const display of allDisplays) {
+    const { x: dx, y: dy, width, height } = display.workArea
+    if (x >= dx && x < dx + width && y >= dy && y < dy + height) {
+      isValdiate = true
+      break
+    }
+  }
+
+  return isValdiate
 }
