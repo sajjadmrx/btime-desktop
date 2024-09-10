@@ -1,5 +1,4 @@
 # ✍ معرفی
-
 <p align="center">
     <img src=".github/assets/banner.png" alt="B time banner" width="600">
 </p>
@@ -23,7 +22,7 @@
 لیستی از ویجت ها (نمایش تاریخ، قیمت ارز، آب و هوا ) برای سیستم عامل های ویندوز،مک، لینوکس
 
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/6c12a011-5143-4218-93b7-a363928cf31a" alt="gif" >
+    <img src="https://github.com/user-attachments/assets/c69ea776-1f40-489e-872e-1e38bdb6b0d9" alt="gif" >
 </p>
 
 - [✍ معرفی](#-معرفی)
