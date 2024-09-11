@@ -14,7 +14,7 @@ files:
   - '!**/release'
   - '!**/*.md' # ignore md files
   - '!**/*.yml' # ignore yml files
-  - '!**/src' 
+  - '!**/src'
 asar: true
 compression: maximum
 directories:
@@ -38,10 +38,12 @@ linux:
   publish:
     - github
 mac:
-  icon: 'public/icons/icon.png'
+  icon: 'public/icons/icon.icns'
   target:
-    - dmg
-    - zip
+    - target: dmg
+      arch:
+        - x64
+        - arm64
   category: Utilities
   publish:
     - github

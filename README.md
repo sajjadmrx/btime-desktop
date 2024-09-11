@@ -1,5 +1,4 @@
 # ✍ معرفی
-
 <p align="center">
     <img src=".github/assets/banner.png" alt="B time banner" width="600">
 </p>
@@ -9,19 +8,21 @@
          <img src="https://discordapp.com/api/guilds/1088561568272367777/widget.png?style=banner2" alt="total" >
     </a>
     <br/>
-<a href="https://coffeebede.com/dnschanger.github.io"><img  width=100 src="https://coffeebede.ir/DashboardTemplateV2/app-assets/images/banner/default-yellow.svg" /></a>
 <br/>
     <img src="https://img.shields.io/github/languages/top/sajjadmrx/btime-desktop" alt="languages" >
     <img src="https://img.shields.io/github/stars/sajjadmrx/btime-desktop" alt="stars">
     <img src="https://img.shields.io/github/downloads/sajjadmrx/btime-desktop/total.svg" alt="total" >
     <img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square" alt="prettier" >
     <img src="https://img.shields.io/badge/antivirus-PASS-green" alt="antivirus" >
+<br/>
+<a href="https://daramet.com/sajjadmrx"  target="_blank"><img  width=100 src="https://github.com/user-attachments/assets/60f38bfe-1353-4518-8c96-d1b9cfdfc797" /></a>
 </p>
+
 
 لیستی از ویجت ها (نمایش تاریخ، قیمت ارز، آب و هوا ) برای سیستم عامل های ویندوز،مک، لینوکس
 
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/6c12a011-5143-4218-93b7-a363928cf31a" alt="gif" >
+    <img src="https://github.com/user-attachments/assets/c69ea776-1f40-489e-872e-1e38bdb6b0d9" alt="gif" >
 </p>
 
 - [✍ معرفی](#-معرفی)

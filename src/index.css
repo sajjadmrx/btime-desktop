@@ -85,10 +85,6 @@
   src: url('./assets/fonts/BalooTamma/BalooTamma2-Bold.ttf');
 }
 
-.h-screen {
-  border-radius: 28px;
-}
-
 body {
   font-family: Vazir;
   -webkit-user-select: none;
@@ -103,34 +99,4 @@ body {
 
 .not-moveable {
   -webkit-app-region: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  .h-screen {
-    background: #333;
-  }
-
-  body.transparent-active .h-screen {
-    background: #33333330;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  .h-screen {
-    /* background: #dddddd30; */
-    background: #ddd;
-    color: black;
-  }
-
-  body.transparent-active .h-screen {
-    background: #dddddd30;
-  }
-
-  body.transparent-active .text-gray-trasnparent {
-    color: #e0e0e0;
-  }
-
-  body.transparent-active .arrow_btn {
-    color: #e0e0e0;
-  }
 }

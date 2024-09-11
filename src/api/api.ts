@@ -10,12 +10,6 @@ export interface CurrencyData {
   name: string
   icon: string
   todyPrice: number
-  buyPercentage: number
-  rate: number
-  convertRate: number
-  priceChange: number
-  rateChange: number
-  history: History[]
 }
 
 export interface History {
@@ -133,6 +127,16 @@ export async function getMonthEvents(): Promise<MonthEvent[]> {
     return response.data
   } catch {
     return []
+  }
+}
+
+export async function getNotifications() {
+  try {
+    api.defaults.baseURL = await getMainApi()
+    const response = await api.get('/notifications')
+    return response.data
+  } catch {
+    return null
   }
 }
 

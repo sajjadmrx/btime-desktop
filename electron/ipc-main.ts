@@ -31,4 +31,37 @@ export function initIpcMain() {
       })
     }
   })
+
+  ipcMain.handle('getBorderRadius', async (event, window: string) => {
+    try {
+      const win = BrowserWindow.getAllWindows().filter(
+        (win) => win.title === window
+      )[0]
+      const color = await win.webContents.executeJavaScript(`
+ getComputedStyle(document.querySelector('.h-screen')).borderRadius
+  `)
+
+      console.log(color)
+      return color
+    } catch (error) {
+      console.error(error)
+      return ''
+    }
+  })
+
+  ipcMain.handle(
+    'setBorderRadius',
+    async (event, window: string, value: string) => {
+      const win = BrowserWindow.getAllWindows().filter(
+        (win) => win.title === window
+      )[0]
+
+      await win.webContents.executeJavaScript(
+        `
+        document.querySelector('.h-screen').style.borderRadius = '${value}'
+        `,
+        true
+      )
+    }
+  )
 }

@@ -20,7 +20,7 @@ export function CurrencyComponent({ currency }: Prop) {
     return () => {
       fetchColor()
     }
-  }, [])
+  }, [currency?.icon])
 
   return (
     <div className="flex flex-row items-center  justify-around  w-full flex-wrap gap-2">
@@ -35,7 +35,7 @@ export function CurrencyComponent({ currency }: Prop) {
                       className="absolute inset-0 h-8 w-8 rounded-full z-0"
                       style={{
                         backdropFilter: 'blur(100px)',
-                        boxShadow: `0px 0px 5px 3px ${imgColor}`,
+                        boxShadow: `0px 0px 5px 2px ${imgColor}`,
                       }}
                     ></div>
                     <img
@@ -44,7 +44,7 @@ export function CurrencyComponent({ currency }: Prop) {
                     />
                   </>
                 ) : (
-                  <div className="animate-pulse bg-gray-200 w-full h-full"></div>
+                  <div className="animate-pulse bg-gray-200 w-full h-full rounded-full"></div>
                 )}
               </div>
             </div>

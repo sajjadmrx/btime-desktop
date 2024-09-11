@@ -1,4 +1,4 @@
-import { Checkbox, Switch, Typography } from '@material-tailwind/react'
+import { Checkbox, Slider, Switch, Typography } from '@material-tailwind/react'
 import { NerkhYabSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
 import { getSupportedCurrencies, SupportedCurrencies } from '../../../api/api'
@@ -10,11 +10,9 @@ export function NerkhYabSetting() {
     useState<SupportedCurrencies>(null)
 
   useEffect(() => {
-    const NerkhYab: NerkhYabSettingStore = window.store.get(
-      'NerkhYab' as widgetKey.NerkhYab
-    )
+    const NerkhYab: NerkhYabSettingStore = window.store.get(widgetKey.NerkhYab)
     setSetting(NerkhYab)
-
+    NerkhYab.borderRaduis = NerkhYab.borderRaduis || 28
     function fetchSupportedCurrencies() {
       getSupportedCurrencies().then((data) => {
         setSupportedCurrencies(data)
@@ -37,18 +35,31 @@ export function NerkhYabSetting() {
   }
 
   function applyChanges() {
-    window.store.set('NerkhYab', {
+    window.store.set(widgetKey.NerkhYab, {
       alwaysOnTop: setting.alwaysOnTop,
       enable: setting.enable,
       transparentStatus: setting.transparentStatus,
-      bounds: window.store.get('NerkhYab' as widgetKey.NerkhYab).bounds,
+      bounds: window.store.get(widgetKey.NerkhYab).bounds,
       currencies: setting.currencies,
+      borderRaduis: setting.borderRaduis,
     })
   }
   if (!setting) return null
+
+  async function onSliderChange(value: number) {
+    const fixedValue = Math.floor(value)
+
+    await window.ipcRenderer.invoke(
+      'setBorderRadius',
+      widgetKey.NerkhYab,
+      `${fixedValue}px`
+    )
+    setSettingValue('borderRaduis', fixedValue)
+  }
+
   return (
     <>
-      <div className="p-2 mt-2 h-full not-moveable font-[Vazir]">
+      <div className="p-2 mt-2 h-80 not-moveable font-[Vazir] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-500 dark:scrollbar-track-gray-800">
         <div className="flex flex-col gap-3">
           <div className="flex flex-row items-center justify-between w-full gap-2">
             <Switch
@@ -70,7 +81,7 @@ export function NerkhYabSetting() {
                   <Typography
                     variant="h5"
                     color="gray"
-                    className="dark:text-gray-500 text-[12px] font-[Vazir] mr-3"
+                    className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir] mr-3"
                   >
                     فعالسازی ویجت نرخ یاب
                   </Typography>
@@ -173,6 +184,28 @@ export function NerkhYabSetting() {
                     </option>
                   ))}
               </select>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-between w-full ">
+            <label
+              htmlFor="currency-select"
+              className="text-gray-600 dark:text-[#eee] font-semibold text-sm"
+            >
+              حاشیه ها
+            </label>
+            <div className="flex items-center gap-2 w-36 h-fit rounded px-2 py-2">
+              <Slider
+                size="md"
+                color="blue"
+                defaultValue={setting.borderRaduis}
+                onChange={(change) =>
+                  onSliderChange(Number(change.target.value))
+                }
+              />
+              <div className="flex flex-row justify-between w-full text-gray-600 dark:text-[#eee]">
+                {setting.borderRaduis}px
+              </div>
             </div>
           </div>
         </div>

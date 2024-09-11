@@ -8,6 +8,7 @@ export interface windowSettings {
     width: number
     height: number
   }
+  borderRaduis: number
   alwaysOnTop: boolean
   transparentStatus: boolean
   enable: boolean
@@ -39,6 +40,7 @@ export type StoreKey = {
   [widgetKey.Weather]: WeatherSettingStore
   startup: boolean
   theme: Theme
+  currenctVersion: string
 }
 export const store = new electronStore<StoreKey>({
   defaults: {
@@ -50,6 +52,7 @@ export const store = new electronStore<StoreKey>({
         width: 180,
         height: 179,
       },
+      borderRaduis: 28,
       alwaysOnTop: false,
       transparentStatus: false,
     },
@@ -61,6 +64,7 @@ export const store = new electronStore<StoreKey>({
         width: 226,
         height: 134,
       },
+      borderRaduis: 28,
       alwaysOnTop: false,
       transparentStatus: false,
       currencies: ['usd'],
@@ -73,6 +77,7 @@ export const store = new electronStore<StoreKey>({
         width: 226,
         height: 134,
       },
+      borderRaduis: 28,
       alwaysOnTop: false,
       transparentStatus: false,
       currencies: ['usd', 'eur'],
@@ -85,12 +90,14 @@ export const store = new electronStore<StoreKey>({
         width: 183,
         height: 203,
       },
+      borderRaduis: 28,
       alwaysOnTop: false,
       transparentStatus: false,
       city: null,
     },
     startup: true,
     theme: 'system',
+    currenctVersion: '1.2.0',
   },
   name: 'bTime-app-v1',
 })

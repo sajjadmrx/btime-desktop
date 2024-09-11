@@ -40,7 +40,7 @@ export function GregorianCalendar() {
   }, [])
 
   return (
-    <div className="w-full max-w-96 h-full rounded-lg overflow-clip not-moveable pt-2 lg:pt-4">
+    <div className="w-full max-w-96 h-full rounded-lg overflow-clip not-moveable pt-2 lg:pt-4 px-1">
       <div className="grid grid-cols-7 space-x-2 sm:p-2 lg:space-x-4 font-[balooTamma] ">
         {weekDays.map((day, index) => (
           <WeekDayComponent
