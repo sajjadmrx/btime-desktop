@@ -30,3 +30,4 @@ dist
 .env
 dev-app-update.yml
 diff.txt
+note.md
