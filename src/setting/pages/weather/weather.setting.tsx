@@ -18,7 +18,7 @@ export function WeatherSetting() {
   const [loading, setLoading] = useState(false)
   useEffect(() => {
     const Weather: WeatherSettingStore = window.store.get(widgetKey.Weather)
-    Weather.borderRaduis = Weather.borderRaduis || 28
+    Weather.borderRadius = Weather.borderRadius || 28
     setSetting(Weather)
     setRelatedCities([])
   }, [])
@@ -57,7 +57,7 @@ export function WeatherSetting() {
       transparentStatus: setting.transparentStatus,
       bounds: window.store.get('Weather' as widgetKey.Weather).bounds,
       city: setting.city,
-      borderRaduis: setting.borderRaduis,
+      borderradius: setting.borderRadius,
     })
   }
 
@@ -98,7 +98,7 @@ export function WeatherSetting() {
       widgetKey.Weather,
       `${fixedValue}px`
     )
-    setSettingValue('borderRaduis', fixedValue)
+    setSettingValue('borderRadius', fixedValue)
   }
 
   if (!setting) return null
@@ -209,13 +209,13 @@ export function WeatherSetting() {
               <Slider
                 size="md"
                 color="blue"
-                defaultValue={setting.borderRaduis}
+                defaultValue={setting.borderRadius}
                 onChange={(change) =>
                   onSliderChange(Number(change.target.value))
                 }
               />
               <div className="flex flex-row justify-between w-full text-gray-600 dark:text-[#eee]">
-                {setting.borderRaduis}px
+                {setting.borderRadius}px
               </div>
             </div>
           </div>
@@ -249,7 +249,7 @@ export function WeatherSetting() {
               />
               {loading ? (
                 <div
-                  className="w-10 h-10  
+                  className="w-10 h-10
               absolute bottom-0 left-1 transition-all duration-300
               rounded-full z-0 flex justify-center items-center
               "
@@ -295,7 +295,7 @@ export function WeatherSetting() {
               <div
                 className="flex flex-row flex-wrap absolute not-moveable
                  w-full gap-2
-                  border-2 border-gray-200 dark:border-[#444] 
+                  border-2 border-gray-200 dark:border-[#444]
                   bg-gray-100 dark:bg-[#333] dark:text-[#eee]
                   transform translate-y-20
                   z-10 rounded transition-all duration-300

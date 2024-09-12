@@ -7,7 +7,7 @@ export function BtimeSetting() {
   const [setting, setSetting] = useState<BtimeSettingStore>(null)
   useEffect(() => {
     const btime: BtimeSettingStore = window.store.get(widgetKey.BTime)
-    btime.borderRaduis = btime.borderRaduis || 28
+    btime.borderRadius = btime.borderRadius || 28
     setSetting(btime)
   }, [])
 
@@ -29,7 +29,7 @@ export function BtimeSetting() {
       enable: setting.enable,
       transparentStatus: setting.transparentStatus,
       bounds: window.store.get('BTime' as widgetKey.BTime).bounds,
-      borderRaduis: setting.borderRaduis,
+      borderradius: setting.borderRadius,
     })
   }
 
@@ -41,7 +41,7 @@ export function BtimeSetting() {
       'BTime',
       `${fixedValue}px`
     )
-    setSettingValue('borderRaduis', fixedValue)
+    setSettingValue('borderRadius', fixedValue)
   }
 
   if (!setting) return null
@@ -152,13 +152,13 @@ export function BtimeSetting() {
               <Slider
                 size="md"
                 color="blue"
-                defaultValue={setting.borderRaduis}
+                defaultValue={setting.borderRadius}
                 onChange={(change) =>
                   onSliderChange(Number(change.target.value))
                 }
               />
               <div className="flex flex-row justify-between w-full text-gray-600 dark:text-[#eee]">
-                {setting.borderRaduis}px
+                {setting.borderRadius}px
               </div>
             </div>
           </div>

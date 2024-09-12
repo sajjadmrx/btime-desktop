@@ -12,7 +12,7 @@ export function ArzChandSetting() {
 
   useEffect(() => {
     const ArzChand: ArzChandSettingStore = window.store.get(widgetKey.ArzChand)
-    ArzChand.borderRaduis = ArzChand.borderRaduis || 28
+    ArzChand.borderRadius = ArzChand.borderRadius || 28
     setSetting(ArzChand)
 
     function fetchSupportedCurrencies() {
@@ -44,7 +44,7 @@ export function ArzChandSetting() {
       transparentStatus: setting.transparentStatus,
       bounds: window.store.get('ArzChand' as widgetKey.ArzChand).bounds,
       currencies: setting.currencies,
-      borderRaduis: setting.borderRaduis,
+      borderradius: setting.borderRadius,
     })
   }
 
@@ -56,7 +56,7 @@ export function ArzChandSetting() {
       widgetKey.ArzChand,
       `${fixedValue}px`
     )
-    setSettingValue('borderRaduis', fixedValue)
+    setSettingValue('borderRadius', fixedValue)
   }
 
   if (!setting) return null
@@ -166,13 +166,13 @@ export function ArzChandSetting() {
               <Slider
                 size="md"
                 color="blue"
-                defaultValue={setting.borderRaduis}
+                defaultValue={setting.borderRadius}
                 onChange={(change) =>
                   onSliderChange(Number(change.target.value))
                 }
               />
               <div className="flex flex-row justify-between w-full text-gray-600 dark:text-[#eee]">
-                {setting.borderRaduis}px
+                {setting.borderRadius}px
               </div>
             </div>
           </div>

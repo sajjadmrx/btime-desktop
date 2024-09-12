@@ -31,5 +31,5 @@ window.ipcRenderer.on('transparent_status', function (evt, message) {
 })
 
 window.ipcRenderer.on('border-radius', function (evt, message) {
-  document.querySelector('.h-screen').style.borderRadius = message.raduis
+  document.querySelector('.h-screen').style.borderRadius = message.radius
 })

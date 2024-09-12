@@ -12,7 +12,7 @@ export function NerkhYabSetting() {
   useEffect(() => {
     const NerkhYab: NerkhYabSettingStore = window.store.get(widgetKey.NerkhYab)
     setSetting(NerkhYab)
-    NerkhYab.borderRaduis = NerkhYab.borderRaduis || 28
+    NerkhYab.borderRadius = NerkhYab.borderRadius || 28
     function fetchSupportedCurrencies() {
       getSupportedCurrencies().then((data) => {
         setSupportedCurrencies(data)
@@ -41,7 +41,7 @@ export function NerkhYabSetting() {
       transparentStatus: setting.transparentStatus,
       bounds: window.store.get(widgetKey.NerkhYab).bounds,
       currencies: setting.currencies,
-      borderRaduis: setting.borderRaduis,
+      borderradius: setting.borderRadius,
     })
   }
   if (!setting) return null
@@ -54,7 +54,7 @@ export function NerkhYabSetting() {
       widgetKey.NerkhYab,
       `${fixedValue}px`
     )
-    setSettingValue('borderRaduis', fixedValue)
+    setSettingValue('borderRadius', fixedValue)
   }
 
   return (
@@ -198,13 +198,13 @@ export function NerkhYabSetting() {
               <Slider
                 size="md"
                 color="blue"
-                defaultValue={setting.borderRaduis}
+                defaultValue={setting.borderRadius}
                 onChange={(change) =>
                   onSliderChange(Number(change.target.value))
                 }
               />
               <div className="flex flex-row justify-between w-full text-gray-600 dark:text-[#eee]">
-                {setting.borderRaduis}px
+                {setting.borderRadius}px
               </div>
             </div>
           </div>

@@ -8,7 +8,7 @@ export interface windowSettings {
     width: number
     height: number
   }
-  borderRaduis: number
+  borderRadius: number
   alwaysOnTop: boolean
   transparentStatus: boolean
   enable: boolean
@@ -52,7 +52,7 @@ export const store = new electronStore<StoreKey>({
         width: 180,
         height: 179,
       },
-      borderRaduis: 28,
+      borderRadius: 28,
       alwaysOnTop: false,
       transparentStatus: false,
     },
@@ -64,7 +64,7 @@ export const store = new electronStore<StoreKey>({
         width: 226,
         height: 134,
       },
-      borderRaduis: 28,
+      borderRadius: 28,
       alwaysOnTop: false,
       transparentStatus: false,
       currencies: ['usd'],
@@ -77,7 +77,7 @@ export const store = new electronStore<StoreKey>({
         width: 226,
         height: 134,
       },
-      borderRaduis: 28,
+      borderRadius: 28,
       alwaysOnTop: false,
       transparentStatus: false,
       currencies: ['usd', 'eur'],
@@ -90,7 +90,7 @@ export const store = new electronStore<StoreKey>({
         width: 183,
         height: 203,
       },
-      borderRaduis: 28,
+      borderRadius: 28,
       alwaysOnTop: false,
       transparentStatus: false,
       city: null,

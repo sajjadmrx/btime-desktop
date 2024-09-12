@@ -240,9 +240,9 @@ async function createWindow(payload: Window) {
     win.webContents.send('transparent_status', {
       newStatus: store.get(widgetKey[payload.title]).transparentStatus,
     })
-    const borderRaduis = store.get(widgetKey[payload.title]).borderRaduis
+    const borderRadius = store.get(widgetKey[payload.title]).borderRadius
     win.webContents.send('border-radius', {
-      raduis: borderRaduis ? `${borderRaduis}px` : '28px',
+      radius: borderRadius ? `${borderRadius}px` : '28px',
     })
   })
 
