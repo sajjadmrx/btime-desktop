@@ -32,6 +32,15 @@ export interface WeatherSettingStore extends windowSettings {
     name: string
   }
 }
+export interface ClockSettingStore extends windowSettings {
+  timeZone: {
+    label: string
+    value: string
+  }
+  showSecond: boolean
+  showDate: boolean
+  showTimeZone: boolean
+}
 
 export type Theme = 'system' | 'light' | 'dark'
 
@@ -40,6 +49,7 @@ export type StoreKey = {
   [widgetKey.NerkhYab]: NerkhYabSettingStore
   [widgetKey.ArzChand]: ArzChandSettingStore
   [widgetKey.Weather]: WeatherSettingStore
+  [widgetKey.Clock]: ClockSettingStore
   startup: boolean
   theme: Theme
   currenctVersion: string
@@ -97,6 +107,25 @@ export const store = new electronStore<StoreKey>({
       alwaysOnTop: false,
       transparentStatus: false,
       city: null,
+    },
+    Clock: {
+      alwaysOnTop: false,
+      borderRadius: 28,
+      bounds: {
+        width: 217,
+        height: 180,
+        x: 0,
+        y: 0,
+      },
+      enable: false,
+      timeZone: {
+        label: 'آسیا/تهران',
+        value: 'Asia/Tehran',
+      },
+      transparentStatus: false,
+      showDate: true,
+      showSecond: false,
+      showTimeZone: false,
     },
     startup: true,
     theme: 'system',

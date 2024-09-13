@@ -29,7 +29,7 @@ export function BtimeSetting() {
       enable: setting.enable,
       transparentStatus: setting.transparentStatus,
       bounds: window.store.get('BTime' as widgetKey.BTime).bounds,
-      borderradius: setting.borderRadius,
+      borderRadius: setting.borderRadius,
     })
   }
 

@@ -44,7 +44,7 @@ export function ArzChandSetting() {
       transparentStatus: setting.transparentStatus,
       bounds: window.store.get('ArzChand' as widgetKey.ArzChand).bounds,
       currencies: setting.currencies,
-      borderradius: setting.borderRadius,
+      borderRadius: setting.borderRadius,
     })
   }
 

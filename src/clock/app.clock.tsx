@@ -1,7 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
+import moment from 'jalali-moment'
+import { widgetKey } from '../../shared/widgetKey'
+import { ClockSettingStore } from '../../electron/store'
 
 function App() {
+  const timeRef = useRef(null)
+  const dateRef = useRef(null)
+
+  const [setting, setSetting] = useState<ClockSettingStore>(null)
+
   useEffect(() => {
+    setSetting(window.store.get(widgetKey.Clock))
     const handleColorSchemeChange = (e) => {
       document.documentElement.classList.remove('dark')
       if (e.matches) {
@@ -12,107 +21,96 @@ function App() {
     const colorSchemeMediaQuery = window.matchMedia(
       '(prefers-color-scheme: dark)'
     )
+
+    window.ipcRenderer.on('updated-setting', function () {
+      setSetting(window.store.get(widgetKey.Clock))
+    })
+
     handleColorSchemeChange(colorSchemeMediaQuery)
+
     document.body.classList.add('transparent-active')
+
     colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
+
     return () => {
       colorSchemeMediaQuery.removeEventListener(
         'change',
         handleColorSchemeChange
       )
+
+      window.ipcRenderer.removeListener('updated-setting', () => {
+        setSetting(window.store.get(widgetKey.Clock))
+      })
     }
   }, [])
 
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date()
+      const options: Intl.DateTimeFormatOptions = {
+        timeZone: setting?.timeZone?.value || 'Asia/Tehran',
+        hour12: false,
+        hour: 'numeric',
+        minute: '2-digit',
+      }
+
+      if (setting?.showSecond) {
+        options.second = '2-digit'
+      }
+
+      let timeString = new Intl.DateTimeFormat('en-US', options).format(now)
+
+      const [hours, ...rest] = timeString.split(':')
+      const formattedHours = hours === '24' ? '00' : hours.padStart(2, '0')
+      timeString = [formattedHours, ...rest].join(':')
+
+      if (timeRef.current) {
+        timeRef.current.textContent = timeString
+      }
+
+      if (
+        now.getHours() == 0 &&
+        now.getMinutes() == 0 &&
+        now.getSeconds() == 0
+      ) {
+        dateRef.current.textContent = moment()
+          .locale('fa')
+          .format('dddd jD jMMMM jYYYY')
+      }
+    }
+
+    if (setting && setting.enable) {
+      updateClock()
+
+      const timerId = setInterval(updateClock, 1000)
+      return () => clearInterval(timerId)
+    }
+  }, [setting])
   return (
-    <div className="h-screen w-screen overflow-hidden moveable">
-      <FlipClock />
+    <div className="h-screen w-screen overflow-hidden bg-[#33333330]">
+      <div className="moveable px-0 h-full">
+        <div className="flex h-full items-center text-center justify-center px-2">
+          <div className="text-6xl flex-col font-bold dark:text-gray-400 text-gray-600 font-mono relative w-60 overflow-clip px-2 font-[digital7]">
+            <div ref={timeRef}>00:00:00</div>
+            <div
+              className={'font-[vazir] text-sm flex flex-col gap-1'}
+              ref={dateRef}
+            >
+              <div>
+                {setting?.showTimeZone && (
+                  <span>{setting?.timeZone?.label}</span>
+                )}
+              </div>
+              <div>
+                {setting?.showDate &&
+                  moment().locale('fa').format('dddd jD jMMMM jYYYY')}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
 
 export default App
-
-const FlipClock = () => {
-  const [time, setTime] = useState({
-    hours: '00',
-    minutes: '00',
-    seconds: '00',
-  })
-  const hourRef = useRef(null)
-  const minuteRef = useRef(null)
-  const secondRef = useRef(null)
-
-  useEffect(() => {
-    const updateTime = () => {
-      const date = new Date()
-      let hours = date.getHours()
-      hours = hours > 12 ? hours - 12 : hours
-      hours = hours === 0 ? 12 : hours
-      const minutes = date.getMinutes()
-      const seconds = date.getSeconds()
-
-      setTime({
-        hours: hours.toString().padStart(2, '0'),
-        minutes: minutes.toString().padStart(2, '0'),
-        seconds: seconds.toString().padStart(2, '0'),
-      })
-    }
-
-    updateTime()
-    const interval = setInterval(updateTime, 1000)
-    return () => clearInterval(interval)
-  }, [])
-
-  useEffect(() => {
-    flipNumber(hourRef.current, time.hours)
-    flipNumber(minuteRef.current, time.minutes)
-    flipNumber(secondRef.current, time.seconds)
-  }, [time])
-
-  const flipNumber = (el, newNumber) => {
-    if (!el) return
-    const currentNumber = el.querySelector('.top .text').textContent
-    if (currentNumber === newNumber) return
-
-    const flipper = el.closest('.flipper')
-    flipper.classList.add('flipping')
-    const newTop = el.querySelector('.top').cloneNode(true)
-    const newBottom = el.querySelector('.bottom').cloneNode(true)
-    newTop.classList.add('new')
-    newBottom.classList.add('new')
-    newBottom.querySelector('.text').textContent = newNumber
-
-    el.querySelector('.top').after(newTop)
-    newTop.appendChild(newBottom)
-
-    el.querySelector('.top:not(.new) .text').textContent = newNumber
-    setTimeout(() => {
-      el.querySelector('.bottom:not(.new) .text').textContent = newNumber
-      flipper.classList.remove('flipping')
-      el.querySelectorAll('.new').forEach((node) => node.remove())
-    }, 500)
-  }
-
-  return (
-    <div className="clock grid grid-cols-3 gap-3 p-3 rounded-[30px]">
-      {[hourRef, minuteRef, secondRef].map((ref, index) => (
-        <div
-          key={index}
-          className="flipper relative transform-style-3d perspective-[1600px]  content-center h-100 mt-auto mb-auto"
-          ref={ref}
-        >
-          <div className="top relative !w-full sm:h-20 h-[95px] bg-gradient-to-b from-[#303135] to-[#38393e] mt-2.5 mb-1.5 rounded-t-[19px] shadow-[0_6px_6px_1px_rgba(0,0,0,0.5),0_2px_2px_1px_rgba(255,255,255,0.15)] border-t-2 border-[#66676e] border-b-2 border-b-black">
-            <div className="text lg:text-[140px] xs:text-[140px] md:text-[100px] sm:text-[100px]  absolute w-full h-full overflow-hidden leading-[193px] text-center text-gray-300 font-[balooTamma]">
-              00
-            </div>
-          </div>
-          <div className="bottom relative !w-full sm:h-20 h-[95px] bg-gradient-to-b from-[#39393f] to-[#414147] mt-1.5 mb-2.5 rounded-b-[19px] shadow-[0_6px_6px_1px_rgba(0,0,0,0.5),0_2px_2px_1px_rgba(255,255,255,0.15)] border-t-2 border-[#66676e] border-b-2 border-b-black">
-            <div className="text lg:text-[140px] xs:text-[140px] md:text-[100px] sm:text-[100px] absolute w-full h-full overflow-hidden leading-[0] text-center text-gray-300 font-[balooTamma]">
-              00
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}

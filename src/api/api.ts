@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { ForecastResponse, WeatherResponse } from './weather.interface'
+import { Timezone } from './api.interface'
 
 const api = axios.create()
 const rawGithubApi = axios.create({
@@ -130,6 +131,15 @@ export async function getMonthEvents(): Promise<MonthEvent[]> {
   }
 }
 
+export async function getTimezones(): Promise<Timezone[]> {
+  try {
+    api.defaults.baseURL = await getMainApi()
+    const response = await api.get('/date/timezones')
+    return response.data
+  } catch {
+    return []
+  }
+}
 export async function getNotifications() {
   try {
     api.defaults.baseURL = await getMainApi()

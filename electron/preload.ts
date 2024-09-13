@@ -126,10 +126,10 @@ export const storePreload = {
   // get: <T>(key: T & keyof StoreKey) => store.get<T>(key),
   get: <T extends keyof StoreKey | keyof typeof widgetKey>(key: T) =>
     store.get<T>(key as T),
-  set: <T extends keyof StoreKey | keyof typeof widgetKey>(
+  set: <T extends keyof StoreKey | keyof typeof widgetKey, V>(
     key: T,
-    value: (typeof widgetKey)[T]
-  ) => store.set<T>(key, value as T),
+    value: V
+  ) => store.set<T>(key, value as V),
 }
 
 export const ipcPreload = {
@@ -140,6 +140,8 @@ export const ipcPreload = {
   openUrl: (url: string) => ipcRenderer.send('open-url', url),
   toggleTransparent: (windowKey: string) =>
     ipcRenderer.send('toggle-transparent', windowKey),
+  updatedSetting: (windowKey: string) =>
+    ipcRenderer.send('updated-setting', windowKey),
 
   send: (channel: string, ...args: any[]) =>
     ipcRenderer.invoke(channel, ...args),

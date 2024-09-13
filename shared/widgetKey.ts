@@ -3,4 +3,5 @@ export enum widgetKey {
   BTime = 'BTime',
   ArzChand = 'ArzChand',
   Weather = 'Weather',
+  Clock = 'Clock',
 }

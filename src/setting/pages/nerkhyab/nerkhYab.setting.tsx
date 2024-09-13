@@ -41,7 +41,7 @@ export function NerkhYabSetting() {
       transparentStatus: setting.transparentStatus,
       bounds: window.store.get(widgetKey.NerkhYab).bounds,
       currencies: setting.currencies,
-      borderradius: setting.borderRadius,
+      borderRadius: setting.borderRadius,
     })
   }
   if (!setting) return null

@@ -85,6 +85,13 @@
   src: url('./assets/fonts/BalooTamma/BalooTamma2-Bold.ttf');
 }
 
+@font-face {
+  font-family: digital7;
+  font-weight: 600;
+  src: url('./assets/fonts/digital-7/digital-7.ttf');
+}
+
+
 body {
   font-family: Vazir;
   -webkit-user-select: none;

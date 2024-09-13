@@ -64,4 +64,13 @@ export function initIpcMain() {
       )
     }
   )
+
+  ipcMain.on('updated-setting', (event, windowKey: string) => {
+    const win = BrowserWindow.getAllWindows().filter(
+      (win) => win.title === windowKey
+    )[0]
+    if (win) {
+      win.webContents.send('updated-setting')
+    }
+  })
 }

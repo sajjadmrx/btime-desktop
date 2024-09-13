@@ -61,6 +61,7 @@ async function onAppReady() {
   const btimeStore = store.get(widgetKey.BTime)
   const arzChandStore = store.get(widgetKey.ArzChand)
   const weatherStore = store.get(widgetKey.Weather)
+  const clockStore = store.get(widgetKey.Clock)
 
   // Btime widget
   if (btimeStore.enable) {
@@ -150,19 +151,27 @@ async function onAppReady() {
     }
   }
 
-  await createWindow({
-    height: 150,
-    width: 150,
-    minHeight: 150,
-    minWidth: 150,
-    x: 0,
-    y: 0,
-    title: 'Clock',
-    html: 'clock.html',
-    devTools: true,
-    alwaysOnTop: true,
-    reziable: true,
-  })
+  if (clockStore.enable) {
+    const clockWindow = await createWindow({
+      height: clockStore.bounds.height,
+      width: clockStore.bounds.width,
+      minHeight: 150,
+      minWidth: 150,
+      x: clockStore.bounds.x,
+      y: clockStore.bounds.y,
+      title: widgetKey.Clock,
+      html: 'clock.html',
+      devTools: true,
+      alwaysOnTop: clockStore.alwaysOnTop,
+      reziable: true,
+    })
+
+    onMoved(clockWindow)
+    onResized(clockWindow)
+    if (!mainWin) {
+      mainWin = clockWindow
+    }
+  }
 
   if (!mainWin) {
     mainWin = await createSettingWindow()
@@ -236,11 +245,12 @@ async function createWindow(payload: Window) {
 
   if (os.platform() == 'darwin') win.setWindowButtonVisibility(false)
   win.webContents.on('did-finish-load', () => {
-    win?.webContents.send('main-process-message', new Date().toLocaleString())
     win.webContents.send('transparent_status', {
       newStatus: store.get(widgetKey[payload.title]).transparentStatus,
     })
+
     const borderRadius = store.get(widgetKey[payload.title]).borderRadius
+
     win.webContents.send('border-radius', {
       radius: borderRadius ? `${borderRadius}px` : '28px',
     })

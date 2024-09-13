@@ -57,7 +57,7 @@ export function WeatherSetting() {
       transparentStatus: setting.transparentStatus,
       bounds: window.store.get('Weather' as widgetKey.Weather).bounds,
       city: setting.city,
-      borderradius: setting.borderRadius,
+      borderRadius: setting.borderRadius,
     })
   }
 
