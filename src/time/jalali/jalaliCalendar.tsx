@@ -1,8 +1,7 @@
 import moment from 'jalali-moment'
 import { useEffect, useState } from 'react'
-import { getMonthEvents, MonthEvent } from '../../../api/api'
-
-// const holidayColor = 'dark:text-red-200/60 text-red-200/60'
+import { getMonthEvents, MonthEvent } from '../../api/api'
+import { Tooltip } from '@material-tailwind/react'
 
 interface JalaliCalendarProp {
   currentDate: moment.Moment
@@ -28,8 +27,10 @@ export function JalaliCalendar({ currentDate }: JalaliCalendarProp) {
   const daysInMonth = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29]
 
   const isHoliday = (day, dayOfWeek) => {
-    const eventDay = events.find((event) => event.day == day)
-    if (eventDay && eventDay.isHoliday) {
+    const eventDay = events.filter((event) => event.day == day) || []
+    const isHoliday = eventDay.find((event) => event.isHoliday)
+
+    if (eventDay && isHoliday) {
       return true
     }
 
@@ -52,7 +53,6 @@ export function JalaliCalendar({ currentDate }: JalaliCalendarProp) {
     })
 
     getMonthEvents().then((data) => {
-      console.log(data)
       setEvents(data)
     })
 
@@ -68,7 +68,7 @@ export function JalaliCalendar({ currentDate }: JalaliCalendarProp) {
 
   return (
     <div
-      className="w-full max-w-96 h-full rounded-lg overflow-clip not-moveable pt-2 lg:pt-4  px-1"
+      className="w-full max-w-96 h-full rounded-lg overflow-clip not-moveable pt-2 lg:pt-4 px-1"
       dir="rtl"
     >
       <div className="grid grid-cols-7 space-x-2 sm:p-2 lg:space-x-4">
@@ -92,6 +92,7 @@ export function JalaliCalendar({ currentDate }: JalaliCalendarProp) {
               jalaliDay={jalaliDay}
               jalaliFirstDay={jalaliFirstDay}
               key={index}
+              events={events}
             />
           )
         })}
@@ -106,6 +107,7 @@ interface Prop {
   isTransparent: boolean
   jalaliDay: number
   isHoliday: (day: number, dayOfWeek: number) => boolean
+  events: MonthEvent[]
 }
 function DayComponent({
   index,
@@ -113,6 +115,7 @@ function DayComponent({
   isTransparent,
   jalaliDay,
   isHoliday,
+  events,
 }: Prop) {
   const day = index + 1
   const dayOfWeek = (jalaliFirstDay + index) % 7
@@ -124,30 +127,77 @@ function DayComponent({
     : 'dark:text-gray-400 text-gray-600'
   if (isHolidayDay) {
     textColor = isTransparent
-      ? 'dark:text-red-400 text-gray-100/50'
-      : 'dark:text-red-400 text-red-600/70'
+      ? 'dark:bg-red-400/10 dark:text-red-400 text-gray-100/80 bg-gray-100/10'
+      : 'bg-red-400/10 dark:text-red-400 text-red-600/70'
   }
 
-  let isCurrentDayColor = isTransparent
-    ? 'dark:bg-black/60 bg-black/20 outline'
-    : ' outline '
+  let isCurrentDayColor = null
+  if (isHoliday) {
+    isCurrentDayColor = isTransparent
+      ? 'dark:bg-black/60 bg-black/20 outline dark:outline-red-400/45  outline-gray-100/60'
+      : 'outline outline-red-400/45'
+  } else {
+    isCurrentDayColor = isTransparent
+      ? 'dark:bg-black/60 bg-black/20 outline  outline-gray-100/60'
+      : 'outline outline-gray-500'
+  }
 
-  isCurrentDayColor += 'outline-gray-700/70 -outline-offset-3 outline-1'
+  isCurrentDayColor += ' -outline-offset-3 outline-1'
+
+  const dayEvents = events.filter((event) => Number(event.day) == day)
+
+  const dayEventsList = dayEvents.length
+    ? dayEvents.map((d) => d.event)
+    : ['مناسبتی ثبت نشده']
+
+  const toolTipBgColor = isTransparent
+    ? 'bg-gray-800 dark:bg-gray-900'
+    : 'bg-gray-100 dark:bg-gray-800'
+
+  const hoverDayColor = isTransparent
+    ? 'hover:bg-gray-600/20 dark:hover:text-gray-200'
+    : 'hover:bg-gray-600/20 dark:hover:text-gray-200'
+
+  const eventCompoenent = dayEventsList.map((event, index) => {
+    return (
+      <div
+        key={index}
+        className="text-[.60rem] font-[Vazir] dark:text-gray-400 text-gray-200"
+      >
+        {event}
+      </div>
+    )
+  })
 
   return (
-    <div
-      key={index}
-      className={`text-center mb-[.1rem] h-5 p-1 rounded cursor-pointer text-xs sm:text-sm  lg:text-xl lg:h-8
+    <>
+      <Tooltip
+        className={`rounded-lg ${toolTipBgColor} bg-gray-700`}
+        content={
+          <div className="flex flex-col justify-center items-center">
+            {eventCompoenent}
+          </div>
+        }
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0, y: 25 },
+        }}
+      >
+        <div
+          key={index}
+          className={`text-center mb-[.1rem] h-5 p-1 rounded cursor-pointer text-xs sm:text-sm  
                 transition-all duration-100  
                 ${textColor}
+                ${!isCurrentDay && hoverDayColor}
                 ${isCurrentDay && isCurrentDayColor}
               `}
-    >
-      {day}
-    </div>
+        >
+          {day}
+        </div>
+      </Tooltip>
+    </>
   )
 }
-
 interface WeekDayProp {
   day: string
   isTransparent: boolean

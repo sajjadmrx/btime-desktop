@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react'
-import { Slider } from '../components/slider'
+import moment from 'jalali-moment'
+import { JalaliComponent } from './jalali'
+import { BtimeSettingStore } from '../../electron/store'
+import { widgetKey } from '../../shared/widgetKey'
+import { GregorianComponent } from './gregorian'
 
 function App() {
-  const [showArrows, setShowArrows] = useState<boolean>(false)
-
-  function onMouseEnter() {
-    setShowArrows(true)
-  }
-
-  function onMouseLave() {
-    setShowArrows(false)
-  }
-
+  const [widgetSetting, setWidgetSetting] = useState<BtimeSettingStore>(
+    window.store.get(widgetKey.BTime)
+  )
   useEffect(() => {
+    console.log(widgetSetting)
     const handleColorSchemeChange = (e) => {
       document.documentElement.classList.remove('dark')
       if (e.matches) {
@@ -36,12 +34,12 @@ function App() {
 
   return (
     <>
-      <div
-        className="h-screen w-screen overflow-hidden"
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLave}
-      >
-        <Slider showArrows={showArrows} />
+      <div className="h-screen w-screen overflow-hidden">
+        {widgetSetting && widgetSetting.currentCalender == 'Gregorian' ? (
+          <GregorianComponent currentTime={moment()} />
+        ) : (
+          <JalaliComponent currentDate={moment()} />
+        )}
       </div>
     </>
   )

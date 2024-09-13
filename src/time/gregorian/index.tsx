@@ -5,7 +5,7 @@ interface Prop {
   currentTime: moment.Moment
 }
 
-export function GregorianSlider(prop: Prop) {
+export function GregorianComponent(prop: Prop) {
   const { currentTime } = prop
   return (
     <div className="flex h-screen items-center justify-center flex-row-reverse overflow-hidden">
