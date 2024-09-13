@@ -14,7 +14,9 @@ export interface windowSettings {
   enable: boolean
 }
 
-export interface BtimeSettingStore extends windowSettings {}
+export interface BtimeSettingStore extends windowSettings {
+  currentCalender: 'Jalali' | 'Gregorian'
+}
 export interface NerkhYabSettingStore extends windowSettings {
   currencies: string[]
 }
@@ -52,6 +54,7 @@ export const store = new electronStore<StoreKey>({
         width: 180,
         height: 179,
       },
+      currentCalender: 'Jalali',
       borderRadius: 28,
       alwaysOnTop: false,
       transparentStatus: false,
