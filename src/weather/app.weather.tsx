@@ -8,7 +8,9 @@ import { widgetKey } from '../../shared/widgetKey'
 function App() {
   const [weather, setWeather] = useState<WeatherResponse>(null)
   const [forecast, setForecast] = useState<ForecastResponse[]>([])
-  const weatherStore = window.store.get('Weather' as widgetKey.Weather)
+  const [weatherStore, setWeatherStore] = useState(
+    window.store.get('Weather' as widgetKey.Weather)
+  )
   const [isDarkMode, setIsDarkMode] = useState(
     window.matchMedia('(prefers-color-scheme: dark)').matches
   )
@@ -28,6 +30,11 @@ function App() {
     handleColorSchemeChange(
       colorSchemeMediaQuery as unknown as MediaQueryListEvent
     )
+
+    window.ipcRenderer.on('updated-setting', function () {
+      const weatherSetting = window.store.get(widgetKey.Weather)
+      setWeatherStore(weatherSetting)
+    })
 
     colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
 
@@ -57,7 +64,7 @@ function App() {
     return () => {
       clearInterval(weatherInterval)
     }
-  }, [])
+  }, [weatherStore])
 
   useEffect(() => {
     function fetch() {
