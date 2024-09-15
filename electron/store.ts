@@ -140,7 +140,7 @@ export const store = new electronStore<StoreKey>({
       },
       enable: false,
       timeZone: {
-        label: 'آسیا/تهران',
+        label: 'آسیا / تهران',
         value: 'Asia/Tehran',
       },
       transparentStatus: false,
