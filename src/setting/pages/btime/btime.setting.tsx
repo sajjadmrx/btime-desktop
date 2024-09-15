@@ -55,7 +55,7 @@ export function BtimeSetting() {
 
   return (
     <>
-      <div className="p-2 mt-2 h-full not-moveable font-[Vazir]">
+      <div className="p-2 mt-2 h-80 not-moveable font-[Vazir] overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-500 dark:scrollbar-track-gray-800">
         <div className="flex flex-col gap-4">
           <Switch
             id={'time-startUp'}
@@ -131,8 +131,42 @@ export function BtimeSetting() {
               }}
             />
           </div>
+          <div className="w-full">
+            <label className="text-gray-600 dark:text-[#eee] font-semibold text-sm">
+              نوع تقویم
+            </label>
+            <div className="flex mt-2 gap-2 w-full h-14 rounded-lg px-2 py-2 dark:bg-[#464545] bg-[#e8e6e6]">
+              <CalendarItem
+                title="جلالی"
+                selected={setting.currentCalender === 'Jalali'}
+                onClick={() => setSettingValue('currentCalender', 'Jalali')}
+              />
+              <CalendarItem
+                title="میلادی"
+                selected={setting.currentCalender === 'Gregorian'}
+                onClick={() => setSettingValue('currentCalender', 'Gregorian')}
+              />
+            </div>
 
-          <div className="flex flex-col justify-between w-full gap-2">
+            <div className="text-gray-600 dark:text-gray-300 text-sm p-2 bg-[#e8e6e6] dark:bg-[#24242459] rounded-lg mt-2 flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="h-6 w-6 ml-1"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                  clipRule="evenodd"
+                />
+              </svg>{' '}
+              <p className="font-light">
+                برای نمایش تقویم، ویجت رو در سایز مناسب قرار بدید.
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-col justify-between w-full">
             <label
               htmlFor="currency-select"
               className="text-gray-600 dark:text-[#eee] font-semibold text-sm"
@@ -156,5 +190,22 @@ export function BtimeSetting() {
         </div>
       </div>
     </>
+  )
+}
+
+function CalendarItem({ title, selected, onClick }) {
+  return (
+    <div
+      onClick={onClick}
+      className={`w-full h-10 flex justify-center items-center rounded-lg text-gray-600 dark:text-[#eee] cursor-pointer ${
+        selected
+          ? 'bg-[#f5f5f5] dark:bg-[#3a3a3a]'
+          : `hover:bg-[#f5f5f578] dark:hover:bg-[#3a3a3a5c]`
+      } 
+        ${selected && 'text-gray-600 dark:text-gray-300'}
+        transition-all  ease-in-out duration-2000`}
+    >
+      {title}
+    </div>
   )
 }

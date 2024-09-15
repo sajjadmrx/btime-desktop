@@ -23,6 +23,10 @@ function App() {
     )
     handleColorSchemeChange(colorSchemeMediaQuery)
 
+    window.ipcRenderer.on('updated-setting', function () {
+      setWidgetSetting(window.store.get(widgetKey.BTime))
+    })
+
     colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
     return () => {
       colorSchemeMediaQuery.removeEventListener(
