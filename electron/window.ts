@@ -168,6 +168,7 @@ export function onResized(win: BrowserWindow) {
       store.set(widgetKey[key], {
         ...store.get(widgetKey[key]),
         bounds: {
+          ...store.get(widgetKey[key]).bounds,
           x: win.getBounds().x,
           y: win.getBounds().y,
           width: win.getBounds().width,
