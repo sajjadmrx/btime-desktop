@@ -136,7 +136,7 @@ export const store = new electronStore<StoreKey>({
         x: 0,
         y: 0,
         minWidth: 150,
-        minHeight: 150,
+        minHeight: 76,
       },
       enable: false,
       timeZone: {
