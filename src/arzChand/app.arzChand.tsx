@@ -2,12 +2,17 @@ import { useEffect, useState } from 'react'
 import { CurrencyData, getRateByCurrency } from '../api/api'
 import { widgetKey } from '../../shared/widgetKey'
 import { CurrencyComponent } from './component/currency.component'
+import { ArzChandSettingStore } from 'electron/store'
 
 function App() {
   const [currencies, setCurrencies] = useState<
     (CurrencyData & { imgColor; code })[]
   >([])
   const [reloading, setReloading] = useState(true)
+
+  const [setting, setSetting] = useState<ArzChandSettingStore>(
+    window.store.get(widgetKey.ArzChand)
+  )
 
   const [isTransparent, setIsTransparent] = useState<boolean>(
     document.body.classList.contains('transparent-active')
@@ -24,16 +29,26 @@ function App() {
     const colorSchemeMediaQuery = window.matchMedia(
       '(prefers-color-scheme: dark)'
     )
+
     handleColorSchemeChange(colorSchemeMediaQuery)
+
     const observer = new MutationObserver(() => {
       setIsTransparent(document.body.classList.contains('transparent-active'))
     })
+
     observer.observe(document.body, {
       attributes: true,
       attributeFilter: ['class'],
     })
 
     colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
+
+    window.ipcRenderer.on('updated-setting', function () {
+      const arzChandSetting = window.store.get(widgetKey.ArzChand)
+      setSetting(arzChandSetting)
+      setReloading(true)
+    })
+
     return () => {
       colorSchemeMediaQuery.removeEventListener(
         'change',
@@ -48,12 +63,12 @@ function App() {
       setCurrencies([])
     }
 
-    const currencyStore = window.store.get('ArzChand' as widgetKey.ArzChand)
+    const currencyList = setting.currencies || []
 
     async function fetchData() {
       const newCurrencies = []
 
-      for (const currency of currencyStore.currencies) {
+      for (const currency of currencyList) {
         const data = await getRateByCurrency(currency)
         if (data) {
           newCurrencies.push({ ...data, imgColor: '', code: currency })

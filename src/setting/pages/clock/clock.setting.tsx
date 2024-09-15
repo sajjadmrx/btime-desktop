@@ -31,19 +31,23 @@ export function ClockSetting() {
     key: T,
     value: ClockSettingStore[T]
   ) {
-    console.log(key, value)
     setting[key] = value
     setSetting({ ...setting })
     applyChanges()
     if (key == 'transparentStatus') {
       window.ipcRenderer.send('toggle-transparent', widgetKey.Clock)
     }
-    console.log(setting)
-    window.ipcRenderer.send('updated-setting', widgetKey.Clock)
+
+    if (key === 'enable') {
+      window.ipcRenderer.send('toggle-enable', widgetKey.Clock)
+    } else if (!['transparentStatus', 'borderRadius'].includes(key)) {
+      window.ipcRenderer.send('updated-setting', widgetKey.Clock)
+    }
   }
 
   function applyChanges() {
     window.store.set<widgetKey.Clock, ClockSettingStore>(widgetKey.Clock, {
+      ...setting,
       alwaysOnTop: setting.alwaysOnTop,
       enable: setting.enable,
       transparentStatus: setting.transparentStatus,
@@ -123,7 +127,7 @@ export function ClockSetting() {
                 </div>
               }
               containerProps={{
-                className: 'mr-2 flex',
+                className: 'flex',
               }}
             />
             <Checkbox
@@ -145,7 +149,7 @@ export function ClockSetting() {
                 </div>
               }
               containerProps={{
-                className: 'mr-2 flex',
+                className: 'flex',
               }}
             />
             <Checkbox
@@ -165,7 +169,7 @@ export function ClockSetting() {
                 </div>
               }
               containerProps={{
-                className: 'mr-2 flex',
+                className: 'flex',
               }}
             />
             <Checkbox
@@ -189,7 +193,7 @@ export function ClockSetting() {
                 </div>
               }
               containerProps={{
-                className: 'mr-2 flex',
+                className: 'flex',
               }}
             />
             <Checkbox
@@ -209,7 +213,7 @@ export function ClockSetting() {
                 </div>
               }
               containerProps={{
-                className: 'mr-2 flex',
+                className: 'flex',
               }}
             />
           </div>

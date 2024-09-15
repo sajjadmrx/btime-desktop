@@ -13,7 +13,7 @@ export default defineConfig(() => {
     build: {
       rollupOptions: {
         input: {
-          index: path.join(__dirname, './html/index.html'), // <-----------------------------------------------------------------------
+          time: path.join(__dirname, './html/time.html'), // <-----------------------------------------------------------------------
           rate: path.join(__dirname, './html/rate.html'),
           setting: path.join(__dirname, './html/setting.html'),
           arzchand: path.join(__dirname, './html/arzchand.html'),

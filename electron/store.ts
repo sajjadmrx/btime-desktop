@@ -7,11 +7,16 @@ export interface windowSettings {
     y: number
     width: number
     height: number
+    minWidth: number
+    minHeight: number
+    maxWidth?: number
+    maxHeight?: number
   }
   borderRadius: number
   alwaysOnTop: boolean
   transparentStatus: boolean
   enable: boolean
+  html: string
 }
 
 export interface BtimeSettingStore extends windowSettings {
@@ -63,11 +68,14 @@ export const store = new electronStore<StoreKey>({
         y: 0,
         width: 180,
         height: 179,
+        minHeight: 150,
+        minWidth: 150,
       },
       currentCalender: 'Jalali',
       borderRadius: 28,
       alwaysOnTop: false,
       transparentStatus: false,
+      html: 'time.html',
     },
     NerkhYab: {
       enable: true,
@@ -76,10 +84,13 @@ export const store = new electronStore<StoreKey>({
         y: 0,
         width: 226,
         height: 134,
+        minHeight: 120,
+        minWidth: 226,
       },
       borderRadius: 28,
       alwaysOnTop: false,
       transparentStatus: false,
+      html: 'rate.html',
       currencies: ['usd'],
     },
     ArzChand: {
@@ -89,10 +100,15 @@ export const store = new electronStore<StoreKey>({
         y: 0,
         width: 226,
         height: 134,
+        minHeight: 120,
+        minWidth: 320,
+        maxWidth: 410,
+        maxHeight: 319,
       },
       borderRadius: 28,
       alwaysOnTop: false,
       transparentStatus: false,
+      html: 'arzchand.html',
       currencies: ['usd', 'eur'],
     },
     Weather: {
@@ -102,11 +118,14 @@ export const store = new electronStore<StoreKey>({
         y: 0,
         width: 183,
         height: 203,
+        minHeight: 203,
+        minWidth: 183,
       },
       borderRadius: 28,
       alwaysOnTop: false,
       transparentStatus: false,
       city: null,
+      html: 'weather.html',
     },
     Clock: {
       alwaysOnTop: false,
@@ -116,6 +135,8 @@ export const store = new electronStore<StoreKey>({
         height: 180,
         x: 0,
         y: 0,
+        minWidth: 150,
+        minHeight: 150,
       },
       enable: false,
       timeZone: {
@@ -126,10 +147,11 @@ export const store = new electronStore<StoreKey>({
       showDate: true,
       showSecond: false,
       showTimeZone: false,
+      html: 'clock.html',
     },
     startup: true,
     theme: 'system',
     currenctVersion: '1.2.0',
   },
-  name: 'bTime-app-v1',
+  name: 'widgetify-app',
 })

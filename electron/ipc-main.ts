@@ -1,7 +1,8 @@
 import { app, BrowserWindow, ipcMain, nativeTheme, shell } from 'electron'
 import { store, StoreKey } from './store'
-import { createSettingWindow } from './main'
 import { widgetKey } from '../shared/widgetKey'
+import { createSettingWindow, createWindow } from './window'
+import { userLogger } from '../shared/logger'
 
 export function initIpcMain() {
   ipcMain.on('reOpen', () => {
@@ -37,14 +38,13 @@ export function initIpcMain() {
       const win = BrowserWindow.getAllWindows().filter(
         (win) => win.title === window
       )[0]
-      const color = await win.webContents.executeJavaScript(`
+      const borderRadius = await win.webContents.executeJavaScript(`
  getComputedStyle(document.querySelector('.h-screen')).borderRadius
   `)
 
-      console.log(color)
-      return color
+      return borderRadius
     } catch (error) {
-      console.error(error)
+      userLogger.error(`Error in getBorderRadius: ${error}`)
       return ''
     }
   })
@@ -65,12 +65,48 @@ export function initIpcMain() {
     }
   )
 
-  ipcMain.on('updated-setting', (event, windowKey: string) => {
+  ipcMain.on('updated-setting', async (event, windowKey: string) => {
     const win = BrowserWindow.getAllWindows().filter(
       (win) => win.title === windowKey
     )[0]
     if (win) {
       win.webContents.send('updated-setting')
+    }
+  })
+
+  ipcMain.on('toggle-enable', async (event, windowKey: string) => {
+    userLogger.info(`Toggle enable for ${windowKey}`)
+    const win = BrowserWindow.getAllWindows().filter(
+      (win) => win.title === windowKey
+    )[0]
+    const setting = store.get(widgetKey[windowKey])
+    if (!setting) {
+      userLogger.error(`Setting not found for ${windowKey}`)
+      return
+    }
+    if (!setting.enable) {
+      if (win.closable) {
+        win.close()
+      }
+    } else {
+      console.log(setting.bounds)
+      await createWindow({
+        height: setting.bounds.height,
+        width: setting.bounds.width,
+        minHeight: setting.bounds.minHeight,
+        minWidth: setting.bounds.minWidth,
+        maxHeight: setting.bounds.maxHeight,
+        maxWidth: setting.bounds.maxWidth,
+        x: setting.bounds.x,
+        y: setting.bounds.y,
+        title: windowKey,
+        html: setting.html,
+        devTools: true,
+        alwaysOnTop: setting.alwaysOnTop,
+        reziable: true,
+        saveBounds: true,
+      })
+      userLogger.info(`Widget ${windowKey} enabled`)
     }
   })
 }

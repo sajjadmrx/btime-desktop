@@ -29,20 +29,31 @@ export function NerkhYabSetting() {
     setting[key] = value
     setSetting({ ...setting })
     applyChanges()
+
     if (key == 'transparentStatus') {
       window.ipcRenderer.send('toggle-transparent', widgetKey.NerkhYab)
+    }
+
+    if (key === 'enable') {
+      window.ipcRenderer.send('toggle-enable', widgetKey.NerkhYab)
+    } else if (!['transparentStatus', 'borderRadius'].includes(key)) {
+      window.ipcRenderer.send('updated-setting', widgetKey.NerkhYab)
     }
   }
 
   function applyChanges() {
-    window.store.set(widgetKey.NerkhYab, {
-      alwaysOnTop: setting.alwaysOnTop,
-      enable: setting.enable,
-      transparentStatus: setting.transparentStatus,
-      bounds: window.store.get(widgetKey.NerkhYab).bounds,
-      currencies: setting.currencies,
-      borderRadius: setting.borderRadius,
-    })
+    window.store.set<widgetKey.NerkhYab, NerkhYabSettingStore>(
+      widgetKey.NerkhYab,
+      {
+        ...setting,
+        alwaysOnTop: setting.alwaysOnTop,
+        enable: setting.enable,
+        transparentStatus: setting.transparentStatus,
+        bounds: window.store.get(widgetKey.NerkhYab).bounds,
+        currencies: setting.currencies,
+        borderRadius: setting.borderRadius,
+      }
+    )
   }
   if (!setting) return null
 
@@ -92,7 +103,7 @@ export function NerkhYabSetting() {
               }}
             />
           </div>
-          <div className="flex flex-row items-center justify-between w-full gap-2">
+          <div className="flex flex-col">
             <Checkbox
               ripple={true}
               defaultChecked={setting.transparentStatus}
@@ -104,25 +115,16 @@ export function NerkhYabSetting() {
                   <Typography
                     variant={'h5'}
                     color="blue-gray"
-                    className="dark:text-[#c7c7c7] text-gray-600  text-[13px] font-[Vazir] flex flex-row items-center "
+                    className="dark:text-[#c7c7c7] text-gray-600  text-[13px] font-[Vazir]"
                   >
-                    شفاف
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="gray"
-                    className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir]"
-                  >
-                    استفاده از پس زمینه شفاف
+                    شفاف <span className="font-light">(پس زمینه شفاف)</span>
                   </Typography>
                 </div>
               }
               containerProps={{
-                className: '-mt-5 mr-2',
+                className: 'flex',
               }}
             />
-          </div>
-          <div className="flex flex-row items-center justify-between w-full gap-2">
             <Checkbox
               ripple={true}
               defaultChecked={setting.alwaysOnTop}
@@ -134,25 +136,18 @@ export function NerkhYabSetting() {
                   <Typography
                     variant={'h5'}
                     color="blue-gray"
-                    className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] flex flex-row items-center "
+                    className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir]"
                   >
-                    اولویت بالا
-                  </Typography>
-                  <Typography
-                    variant="h5"
-                    color="gray"
-                    className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir]"
-                  >
-                    اولویت بالایی برای نمایش
+                    اولویت بالا{' '}
+                    <span className="font-light">(همیشه بالای همه باشد)</span>
                   </Typography>
                 </div>
               }
               containerProps={{
-                className: '-mt-5 mr-2',
+                className: 'flex',
               }}
             />
           </div>
-
           <div
             className="flex flex-row items-center justify-between w-full gap-2"
             dir="rtl"

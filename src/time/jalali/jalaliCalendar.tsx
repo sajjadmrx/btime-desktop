@@ -132,7 +132,7 @@ function DayComponent({
   }
 
   let isCurrentDayColor = null
-  if (isHoliday) {
+  if (isHolidayDay) {
     isCurrentDayColor = isTransparent
       ? 'dark:bg-black/60 bg-black/20 outline dark:outline-red-400/45  outline-gray-100/60'
       : 'outline outline-red-400/45'

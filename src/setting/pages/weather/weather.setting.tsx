@@ -30,8 +30,15 @@ export function WeatherSetting() {
     setting[key] = value
     setSetting({ ...setting })
     applyChanges()
+
     if (key == 'transparentStatus') {
       window.ipcRenderer.send('toggle-transparent', widgetKey.Weather)
+    }
+
+    if (key === 'enable') {
+      window.ipcRenderer.send('toggle-enable', widgetKey.Weather)
+    } else if (!['transparentStatus', 'borderRadius'].includes(key)) {
+      window.ipcRenderer.send('updated-setting', widgetKey.Weather)
     }
   }
 
@@ -51,7 +58,8 @@ export function WeatherSetting() {
   }, [])
 
   function applyChanges() {
-    window.store.set(widgetKey.Weather, {
+    window.store.set<widgetKey, WeatherSettingStore>(widgetKey.Weather, {
+      ...setting,
       alwaysOnTop: setting.alwaysOnTop,
       enable: setting.enable,
       transparentStatus: setting.transparentStatus,

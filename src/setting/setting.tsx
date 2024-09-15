@@ -44,8 +44,7 @@ function App() {
   }, [])
 
   function onExitButtonClick() {
-    const x = data.find((x) => x.isExit)
-    document.querySelector(`[data-value="${x.value}"]`).click()
+    window.close()
   }
 
   const data = [
@@ -222,27 +221,6 @@ function App() {
       ),
       element: <AboutUs />,
     },
-    {
-      label: 'خروج',
-      value: 'ts',
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="size-4 dark:text-[#e8e7e7] text-gray-600"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
-      ),
-      isExit: true,
-    },
   ]
 
   return (
@@ -294,45 +272,11 @@ function App() {
               ))}
             </TabsHeader>
             <TabsBody className="w-screen">
-              {data.map(({ value, element, isExit }) =>
-                isExit ? (
-                  <TabPanel key={value} value={value}>
-                    <div className="flex flex-col items-center justify-center h-full">
-                      <Typography className="font-[Vazir] font-bold text-gray-600 dark:text-[#e8e7e7]">
-                        آیا مطمئن هستید؟
-                      </Typography>
-                      <Typography className="font-[Vazir] text-gray-600 dark:text-[#e8e7e7]">
-                        برای اعمال تغییرات نیاز به کلیک بر روی &quot;خروج و
-                        اعمال تغییرات&quot; دارید.
-                      </Typography>
-
-                      <div className="flex flex-row gap-4  items-center">
-                        <button
-                          className="bg-red-500 text-white font-[Vazir] font-light rounded-md px-4 py-2 mt-4 w-full transition duration-300 ease-in-out transform hover:bg-red-600 focus:bg-red-700"
-                          onClick={() => window.ipcMain.reOpen()}
-                        >
-                          خروج و اعمال تغییرات
-                        </button>
-
-                        <button
-                          className="dark:text-gray-300 text-gray-600 font-[Vazir] font-light rounded-md px-4 py-2 mt-4 w-32 transition duration-300 ease-in-out transform 
-                          hover:bg-blue-600/30
-                          hover:dark:text-gray-100
-                          hover:text-gray-100
-                          focus:bg-blue-700"
-                          onClick={() => window.close()}
-                        >
-                          انصراف
-                        </button>
-                      </div>
-                    </div>
-                  </TabPanel>
-                ) : (
-                  <TabPanel key={value} value={value} className="h-screen">
-                    {element}
-                  </TabPanel>
-                )
-              )}
+              {data.map(({ value, element }) => (
+                <TabPanel key={value} value={value} className="h-screen">
+                  {element}
+                </TabPanel>
+              ))}
             </TabsBody>
           </Tabs>
         </div>
