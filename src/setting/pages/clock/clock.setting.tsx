@@ -21,7 +21,6 @@ export function ClockSetting() {
     }
 
     fetchTimezones()
-
     return () => {
       fetchTimezones()
     }
@@ -235,7 +234,8 @@ export function ClockSetting() {
                   getTimeZoneItem(timezones, e.target.value)
                 )
               }
-              defaultValue={setting?.timeZone.value}
+              value={setting?.timeZone.value}
+              disabled={timezones.length === 0}
             >
               {timezones.map((timezone: Timezone, index) => (
                 <option
