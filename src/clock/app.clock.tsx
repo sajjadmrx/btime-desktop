@@ -90,7 +90,7 @@ function App() {
     <div className="h-screen w-screen overflow-hidden bg-[#33333330]">
       <div className="moveable px-0 h-full">
         <div className="flex h-full items-center text-center justify-center px-2">
-          <div className="text-6xl flex-col font-bold dark:text-gray-400 text-gray-600 font-mono relative w-60 overflow-clip px-2 font-[digital7]">
+          <div className="text-6xl flex-col font-bold text-gray-600 text-gray-trasnparent dark:text-[#eee] font-mono relative w-60 overflow-clip px-2 font-[digital7]">
             <div ref={timeRef}>00:00:00</div>
             <div
               className={'font-[vazir] text-sm flex flex-col gap-1'}
