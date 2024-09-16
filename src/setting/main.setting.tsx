@@ -29,9 +29,3 @@ window.ipcRenderer.on('transparent_status', function (evt, message) {
     bodyElement.classList.add('transparent-active')
   } else bodyElement.classList.remove('transparent-active')
 })
-
-window.addEventListener('DOMContentLoaded', () => {
-  window.electronAPI.onUpdateDetails(() => {
-    document.querySelector(`[data-value="notification"]`).click()
-  })
-})

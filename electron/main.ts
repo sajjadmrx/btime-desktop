@@ -185,14 +185,14 @@ async function onAppReady() {
   }
 
   const appVersion = app.getVersion()
-  // if (store.get('currenctVersion') !== appVersion) {
-  //   store.set('currenctVersion', appVersion)
-  //   const settingPage = await createSettingWindow()
-  //   settingPage.once('ready-to-show', async () => {
-  //     await new Promise((resolve) => setTimeout(resolve, 1000))
-  //     settingPage.webContents.send('update-details', { hello: 'world' })
-  //   })
-  // }
+  if (store.get('currenctVersion') !== appVersion) {
+    store.set('currenctVersion', appVersion)
+    const settingPage = await createSettingWindow()
+    settingPage.once('ready-to-show', async () => {
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+      settingPage.webContents.send('update-details', { hello: 'world' })
+    })
+  }
 
   nativeTheme.themeSource = store.get('theme')
   createTray()

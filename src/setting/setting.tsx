@@ -10,17 +10,18 @@ import {
   Typography,
 } from '@material-tailwind/react'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { BtimeSetting } from './pages/btime/btime.setting'
 import { NerkhYabSetting } from './pages/nerkhyab/nerkhYab.setting'
 import { AppSetting } from './pages/setting/app.setting'
 import { ArzChandSetting } from './pages/arzChand/arzChand.setting'
 import { WeatherSetting } from './pages/weather/weather.setting'
 import { AboutUs } from './pages/about-us/aboutUs'
-import { NotificationPage } from './pages/notifications/notification'
 import { ClockSetting } from './pages/clock/clock.setting'
+import UpdateModal from './components/updateModal'
 
 function App() {
+  const [open, setOpen] = useState(false)
   useEffect(() => {
     const handleColorSchemeChange = (e) => {
       document.documentElement.classList.remove('dark')
@@ -29,12 +30,17 @@ function App() {
       }
     }
 
+    window.electronAPI.onUpdateDetails(() => {
+      setOpen(true)
+    })
+
     const colorSchemeMediaQuery = window.matchMedia(
       '(prefers-color-scheme: dark)'
     )
     handleColorSchemeChange(colorSchemeMediaQuery)
 
     colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
+
     return () => {
       colorSchemeMediaQuery.removeEventListener(
         'change',
@@ -45,6 +51,10 @@ function App() {
 
   function onExitButtonClick() {
     window.close()
+  }
+
+  function onClick() {
+    setOpen(false)
   }
 
   const data = [
@@ -180,27 +190,6 @@ function App() {
       element: <AppSetting />,
     },
     {
-      label: 'پیام ها',
-      value: 'notification',
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="size-4 dark:text-[#e8e7e7] text-gray-600"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5"
-          />
-        </svg>
-      ),
-      element: <NotificationPage />,
-    },
-    {
       label: 'درباره ما',
       value: 'about',
       icon: (
@@ -280,6 +269,7 @@ function App() {
             </TabsBody>
           </Tabs>
         </div>
+        {open && <UpdateModal onClick={onClick} />}
       </div>
     </>
   )
