@@ -87,7 +87,7 @@ function DayComponent({ index, gregorianDay, isTransparent }: Prop) {
   return (
     <div
       key={index}
-      className={`text-center mb-[.1rem] h-5 p-1 rounded cursor-pointer text-xs sm:text-sm  lg:text-xl lg:h-8
+      className={`text-center mb-[.1rem] h-5 p-1 rounded cursor-pointer text-xs sm:text-sm
                 transition-all duration-100  
                 ${textColor}
                 ${isCurrentDay && isCurrentDayColor}

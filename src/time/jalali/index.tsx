@@ -18,7 +18,7 @@ export function JalaliComponent(prop: Prop) {
         <div className="text-6xl select-none text-gray-600 text-gray-trasnparent dark:text-[#eee]  ">
           {currentTime.locale('fa').jDate()}
         </div>
-        <div className="flex flex-row gap-1 text-gray-600 text-gray-trasnparent dark:text-[#eee] font-light">
+        <div className="flex flex-row gap-1 text-gray-600 text-gray-trasnparent dark:text-[#eee]">
           <div>{currentTime.locale('fa').jYear()}</div>
           <div>{currentTime.locale('fa').format('jMMMM')}</div>
         </div>
