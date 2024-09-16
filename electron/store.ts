@@ -72,7 +72,7 @@ export const store = new electronStore<StoreKey>({
         minHeight: 150,
         minWidth: 150,
         maxHeight: 266,
-        maxWidth: 500,
+        maxWidth: 510,
       },
       currentCalender: 'Jalali',
       showDayEvents: true,
