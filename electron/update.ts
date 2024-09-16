@@ -2,6 +2,9 @@ import { autoUpdater } from 'electron-updater'
 import isDev from 'electron-is-dev'
 import ms from 'ms'
 import eLogger from 'electron-log'
+import { nativeImage, Notification } from 'electron'
+import { getIconPath } from '../shared/getIconPath'
+
 export function update(win: Electron.BrowserWindow, app: Electron.App) {
   autoUpdater.autoDownload = true
   autoUpdater.disableWebInstaller = false
@@ -21,13 +24,14 @@ export function update(win: Electron.BrowserWindow, app: Electron.App) {
     autoUpdater.logger.info('checking....')
   })
 
-  autoUpdater.on('update-available', (arg) => {
-    win.webContents.send('update-can-available', {
-      update: true,
-      version: app.getVersion(),
-      notes: arg.releaseNotes,
-      newVersion: arg?.version,
-    })
+  autoUpdater.on('update-available', () => {
+    new Notification({
+      title: `📥 نسخه جدید ویجت فای (بی تایم) در دسترس قرار گرفت`,
+      body: `نسخه جدید در حال بارگیری و نصب است لطفا منتظر بمانید...`,
+      subtitle: 'بروزرسانی',
+      icon: nativeImage.createFromPath(getIconPath()),
+    }).show()
+    autoUpdater.logger.info('update available')
   })
 
   autoUpdater.on('update-not-available', (arg) => {
