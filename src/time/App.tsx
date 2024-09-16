@@ -4,13 +4,16 @@ import { JalaliComponent } from './jalali'
 import { BtimeSettingStore } from '../../electron/store'
 import { widgetKey } from '../../shared/widgetKey'
 import { GregorianComponent } from './gregorian'
+import { DayEventsComponent } from './dayEvents/dayEvents'
+import ms from 'ms'
 
 function App() {
   const [widgetSetting, setWidgetSetting] = useState<BtimeSettingStore>(
     window.store.get(widgetKey.BTime)
   )
+  const [currentDate, setCurrentDate] = useState(moment())
+
   useEffect(() => {
-    console.log(widgetSetting)
     const handleColorSchemeChange = (e) => {
       document.documentElement.classList.remove('dark')
       if (e.matches) {
@@ -28,22 +31,33 @@ function App() {
     })
 
     colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
+
+    const interval = setInterval(() => {
+      setCurrentDate(moment())
+    }, ms('5m')) // 5m
+
     return () => {
       colorSchemeMediaQuery.removeEventListener(
         'change',
         handleColorSchemeChange
       )
+      clearInterval(interval)
     }
   }, [])
 
   return (
     <>
       <div className="h-screen w-screen overflow-hidden">
-        {widgetSetting && widgetSetting.currentCalender == 'Gregorian' ? (
-          <GregorianComponent currentTime={moment()} />
-        ) : (
-          <JalaliComponent currentDate={moment()} />
-        )}
+        <div className="flex flex-col h-screen overflow-hidden">
+          {widgetSetting && widgetSetting.currentCalender == 'Gregorian' ? (
+            <GregorianComponent currentTime={currentDate} />
+          ) : (
+            <JalaliComponent currentDate={currentDate} />
+          )}
+          {widgetSetting.showDayEvents && (
+            <DayEventsComponent currentDate={currentDate} />
+          )}
+        </div>
       </div>
     </>
   )

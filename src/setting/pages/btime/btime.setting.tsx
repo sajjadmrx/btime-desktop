@@ -130,6 +130,30 @@ export function BtimeSetting() {
                 className: 'flex',
               }}
             />
+            <Checkbox
+              ripple={true}
+              defaultChecked={setting.showDayEvents}
+              onClick={() =>
+                setSettingValue('showDayEvents', !setting.showDayEvents)
+              }
+              label={
+                <div>
+                  <Typography
+                    variant={'h5'}
+                    color="blue-gray"
+                    className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] items-center "
+                  >
+                    نمایش مناسبت های روز و اعلانات{' '}
+                    <span className="font-light">
+                      (نمایش مناسبت های روز و اعلانات در زیر ویجت)
+                    </span>
+                  </Typography>
+                </div>
+              }
+              containerProps={{
+                className: 'flex',
+              }}
+            />
           </div>
           <div className="w-full">
             <label className="text-gray-600 dark:text-[#eee] font-semibold text-sm">

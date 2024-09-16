@@ -52,10 +52,6 @@ export function JalaliCalendar({ currentDate }: JalaliCalendarProp) {
       setIsTransparent(document.body.classList.contains('transparent-active'))
     })
 
-    getMonthEvents().then((data) => {
-      setEvents(data)
-    })
-
     observer.observe(document.body, {
       attributes: true,
       attributeFilter: ['class'],
@@ -63,6 +59,16 @@ export function JalaliCalendar({ currentDate }: JalaliCalendarProp) {
 
     return () => {
       observer.disconnect()
+    }
+  }, [])
+
+  useEffect(() => {
+    getMonthEvents().then((data) => {
+      setEvents(data)
+    })
+
+    return () => {
+      setEvents([])
     }
   }, [currentDate])
 

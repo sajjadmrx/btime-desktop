@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { ForecastResponse, WeatherResponse } from './weather.interface'
-import { Timezone } from './api.interface'
+import { News, Timezone, TodayEvent } from './api.interface'
 
 const api = axios.create()
 const rawGithubApi = axios.create({
@@ -144,6 +144,38 @@ export async function getNotifications() {
   try {
     api.defaults.baseURL = await getMainApi()
     const response = await api.get('/notifications')
+    return response.data
+  } catch {
+    return null
+  }
+}
+
+export async function getTodayEvents(): Promise<TodayEvent[]> {
+  try {
+    api.defaults.baseURL = await getMainApi()
+    const response = await api.get<{
+      todayEvents: TodayEvent[]
+    }>('/date/todoy-events')
+    return response.data.todayEvents
+  } catch {
+    return []
+  }
+}
+
+export async function getOurNews(): Promise<News[]> {
+  try {
+    api.defaults.baseURL = await getMainApi()
+    const response = await api.get('/news')
+    return response.data
+  } catch {
+    return []
+  }
+}
+
+export async function getAppLogo(): Promise<string | null> {
+  try {
+    api.defaults.baseURL = await getMainApi()
+    const response = await api.get('/logo')
     return response.data
   } catch {
     return null

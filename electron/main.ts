@@ -68,6 +68,8 @@ async function onAppReady() {
       height: btimeStore.bounds.height,
       minHeight: btimeStore.bounds.minHeight || 150,
       minWidth: btimeStore.bounds.minWidth || 150,
+      maxHeight: btimeStore.bounds.maxHeight,
+      maxWidth: btimeStore.bounds.maxWidth,
       width: btimeStore.bounds.width,
       x: btimeStore.bounds.x,
       y: btimeStore.bounds.y,
@@ -87,6 +89,8 @@ async function onAppReady() {
       height: nerkhStore.bounds.height,
       minHeight: nerkhStore.bounds.minHeight || 120,
       minWidth: nerkhStore.bounds.minWidth || 226,
+      maxWidth: nerkhStore.bounds.maxWidth,
+      maxHeight: nerkhStore.bounds.maxHeight,
       width: nerkhStore.bounds.width,
       x: nerkhStore.bounds.x,
       y: nerkhStore.bounds.y,
@@ -135,6 +139,8 @@ async function onAppReady() {
       height: weatherStore.bounds.height,
       minWidth: weatherStore.bounds.minWidth || 183,
       minHeight: weatherStore.bounds.minHeight || 203,
+      maxWidth: weatherStore.bounds.maxWidth,
+      maxHeight: weatherStore.bounds.maxHeight,
       width: weatherStore.bounds.width,
       x: weatherStore.bounds.x,
       y: weatherStore.bounds.y,
@@ -157,6 +163,8 @@ async function onAppReady() {
       width: clockStore.bounds.width,
       minHeight: clockStore.bounds.minHeight,
       minWidth: clockStore.bounds.minWidth,
+      maxHeight: clockStore.bounds.maxHeight,
+      maxWidth: clockStore.bounds.maxWidth,
       x: clockStore.bounds.x,
       y: clockStore.bounds.y,
       title: widgetKey.Clock,
@@ -177,14 +185,14 @@ async function onAppReady() {
   }
 
   const appVersion = app.getVersion()
-  if (store.get('currenctVersion') !== appVersion) {
-    store.set('currenctVersion', appVersion)
-    const settingPage = await createSettingWindow()
-    settingPage.once('ready-to-show', async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      settingPage.webContents.send('update-details', { hello: 'world' })
-    })
-  }
+  // if (store.get('currenctVersion') !== appVersion) {
+  //   store.set('currenctVersion', appVersion)
+  //   const settingPage = await createSettingWindow()
+  //   settingPage.once('ready-to-show', async () => {
+  //     await new Promise((resolve) => setTimeout(resolve, 1000))
+  //     settingPage.webContents.send('update-details', { hello: 'world' })
+  //   })
+  // }
 
   nativeTheme.themeSource = store.get('theme')
   createTray()
