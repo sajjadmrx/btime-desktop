@@ -269,6 +269,28 @@ export function ClockSetting() {
               </div>
             </div>
           </div>
+          <div className="w-full">
+            <label className="text-gray-600 dark:text-[#eee] font-semibold text-sm">
+              قالب ساعت
+            </label>
+            <div className="flex mt-2 gap-2 w-full h-14 rounded-lg px-2 py-2 dark:bg-[#464545] bg-[#e8e6e6]">
+              <div
+                className={`w-full h-10 flex justify-center items-center rounded-lg text-gray-600 dark:text-[#eee] cursor-pointer bg-[#f5f5f5] dark:bg-[#3a3a3a] `}
+              >
+                دیجیتال 1
+              </div>
+              <div
+                className={`w-full h-10 flex justify-center items-center rounded-lg text-gray-600 opacity-60 dark:text-[#eee]`}
+              >
+                به‌زودی
+              </div>
+              <div
+                className={`w-full h-10 flex justify-center items-center rounded-lg text-gray-600 opacity-60 dark:text-[#eee]`}
+              >
+                به‌زودی
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>
