@@ -74,7 +74,7 @@ export function JalaliCalendar({ currentDate }: JalaliCalendarProp) {
 
   return (
     <div
-      className="w-full max-w-96 h-full rounded-lg overflow-clip not-moveable pt-2 lg:pt-4 px-1"
+      className="w-full max-w-96 h-full rounded-lg overflow-hidden not-moveable pt-2 lg:pt-4 px-1"
       dir="rtl"
     >
       <div className="grid grid-cols-7 space-x-2 sm:p-2 lg:space-x-4">
@@ -152,9 +152,7 @@ function DayComponent({
 
   const dayEvents = events.filter((event) => Number(event.day) == day)
 
-  const dayEventsList = dayEvents.length
-    ? dayEvents.map((d) => d.event)
-    : ['مناسبتی ثبت نشده']
+  const dayEventsList = dayEvents.length ? dayEvents.map((d) => d) : []
 
   const toolTipBgColor = isTransparent
     ? 'bg-gray-800 dark:bg-gray-900'
@@ -164,24 +162,39 @@ function DayComponent({
     ? 'hover:bg-gray-600/20 dark:hover:text-gray-200'
     : 'hover:bg-gray-600/20 dark:hover:text-gray-200'
 
-  const eventCompoenent = dayEventsList.map((event, index) => {
-    return (
-      <div
-        key={index}
-        className="text-[.60rem] font-[Vazir] dark:text-gray-400 text-gray-200"
-      >
-        {event}
-      </div>
-    )
-  })
+  function DayEvents() {
+    return dayEventsList.map((eventInfo, index) => (
+      <li key={index} className="truncate max-w-full">
+        <span
+          className={`whitespace-break-spaces font-[Vazir] font-light text-xs ${eventInfo.isHoliday ? 'dark:text-red-400 text-red-600' : 'dark:text-gray-300 text-gray-600/80'}`}
+        >
+          {eventInfo.event} {eventInfo.isHoliday ? '(تعطیل)' : ''}
+        </span>
+      </li>
+    ))
+  }
 
   return (
     <>
       <Tooltip
-        className={`rounded-lg ${toolTipBgColor} bg-gray-700`}
+        className={`rounded-bl-3xl rounded-tr-3xl ${toolTipBgColor} w-52 h-24 truncate
+          dark:bg-gray-900 bg-[#d2d2d2] dark:text-gray-200 text-gray-800 shadow-lg
+          `}
         content={
-          <div className="flex flex-col justify-center items-center">
-            {eventCompoenent}
+          <div className="flex flex-col justify-between items-center w-full">
+            <ul
+              className="px-4 text-xs bg-gray-lightest text-blue-darkest dark:bg-d-black-30 dark:text-d-black-70"
+              dir="rtl"
+            >
+              {dayEventsList.length ? (
+                <DayEvents />
+              ) : (
+                <li className="text-center dark:text-gray-300 text-gray-600 font-[Vazir] font-light text-xs">
+                  مناستبی ثبت نشده.
+                </li>
+              )}
+            </ul>
+            <div className="flex justify-between text-gray text-xs w-full dark:bg-d-black-40 px-4 py-1"></div>
           </div>
         }
         animate={{
