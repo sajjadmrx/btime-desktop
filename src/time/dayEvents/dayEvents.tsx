@@ -43,7 +43,7 @@ export function DayEventsComponent({ currentDate }: Prop) {
     <div>
       <div className="w-full bg-gray-400 dark:bg-[#a8a8a8] h-0.5 mt-1 sm:invisible xs:invisible h-xs:invisible"></div>
       <div className="flex flex-row-reverse  justify-between p-2 lg:p-0 h-28 sm:invisible xs:invisible h-xs:invisible">
-        <div className="flex-col items-end w-72 h-24 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
+        <div className="flex-col items-end w-72 h-24 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100/60 dark:scrollbar-thumb-gray-600/20 dark:scrollbar-track-gray-800/20">
           <div className="px-4 py-2 w-full text-right">
             {<EventsDisplay events={events} />}
             {<NewsDisplay />}

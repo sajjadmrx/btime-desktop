@@ -185,8 +185,8 @@ async function onAppReady() {
   }
 
   const appVersion = app.getVersion()
-  if (store.get('currenctVersion') !== appVersion) {
-    store.set('currenctVersion', appVersion)
+  if (store.get('currentVersion') !== appVersion) {
+    store.set('currentVersion', appVersion)
     const settingPage = await createSettingWindow()
     settingPage.once('ready-to-show', async () => {
       await new Promise((resolve) => setTimeout(resolve, 2000))

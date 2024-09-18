@@ -48,7 +48,35 @@ const UpdateModal = ({ onClick }) => {
       text: string
     }[]
   }
-  const updateDetails: Update[] = []
+  const updateDetails: Update[] = [
+    {
+      date: '1403/06/27',
+      last: true,
+      version: '1.4.0',
+      updates: [
+        {
+          emoji: '🕰️',
+          text: 'اضافه شدن ساعت دیجیتال',
+        },
+        {
+          emoji: '📝',
+          text: 'اضافه شدن مناسبت های روز در ویجت تایم',
+        },
+        {
+          emoji: '⚙️',
+          text: 'اضافه شدن امکان اعمال مستقیم تغییرات در تنظیمات ویجت ها',
+        },
+        {
+          emoji: '🐛',
+          text: 'رفع مشکل تشخیص درست روزهای تعطیل',
+        },
+        {
+          emoji: '🐛',
+          text: 'رفع چندین مشکل جزئی',
+        },
+      ],
+    },
+  ]
 
   return (
     <div className="fixed z-50 inset-0 bg-opacity-50 flex items-center justify-center p-4 bg-black">
