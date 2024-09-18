@@ -80,6 +80,7 @@ export function initIpcMain() {
       (win) => win.title === windowKey
     )[0]
     const setting = store.get(widgetKey[windowKey])
+    const moveable = store.get('moveable')
     if (!setting) {
       userLogger.error(`Setting not found for ${windowKey}`)
       return
@@ -89,7 +90,6 @@ export function initIpcMain() {
         win.close()
       }
     } else {
-      console.log(setting.bounds)
       await createWindow({
         height: setting.bounds.height,
         width: setting.bounds.width,
@@ -105,6 +105,7 @@ export function initIpcMain() {
         alwaysOnTop: setting.alwaysOnTop,
         reziable: true,
         saveBounds: true,
+        moveable,
       })
       userLogger.info(`Widget ${windowKey} enabled`)
     }

@@ -58,6 +58,7 @@ export type StoreKey = {
   [widgetKey.Clock]: ClockSettingStore
   startup: boolean
   theme: Theme
+  moveable: boolean
   currentVersion: string
 }
 export const store = new electronStore<StoreKey>({
@@ -155,6 +156,7 @@ export const store = new electronStore<StoreKey>({
     },
     startup: true,
     theme: 'light',
+    moveable: true,
     currentVersion: null,
   },
   name: 'widgetify-app',

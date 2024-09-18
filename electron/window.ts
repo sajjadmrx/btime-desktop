@@ -9,6 +9,7 @@ export interface Window {
   height: number
   minHeight: number
   width: number
+  moveable: boolean
   minWidth: number
   maxWidth?: number
   maxHeight?: number
@@ -30,6 +31,7 @@ export async function createWindow(payload: Window) {
     payload.x = x
     payload.y = y
   }
+
   const win = new BrowserWindow({
     icon: getIconPath(),
     webPreferences: {
@@ -50,7 +52,7 @@ export async function createWindow(payload: Window) {
     alwaysOnTop: payload.alwaysOnTop,
     skipTaskbar: true,
     fullscreenable: false,
-    movable: true,
+    movable: payload.moveable,
     center: true,
     x: payload.x || undefined,
     y: payload.y || undefined,
@@ -193,6 +195,7 @@ export async function createSettingWindow() {
     width: 595,
     minHeight: 432,
     minWidth: 595,
+    moveable: true,
     x: 0,
     y: 0,
     title: 'Setting',

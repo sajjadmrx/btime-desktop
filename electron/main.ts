@@ -61,7 +61,7 @@ async function onAppReady() {
   const arzChandStore = store.get(widgetKey.ArzChand)
   const weatherStore = store.get(widgetKey.Weather)
   const clockStore = store.get(widgetKey.Clock)
-
+  const moveable = store.get('moveable')
   // Btime widget
   if (btimeStore.enable) {
     const btime = await createWindow({
@@ -78,6 +78,7 @@ async function onAppReady() {
       devTools: true,
       alwaysOnTop: btimeStore.alwaysOnTop,
       reziable: true,
+      moveable,
       saveBounds: true,
     })
     mainWin = btime
@@ -99,6 +100,7 @@ async function onAppReady() {
       devTools: true,
       alwaysOnTop: nerkhStore.alwaysOnTop,
       reziable: true,
+      moveable,
       saveBounds: true,
     })
 
@@ -116,7 +118,7 @@ async function onAppReady() {
       minWidth: arzChandStore.bounds.minWidth || 320,
       maxWidth: arzChandStore.bounds.maxWidth || 410,
       maxHeight: arzChandStore.bounds.maxHeight || 319,
-
+      moveable,
       width: arzChandStore.bounds.width,
       x: arzChandStore.bounds.x,
       y: arzChandStore.bounds.y,
@@ -150,6 +152,7 @@ async function onAppReady() {
       alwaysOnTop: weatherStore.alwaysOnTop,
       reziable: true,
       saveBounds: true,
+      moveable,
     })
 
     if (!mainWin) {
@@ -173,6 +176,7 @@ async function onAppReady() {
       alwaysOnTop: clockStore.alwaysOnTop,
       reziable: true,
       saveBounds: true,
+      moveable,
     })
 
     if (!mainWin) {
