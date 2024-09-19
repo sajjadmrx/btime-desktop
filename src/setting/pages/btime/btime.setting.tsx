@@ -154,6 +154,30 @@ export function BtimeSetting() {
                 className: 'flex',
               }}
             />
+            <Checkbox
+              ripple={true}
+              defaultChecked={setting.showCalendar}
+              onClick={() =>
+                setSettingValue('showCalendar', !setting.showCalendar)
+              }
+              label={
+                <div>
+                  <Typography
+                    variant={'h5'}
+                    color="blue-gray"
+                    className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] items-center "
+                  >
+                    نمایش تقویم{' '}
+                    <span className="font-light">
+                      (نمایش روزهای ماه در سمت جپ ویجت)
+                    </span>
+                  </Typography>
+                </div>
+              }
+              containerProps={{
+                className: 'flex',
+              }}
+            />
           </div>
           <div className="w-full">
             <label className="text-gray-600 dark:text-[#eee] font-semibold text-sm">

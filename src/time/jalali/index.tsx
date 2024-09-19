@@ -1,13 +1,15 @@
 import moment from 'jalali-moment'
 import { JalaliCalendar } from './jalaliCalendar'
 import React from 'react'
+import { BtimeSettingStore } from 'electron/store'
 
 interface Prop {
   currentDate: moment.Moment
+  setting: BtimeSettingStore
 }
 
 export function JalaliComponent(prop: Prop) {
-  const { currentDate: currentTime } = prop
+  const { currentDate: currentTime, setting } = prop
 
   return (
     <div className="flex w-full items-center justify-center h-full flex-row-reverse">
@@ -23,9 +25,11 @@ export function JalaliComponent(prop: Prop) {
           <div>{currentTime.locale('fa').format('jMMMM')}</div>
         </div>
       </div>
-      <div className="hidden md:flex lg:flex justify-center  not-moveable h-xs:hidden">
-        <JalaliCalendar currentDate={currentTime} />
-      </div>
+      {setting.showCalendar && (
+        <div className="hidden md:flex lg:flex justify-center  not-moveable h-xs:hidden">
+          <JalaliCalendar currentDate={currentTime} />
+        </div>
+      )}
     </div>
   )
 }

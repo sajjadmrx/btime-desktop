@@ -1,12 +1,14 @@
 import moment from 'jalali-moment'
 import { GregorianCalendar } from './gregorianCalendar'
+import { BtimeSettingStore } from 'electron/store'
 
 interface Prop {
   currentTime: moment.Moment
+  setting: BtimeSettingStore
 }
 
 export function GregorianComponent(prop: Prop) {
-  const { currentTime } = prop
+  const { currentTime, setting } = prop
   return (
     <div className="flex w-full items-center justify-center h-full flex-row-reverse">
       <div className="flex flex-col items-center justify-center gap-4 moveable  w-[40%]">
@@ -21,9 +23,11 @@ export function GregorianComponent(prop: Prop) {
           <div>{currentTime.locale('en').format('MMMM')}</div>
         </div>
       </div>
-      <div className="hidden md:flex lg:flex  flex-col items-center justify-center not-moveable">
-        <GregorianCalendar />
-      </div>
+      {setting.showCalendar && (
+        <div className="hidden md:flex lg:flex justify-center  not-moveable h-xs:hidden">
+          <GregorianCalendar />
+        </div>
+      )}
     </div>
   )
 }

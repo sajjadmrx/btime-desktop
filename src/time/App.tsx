@@ -50,9 +50,12 @@ function App() {
       <div className="h-screen w-screen overflow-hidden">
         <div className="flex flex-col h-screen overflow-hidden">
           {widgetSetting && widgetSetting.currentCalender == 'Gregorian' ? (
-            <GregorianComponent currentTime={currentDate} />
+            <GregorianComponent currentTime={currentDate} setting={widgetSetting} />
           ) : (
-            <JalaliComponent currentDate={currentDate} />
+            <JalaliComponent
+              currentDate={currentDate}
+              setting={widgetSetting}
+            />
           )}
           {widgetSetting.showDayEvents && (
             <DayEventsComponent currentDate={currentDate} />
