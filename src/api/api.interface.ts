@@ -1,17 +1,17 @@
 export interface Timezone {
-  label: string
-  value: string
-  offset: string
+	label: string
+	value: string
+	offset: string
 }
 export interface TodayEvent {
-  isHoliday: boolean
-  title: string
-  gif: string | null
+	isHoliday: boolean
+	title: string
+	gif: string | null
 }
 
 export interface News {
-  title: string
-  url: string | null
-  icon: string | null
-  isPin?: boolean
+	title: string
+	url: string | null
+	icon: string | null
+	isPin?: boolean
 }

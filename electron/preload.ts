@@ -2,58 +2,56 @@
 // @ts-nocheck
 
 import { contextBridge, ipcRenderer } from 'electron'
-import { store, StoreKey, widgetKey } from './store'
+import { store, type StoreKey, type widgetKey } from './store'
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer))
 
 // `exposeInMainWorld` can't detect attributes and methods of `prototype`, manually patching it.
 function withPrototype(obj: Record<string, any>) {
-  const protos = Object.getPrototypeOf(obj)
+	const protos = Object.getPrototypeOf(obj)
 
-  for (const [key, value] of Object.entries(protos)) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) continue
+	for (const [key, value] of Object.entries(protos)) {
+		if (Object.prototype.hasOwnProperty.call(obj, key)) continue
 
-    if (typeof value === 'function') {
-      // Some native APIs, like `NodeJS.EventEmitter['on']`, don't work in the Renderer process. Wrapping them into a function.
-      obj[key] = function (...args: any) {
-        return value.call(obj, ...args)
-      }
-    } else {
-      obj[key] = value
-    }
-  }
-  return obj
+		if (typeof value === 'function') {
+			// Some native APIs, like `NodeJS.EventEmitter['on']`, don't work in the Renderer process. Wrapping them into a function.
+			obj[key] = (...args: any) => value.call(obj, ...args)
+		} else {
+			obj[key] = value
+		}
+	}
+	return obj
 }
 
 // --------- Preload scripts loading ---------
 function domReady(
-  condition: DocumentReadyState[] = ['complete', 'interactive']
+	condition: DocumentReadyState[] = ['complete', 'interactive'],
 ) {
-  return new Promise((resolve) => {
-    if (condition.includes(document.readyState)) {
-      resolve(true)
-    } else {
-      document.addEventListener('readystatechange', () => {
-        if (condition.includes(document.readyState)) {
-          resolve(true)
-        }
-      })
-    }
-  })
+	return new Promise((resolve) => {
+		if (condition.includes(document.readyState)) {
+			resolve(true)
+		} else {
+			document.addEventListener('readystatechange', () => {
+				if (condition.includes(document.readyState)) {
+					resolve(true)
+				}
+			})
+		}
+	})
 }
 
 const safeDOM = {
-  append(parent: HTMLElement, child: HTMLElement) {
-    if (!Array.from(parent.children).find((e) => e === child)) {
-      parent.appendChild(child)
-    }
-  },
-  remove(parent: HTMLElement, child: HTMLElement) {
-    if (Array.from(parent.children).find((e) => e === child)) {
-      parent.removeChild(child)
-    }
-  },
+	append(parent: HTMLElement, child: HTMLElement) {
+		if (!Array.from(parent.children).find((e) => e === child)) {
+			parent.appendChild(child)
+		}
+	},
+	remove(parent: HTMLElement, child: HTMLElement) {
+		if (Array.from(parent.children).find((e) => e === child)) {
+			parent.removeChild(child)
+		}
+	},
 }
 
 /**
@@ -63,8 +61,8 @@ const safeDOM = {
  * https://matejkustec.github.io/SpinThatShit
  */
 function useLoading() {
-  const className = `loaders-css__square-spin`
-  const styleContent = `
+	const className = 'loaders-css__square-spin'
+	const styleContent = `
 @keyframes square-spin {
   25% { transform: perspective(100px) rotateX(180deg) rotateY(0); }
   50% { transform: perspective(100px) rotateX(180deg) rotateY(180deg); }
@@ -91,24 +89,24 @@ function useLoading() {
   z-index: 9;
 }
     `
-  const oStyle = document.createElement('style')
-  const oDiv = document.createElement('div')
+	const oStyle = document.createElement('style')
+	const oDiv = document.createElement('div')
 
-  oStyle.id = 'app-loading-style'
-  oStyle.innerHTML = styleContent
-  oDiv.className = 'app-loading-wrap'
-  oDiv.innerHTML = `<div class="${className}"><div></div></div>`
+	oStyle.id = 'app-loading-style'
+	oStyle.innerHTML = styleContent
+	oDiv.className = 'app-loading-wrap'
+	oDiv.innerHTML = `<div class="${className}"><div></div></div>`
 
-  return {
-    appendLoading() {
-      safeDOM.append(document.head, oStyle)
-      safeDOM.append(document.body, oDiv)
-    },
-    removeLoading() {
-      safeDOM.remove(document.head, oStyle)
-      safeDOM.remove(document.body, oDiv)
-    },
-  }
+	return {
+		appendLoading() {
+			safeDOM.append(document.head, oStyle)
+			safeDOM.append(document.body, oDiv)
+		},
+		removeLoading() {
+			safeDOM.remove(document.head, oStyle)
+			safeDOM.remove(document.body, oDiv)
+		},
+	}
 }
 
 // ----------------------------------------------------------------------
@@ -117,39 +115,39 @@ const { appendLoading, removeLoading } = useLoading()
 domReady().then(appendLoading)
 
 window.onmessage = (ev) => {
-  ev.data.payload === 'removeLoading' && removeLoading()
+	ev.data.payload === 'removeLoading' && removeLoading()
 }
 
 setTimeout(removeLoading, 4999)
 
 export const storePreload = {
-  // get: <T>(key: T & keyof StoreKey) => store.get<T>(key),
-  get: <T extends keyof StoreKey | keyof typeof widgetKey>(key: T) =>
-    store.get<T>(key as T),
-  set: <T extends keyof StoreKey | keyof typeof widgetKey, V>(
-    key: T,
-    value: V
-  ) => store.set<T>(key, value as V),
+	// get: <T>(key: T & keyof StoreKey) => store.get<T>(key),
+	get: <T extends keyof StoreKey | keyof typeof widgetKey>(key: T) =>
+		store.get<T>(key as T),
+	set: <T extends keyof StoreKey | keyof typeof widgetKey, V>(
+		key: T,
+		value: V,
+	) => store.set<T>(key, value as V),
 }
 
 export const ipcPreload = {
-  reOpen: () => ipcRenderer.send('reOpen'),
-  changeTheme: (theme: StoreKey['theme']) =>
-    ipcRenderer.send('changeTheme', theme),
-  openSettingWindow: () => ipcRenderer.send('openSettingWindow'),
-  openUrl: (url: string) => ipcRenderer.send('open-url', url),
-  toggleTransparent: (windowKey: string) =>
-    ipcRenderer.send('toggle-transparent', windowKey),
-  updatedSetting: (windowKey: string) =>
-    ipcRenderer.send('updated-setting', windowKey),
+	reOpen: () => ipcRenderer.send('reOpen'),
+	changeTheme: (theme: StoreKey['theme']) =>
+		ipcRenderer.send('changeTheme', theme),
+	openSettingWindow: () => ipcRenderer.send('openSettingWindow'),
+	openUrl: (url: string) => ipcRenderer.send('open-url', url),
+	toggleTransparent: (windowKey: string) =>
+		ipcRenderer.send('toggle-transparent', windowKey),
+	updatedSetting: (windowKey: string) =>
+		ipcRenderer.send('updated-setting', windowKey),
 
-  send: (channel: string, ...args: any[]) =>
-    ipcRenderer.invoke(channel, ...args),
+	send: (channel: string, ...args: any[]) =>
+		ipcRenderer.invoke(channel, ...args),
 }
 
 export const electronAPI = {
-  onUpdateDetails: (callback: (details: any) => void) =>
-    ipcRenderer.on('update-details', (_event, details) => callback(details)),
+	onUpdateDetails: (callback: (details: any) => void) =>
+		ipcRenderer.on('update-details', (_event, details) => callback(details)),
 }
 
 contextBridge.exposeInMainWorld('store', storePreload)

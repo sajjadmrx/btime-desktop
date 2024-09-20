@@ -1,244 +1,247 @@
 import moment from 'jalali-moment'
-import { useEffect, useState } from 'react'
-import { getMonthEvents, MonthEvent } from '../../api/api'
+import { useEffect, useId, useState } from 'react'
+import { getMonthEvents, type MonthEvent } from '../../api/api'
 import { Tooltip } from '@material-tailwind/react'
 
 interface JalaliCalendarProp {
-  currentDate: moment.Moment
+	currentDate: moment.Moment
 }
 export function JalaliCalendar({ currentDate }: JalaliCalendarProp) {
-  const [isTransparent, setIsTransparent] = useState<boolean>(
-    document.body.classList.contains('transparent-active')
-  )
+	const [isTransparent, setIsTransparent] = useState<boolean>(
+		document.body.classList.contains('transparent-active'),
+	)
 
-  const [events, setEvents] = useState<MonthEvent[]>([])
+	const [events, setEvents] = useState<MonthEvent[]>([])
 
-  const weekDays = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج']
+	const weekDays = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج']
 
-  const jalaliDate = moment(currentDate)
-    .locale('fa')
-    .format('jYYYY-jM-jD')
-    .split('-')
+	const jalaliDate = moment(currentDate)
+		.locale('fa')
+		.format('jYYYY-jM-jD')
+		.split('-')
 
-  const jalaliYear = parseInt(jalaliDate[0])
-  const jalaliMonth = parseInt(jalaliDate[1]) - 1 // Months in your code are 0-indexed
-  const jalaliDay = parseInt(jalaliDate[2])
+	const jalaliYear = Number.parseInt(jalaliDate[0])
+	const jalaliMonth = Number.parseInt(jalaliDate[1]) - 1 // Months in your code are 0-indexed
+	const jalaliDay = Number.parseInt(jalaliDate[2])
 
-  const daysInMonth = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29]
+	const daysInMonth = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29]
 
-  const isHoliday = (day, dayOfWeek) => {
-    const eventDay = events.filter((event) => event.day == day) || []
-    const isHoliday = eventDay.find((event) => event.isHoliday)
+	const isHoliday = (day, dayOfWeek) => {
+		// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
+		const eventDay = events.filter((event) => event.day == day) || []
+		const isHoliday = eventDay.find((event) => event.isHoliday)
 
-    if (eventDay && isHoliday) {
-      return true
-    }
+		if (eventDay && isHoliday) {
+			return true
+		}
 
-    return dayOfWeek === 6 // 6 represents Friday (0-indexed)
-  }
+		return dayOfWeek === 6 // 6 represents Friday (0-indexed)
+	}
 
-  const getJalaliFirstDayOfMonth = (year, month) => {
-    const firstDayOfMonth = moment(
-      `${year}-${month + 1}-01`,
-      'jYYYY-jM-D'
-    ).day()
-    return (firstDayOfMonth + 1) % 7 // Adjust to start the week from Saturday
-  }
+	const getJalaliFirstDayOfMonth = (year, month) => {
+		const firstDayOfMonth = moment(
+			`${year}-${month + 1}-01`,
+			'jYYYY-jM-D',
+		).day()
+		return (firstDayOfMonth + 1) % 7 // Adjust to start the week from Saturday
+	}
 
-  const jalaliFirstDay = getJalaliFirstDayOfMonth(jalaliYear, jalaliMonth)
+	const jalaliFirstDay = getJalaliFirstDayOfMonth(jalaliYear, jalaliMonth)
 
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setIsTransparent(document.body.classList.contains('transparent-active'))
-    })
+	useEffect(() => {
+		const observer = new MutationObserver(() => {
+			setIsTransparent(document.body.classList.contains('transparent-active'))
+		})
 
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ['class'],
-    })
+		observer.observe(document.body, {
+			attributes: true,
+			attributeFilter: ['class'],
+		})
 
-    return () => {
-      observer.disconnect()
-    }
-  }, [])
+		return () => {
+			observer.disconnect()
+		}
+	}, [])
 
-  useEffect(() => {
-    getMonthEvents().then((data) => {
-      setEvents(data)
-    })
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		getMonthEvents().then((data) => {
+			setEvents(data)
+		})
 
-    return () => {
-      setEvents([])
-    }
-  }, [currentDate])
+		return () => {
+			setEvents([])
+		}
+	}, [currentDate])
 
-  return (
-    <div
-      className="w-full max-w-96 h-full rounded-lg overflow-hidden not-moveable pt-2 lg:pt-4 px-1"
-      dir="rtl"
-    >
-      <div className="grid grid-cols-7 space-x-2 sm:p-2 lg:space-x-4">
-        {weekDays.map((day, index) => (
-          <WeekDayComponent
-            day={day}
-            isTransparent={isTransparent}
-            index={index}
-            key={day}
-          />
-        ))}
-        {[...Array(jalaliFirstDay)].map((_, index) => (
-          <div key={`empty-${index}`} className="text-center p-1 sm:p-2"></div>
-        ))}
-        {[...Array(daysInMonth[jalaliMonth])].map((_, index) => {
-          return (
-            <DayComponent
-              index={index}
-              isHoliday={isHoliday}
-              isTransparent={isTransparent}
-              jalaliDay={jalaliDay}
-              jalaliFirstDay={jalaliFirstDay}
-              key={index}
-              events={events}
-            />
-          )
-        })}
-      </div>
-    </div>
-  )
+	return (
+		<div
+			className="w-full max-w-96 h-full rounded-lg overflow-hidden not-moveable pt-2 lg:pt-4 px-1"
+			dir="rtl"
+		>
+			<div className="grid grid-cols-7 space-x-2 sm:p-2 lg:space-x-4">
+				{weekDays.map((day, index) => (
+					<WeekDayComponent
+						day={day}
+						isTransparent={isTransparent}
+						index={index}
+						key={day}
+					/>
+				))}
+				{[...Array(jalaliFirstDay)].map((_, index) => (
+					<div key={useId()} className="text-center p-1 sm:p-2"></div>
+				))}
+				{[...Array(daysInMonth[jalaliMonth])].map((_, index) => {
+					return (
+						<DayComponent
+							index={index}
+							isHoliday={isHoliday}
+							isTransparent={isTransparent}
+							jalaliDay={jalaliDay}
+							jalaliFirstDay={jalaliFirstDay}
+							key={useId()}
+							events={events}
+						/>
+					)
+				})}
+			</div>
+		</div>
+	)
 }
 
 interface Prop {
-  index: number
-  jalaliFirstDay: number
-  isTransparent: boolean
-  jalaliDay: number
-  isHoliday: (day: number, dayOfWeek: number) => boolean
-  events: MonthEvent[]
+	index: number
+	jalaliFirstDay: number
+	isTransparent: boolean
+	jalaliDay: number
+	isHoliday: (day: number, dayOfWeek: number) => boolean
+	events: MonthEvent[]
 }
 function DayComponent({
-  index,
-  jalaliFirstDay,
-  isTransparent,
-  jalaliDay,
-  isHoliday,
-  events,
+	index,
+	jalaliFirstDay,
+	isTransparent,
+	jalaliDay,
+	isHoliday,
+	events,
 }: Prop) {
-  const day = index + 1
-  const dayOfWeek = (jalaliFirstDay + index) % 7
-  const isHolidayDay = isHoliday(day, dayOfWeek)
-  const isCurrentDay = day === jalaliDay
+	const day = index + 1
+	const dayOfWeek = (jalaliFirstDay + index) % 7
+	const isHolidayDay = isHoliday(day, dayOfWeek)
+	const isCurrentDay = day === jalaliDay
 
-  let textColor = isTransparent
-    ? 'dark:text-gray-200 text-gray-300'
-    : 'dark:text-gray-400 text-gray-600'
-  if (isHolidayDay) {
-    textColor = isTransparent
-      ? 'dark:bg-red-400/10 dark:text-red-400 text-gray-100/80 bg-gray-100/10'
-      : 'bg-red-400/10 dark:text-red-400 text-red-600/70'
-  }
+	let textColor = isTransparent
+		? 'dark:text-gray-200 text-gray-300'
+		: 'dark:text-gray-400 text-gray-600'
+	if (isHolidayDay) {
+		textColor = isTransparent
+			? 'dark:bg-red-400/10 dark:text-red-400 text-gray-100/80 bg-gray-100/10'
+			: 'bg-red-400/10 dark:text-red-400 text-red-600/70'
+	}
 
-  let isCurrentDayColor = null
-  if (isHolidayDay) {
-    isCurrentDayColor = isTransparent
-      ? 'dark:bg-black/60 bg-black/20 outline dark:outline-red-400/45  outline-gray-100/60'
-      : 'outline outline-red-400/45'
-  } else {
-    isCurrentDayColor = isTransparent
-      ? 'dark:bg-black/60 bg-black/20 outline  outline-gray-100/60'
-      : 'outline outline-gray-500'
-  }
+	let isCurrentDayColor = null
+	if (isHolidayDay) {
+		isCurrentDayColor = isTransparent
+			? 'dark:bg-black/60 bg-black/20 outline dark:outline-red-400/45  outline-gray-100/60'
+			: 'outline outline-red-400/45'
+	} else {
+		isCurrentDayColor = isTransparent
+			? 'dark:bg-black/60 bg-black/20 outline  outline-gray-100/60'
+			: 'outline outline-gray-500'
+	}
 
-  isCurrentDayColor += ' -outline-offset-3 outline-1'
+	isCurrentDayColor += ' -outline-offset-3 outline-1'
 
-  const dayEvents = events.filter((event) => Number(event.day) == day)
+	// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
+	const dayEvents = events.filter((event) => Number(event.day) == day)
 
-  const dayEventsList = dayEvents.length ? dayEvents.map((d) => d) : []
+	const dayEventsList = dayEvents.length ? dayEvents.map((d) => d) : []
 
-  const toolTipBgColor = isTransparent
-    ? 'bg-gray-800 dark:bg-gray-900'
-    : 'bg-gray-100 dark:bg-gray-800'
+	const toolTipBgColor = isTransparent
+		? 'bg-gray-800 dark:bg-gray-900'
+		: 'bg-gray-100 dark:bg-gray-800'
 
-  const hoverDayColor = isTransparent
-    ? 'hover:bg-gray-600/20 dark:hover:text-gray-200'
-    : 'hover:bg-gray-600/20 dark:hover:text-gray-200'
+	const hoverDayColor = isTransparent
+		? 'hover:bg-gray-600/20 dark:hover:text-gray-200'
+		: 'hover:bg-gray-600/20 dark:hover:text-gray-200'
 
-  function DayEvents() {
-    return dayEventsList.map((eventInfo, index) => (
-      <li key={index} className="truncate max-w-full">
-        <span
-          className={`whitespace-break-spaces font-[Vazir] font-light text-xs ${eventInfo.isHoliday ? 'dark:text-red-400 text-red-600' : 'dark:text-gray-300 text-gray-600/80'}`}
-        >
-          {eventInfo.event} {eventInfo.isHoliday ? '(تعطیل)' : ''}
-        </span>
-      </li>
-    ))
-  }
+	function DayEvents() {
+		return dayEventsList.map((eventInfo) => (
+			<li key={useId()} className="truncate max-w-full">
+				<span
+					className={`whitespace-break-spaces font-[Vazir] font-light text-xs ${eventInfo.isHoliday ? 'dark:text-red-400 text-red-600' : 'dark:text-gray-300 text-gray-600/80'}`}
+				>
+					{eventInfo.event} {eventInfo.isHoliday ? '(تعطیل)' : ''}
+				</span>
+			</li>
+		))
+	}
 
-  return (
-    <>
-      <Tooltip
-        className={`rounded-bl-3xl rounded-tr-3xl ${toolTipBgColor} w-52 h-24 truncate
+	return (
+		<>
+			<Tooltip
+				className={`rounded-bl-3xl rounded-tr-3xl ${toolTipBgColor} w-52 h-24 truncate
           dark:bg-gray-900 bg-[#d2d2d2] dark:text-gray-200 text-gray-800 shadow-lg
           `}
-        content={
-          <div className="flex flex-col justify-between items-center w-full">
-            <ul
-              className="px-4 text-xs bg-gray-lightest text-blue-darkest dark:bg-d-black-30 dark:text-d-black-70"
-              dir="rtl"
-            >
-              {dayEventsList.length ? (
-                <DayEvents />
-              ) : (
-                <li className="text-center dark:text-gray-300 text-gray-600 font-[Vazir] font-light text-xs">
-                  مناستبی ثبت نشده.
-                </li>
-              )}
-            </ul>
-            <div className="flex justify-between text-gray text-xs w-full dark:bg-d-black-40 px-4 py-1"></div>
-          </div>
-        }
-        animate={{
-          mount: { scale: 1, y: 0 },
-          unmount: { scale: 0, y: 25 },
-        }}
-      >
-        <div
-          key={index}
-          className={`text-center mb-[.1rem] h-5 p-1 rounded cursor-pointer text-xs sm:text-sm  
+				content={
+					<div className="flex flex-col justify-between items-center w-full">
+						<ul
+							className="px-4 text-xs bg-gray-lightest text-blue-darkest dark:bg-d-black-30 dark:text-d-black-70"
+							dir="rtl"
+						>
+							{dayEventsList.length ? (
+								<DayEvents />
+							) : (
+								<li className="text-center dark:text-gray-300 text-gray-600 font-[Vazir] font-light text-xs">
+									مناستبی ثبت نشده.
+								</li>
+							)}
+						</ul>
+						<div className="flex justify-between text-gray text-xs w-full dark:bg-d-black-40 px-4 py-1"></div>
+					</div>
+				}
+				animate={{
+					mount: { scale: 1, y: 0 },
+					unmount: { scale: 0, y: 25 },
+				}}
+			>
+				<div
+					key={index}
+					className={`text-center mb-[.1rem] h-5 p-1 rounded cursor-pointer text-xs sm:text-sm  
                 transition-all duration-100  
                 ${textColor}
                 ${!isCurrentDay && hoverDayColor}
                 ${isCurrentDay && isCurrentDayColor}
               `}
-        >
-          {day}
-        </div>
-      </Tooltip>
-    </>
-  )
+				>
+					{day}
+				</div>
+			</Tooltip>
+		</>
+	)
 }
 interface WeekDayProp {
-  day: string
-  isTransparent: boolean
-  index: number
+	day: string
+	isTransparent: boolean
+	index: number
 }
 function WeekDayComponent({ day, isTransparent, index }: WeekDayProp) {
-  let textColor = isTransparent
-    ? 'dark:text-white text-gray-300'
-    : ' dark:text-gray-400 text-gray-600'
+	let textColor = isTransparent
+		? 'dark:text-white text-gray-300'
+		: ' dark:text-gray-400 text-gray-600'
 
-  if (index === 6) {
-    textColor = isTransparent
-      ? ' dark:text-red-400 text-gray-100/40'
-      : ' dark:text-red-400 text-red-600/70'
-  }
+	if (index === 6) {
+		textColor = isTransparent
+			? ' dark:text-red-400 text-gray-100/40'
+			: ' dark:text-red-400 text-red-600/70'
+	}
 
-  return (
-    <div
-      key={day}
-      className={`text-center md:font-bold  text-xs xs:text-[10px] truncate mb-1 ${textColor}`}
-    >
-      {day}
-    </div>
-  )
+	return (
+		<div
+			key={day}
+			className={`text-center md:font-bold  text-xs xs:text-[10px] truncate mb-1 ${textColor}`}
+		>
+			{day}
+		</div>
+	)
 }

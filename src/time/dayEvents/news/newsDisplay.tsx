@@ -1,27 +1,27 @@
 import { NewsCard } from './newsCard'
-import { News } from '../../../api/api.interface'
+import type { News } from '../../../api/api.interface'
 import { useEffect, useState } from 'react'
 import { getOurNews } from '../../../api/api'
 
 export function NewsDisplay() {
-  const [news, setNews] = useState<News[]>([])
+	const [news, setNews] = useState<News[]>([])
 
-  useEffect(() => {
-    async function fetchNews() {
-      const data = await getOurNews()
-      setNews(data)
-    }
+	useEffect(() => {
+		async function fetchNews() {
+			const data = await getOurNews()
+			setNews(data)
+		}
 
-    fetchNews()
-  }, [])
+		fetchNews()
+	}, [])
 
-  return (
-    <div className="mt-1 overflow-x-hidden">
-      {news.length
-        ? news.map((news, index) => (
-            <NewsCard key={index.toString()} news={news} />
-          ))
-        : null}
-    </div>
-  )
+	return (
+		<div className="mt-1 overflow-x-hidden">
+			{news.length
+				? news.map((news, index) => (
+						<NewsCard key={index.toString()} news={news} />
+					))
+				: null}
+		</div>
+	)
 }
