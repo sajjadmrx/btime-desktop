@@ -1,5 +1,5 @@
 import { Checkbox, Slider, Switch, Typography } from '@material-tailwind/react'
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
 import type { ClockSettingStore } from 'electron/store'
 import type { Timezone } from '../../../api/api.interface'
@@ -243,9 +243,9 @@ export function ClockSetting() {
 							value={setting?.timeZone.value}
 							disabled={timezones.length === 0}
 						>
-							{timezones.map((timezone: Timezone) => (
+							{timezones.map((timezone: Timezone, index) => (
 								<option
-									key={useId()}
+									key={index}
 									value={timezone.value}
 									className="font-light"
 								>

@@ -1,4 +1,4 @@
-import { useEffect, useState, useId } from 'react'
+import { useEffect, useState } from 'react'
 import type {
 	ForecastResponse,
 	WeatherResponse,
@@ -80,7 +80,7 @@ export function WeatherComponent({
 				</div>
 				<div className="flex flex-row mt-2 justify-around font-light rounded-md py-2 xs:w-40 sm:w-52 md:w-80 lg:w-96 ">
 					{forecast.map((item, index) => {
-						return <ForecastComponent weather={item} key={useId()} />
+						return <ForecastComponent weather={item} key={index} />
 					})}
 				</div>
 			</div>

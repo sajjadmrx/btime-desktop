@@ -1,5 +1,5 @@
 import type { MainSettingStore, Theme } from 'electron/store'
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ThemeComponent } from './theme.component'
 import { Checkbox, Typography } from '@material-tailwind/react'
 import { sendEvent } from '../../../api/api'
@@ -71,9 +71,9 @@ export function AppSetting() {
 							تم
 						</h1>
 						<div className="w-full flex flex-row justify-around px-3 gap-4  duration-200 h-20 mt-2">
-							{thmes.map((item) => (
+							{thmes.map((item, index) => (
 								<ThemeComponent
-									key={useId()}
+									key={index}
 									setThemeValue={setThemeValue}
 									themeState={mainSetting.theme}
 									theme={item.theme}

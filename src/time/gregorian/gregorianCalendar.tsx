@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export function GregorianCalendar() {
 	const [currentDate] = useState(new Date())
@@ -46,18 +46,18 @@ export function GregorianCalendar() {
 					<WeekDayComponent
 						day={day}
 						isTransparent={isTransparent}
-						key={useId()}
+						key={index}
 					/>
 				))}
 				{[...Array(gregorianFirstDay)].map((_, index) => (
-					<div key={useId()} className="text-center p-1 sm:p-2"></div>
+					<div key={index} className="text-center p-1 sm:p-2"></div>
 				))}
 				{[...Array(daysInMonth)].map((_, index) => (
 					<DayComponent
 						gregorianDay={gregorianDay}
 						index={index}
 						isTransparent={isTransparent}
-						key={useId()}
+						key={index}
 					/>
 				))}
 			</div>

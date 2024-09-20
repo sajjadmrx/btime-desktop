@@ -1,8 +1,6 @@
-import { useId } from 'react'
-
 export function NewsCard({ news }) {
 	return (
-		<div className="px-2 py-1" key={useId()}>
+		<div className="px-2 py-1">
 			<div className={'mt-2 mb-1 flex items-center'}>
 				<div
 					className="flex-grow flex items-center gap-2"

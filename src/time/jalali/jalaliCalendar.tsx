@@ -1,5 +1,5 @@
 import moment from 'jalali-moment'
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getMonthEvents, type MonthEvent } from '../../api/api'
 import { Tooltip } from '@material-tailwind/react'
 
@@ -89,7 +89,7 @@ export function JalaliCalendar({ currentDate }: JalaliCalendarProp) {
 					/>
 				))}
 				{[...Array(jalaliFirstDay)].map((_, index) => (
-					<div key={useId()} className="text-center p-1 sm:p-2"></div>
+					<div key={index} className="text-center p-1 sm:p-2"></div>
 				))}
 				{[...Array(daysInMonth[jalaliMonth])].map((_, index) => {
 					return (
@@ -99,7 +99,7 @@ export function JalaliCalendar({ currentDate }: JalaliCalendarProp) {
 							isTransparent={isTransparent}
 							jalaliDay={jalaliDay}
 							jalaliFirstDay={jalaliFirstDay}
-							key={useId()}
+							key={index}
 							events={events}
 						/>
 					)
@@ -166,8 +166,8 @@ function DayComponent({
 		: 'hover:bg-gray-600/20 dark:hover:text-gray-200'
 
 	function DayEvents() {
-		return dayEventsList.map((eventInfo) => (
-			<li key={useId()} className="truncate max-w-full">
+		return dayEventsList.map((eventInfo, index) => (
+			<li key={index} className="truncate max-w-full">
 				<span
 					className={`whitespace-break-spaces font-[Vazir] font-light text-xs ${eventInfo.isHoliday ? 'dark:text-red-400 text-red-600' : 'dark:text-gray-300 text-gray-600/80'}`}
 				>

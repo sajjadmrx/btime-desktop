@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { type CurrencyData, getRateByCurrency } from '../api/api'
 import { widgetKey } from '../../shared/widgetKey'
 import { CurrencyComponent } from './component/currency.component'
@@ -113,10 +113,10 @@ function App() {
 					>
 						{currencies?.length
 							? currencies.map((currency, index) => (
-									<CurrencyComponent currency={currency} key={useId()} />
+									<CurrencyComponent currency={currency} key={index} />
 								))
 							: [...Array(5)].map((_, index) => (
-									<CurrencyComponent currency={null} key={useId()} />
+									<CurrencyComponent currency={null} key={index} />
 								))}
 					</div>
 					{

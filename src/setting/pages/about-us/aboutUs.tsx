@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getSponsors } from '../../../api/api'
 
 export function AboutUs() {
@@ -127,9 +127,9 @@ export function AboutUs() {
 								حامیان
 							</h1>
 							<div className="flex flex-row gap-2 p-1 flex-wrap h-16  overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-500 dark:scrollbar-track-gray-300">
-								{sponsores.map((sponsor) => (
+								{sponsores.map((sponsor, index) => (
 									<div
-										key={useId()}
+										key={index}
 										className="hover:underline text-blue-500 cursor-pointer text-sm  h-fit"
 										onClick={() => window.ipcMain.openUrl(sponsor.url)}
 									>
