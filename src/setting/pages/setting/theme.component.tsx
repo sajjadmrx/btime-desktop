@@ -29,7 +29,9 @@ export function ThemeComponent({
         alt="light"
         className={`w-12 h-12 absolute left-16 top-10 z-0 ${themeState === theme ? 'opacity-50' : 'opacity-10'}`}
       />
-      <p className="text-sm font-medium font-[Vazir]">{text}</p>
+      <p className="text-sm font-medium font-[Vazir] dark:text-gray-400 text-gray-600">
+        {text}
+      </p>
     </div>
   )
 }

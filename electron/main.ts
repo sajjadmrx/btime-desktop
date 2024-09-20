@@ -18,6 +18,7 @@ import { toggleStartUp } from './utils/startup.util'
 import { initIpcMain } from './ipc-main'
 import { widgetKey } from '../shared/widgetKey'
 import { createSettingWindow, createWindow } from './window'
+import { sendEvent } from './utils/event'
 
 config()
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
@@ -52,7 +53,7 @@ if (isDev) {
 
 const isWindoAndDrawin: boolean = ['darwin', 'win32'].includes(process.platform)
 if (isWindoAndDrawin) {
-  toggleStartUp(app, store.get('startup'))
+  toggleStartUp(app, store.get('main').startup)
 }
 
 async function onAppReady() {
@@ -61,7 +62,7 @@ async function onAppReady() {
   const arzChandStore = store.get(widgetKey.ArzChand)
   const weatherStore = store.get(widgetKey.Weather)
   const clockStore = store.get(widgetKey.Clock)
-  const moveable = store.get('moveable')
+  const moveable = store.get('main').moveable
   // Btime widget
   if (btimeStore.enable) {
     const btime = await createWindow({
@@ -198,9 +199,15 @@ async function onAppReady() {
     })
   }
 
-  nativeTheme.themeSource = store.get('theme')
+  nativeTheme.themeSource = store.get('main').theme
   createTray()
   update(mainWin, app)
+
+  sendEvent({
+    name: 'app_open',
+    value: appVersion,
+    widget: 'main',
+  })
 }
 
 app.on('window-all-closed', () => {
@@ -275,12 +282,12 @@ function getContextMenu() {
 
     {
       label: 'Open at boot',
-      icon: store.get('startup') && getIcon('icons/checked.png'),
+      icon: store.get('main').startup && getIcon('icons/checked.png'),
       visible: isWindoAndDrawin,
       click: function () {
-        const startupStatus = store.get('startup')
+        const startupStatus = store.get('main').startup
         const newValue = !startupStatus
-        store.set('startup', newValue)
+        store.set('main.startup', newValue)
         toggleStartUp(app, newValue)
         contextMenu.closePopup()
         createTray()

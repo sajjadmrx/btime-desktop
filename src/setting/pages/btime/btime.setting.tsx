@@ -2,6 +2,7 @@ import { Checkbox, Slider, Switch, Typography } from '@material-tailwind/react'
 import { BtimeSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
+import { sendEvent } from '../../../api/api'
 
 export function BtimeSetting() {
   const [setting, setSetting] = useState<BtimeSettingStore>(null)
@@ -22,6 +23,15 @@ export function BtimeSetting() {
     if (key == 'transparentStatus') {
       window.ipcRenderer.send('toggle-transparent', widgetKey.BTime)
     }
+
+    if (!['borderRadius'].includes(key)) {
+      sendEvent({
+        name: `setting_${key}`,
+        value: value,
+        widget: widgetKey.NerkhYab,
+      })
+    }
+
     if (key === 'enable') {
       window.ipcRenderer.send('toggle-enable', widgetKey.BTime)
     } else if (!['transparentStatus', 'borderRadius'].includes(key)) {

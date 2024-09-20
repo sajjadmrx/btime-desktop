@@ -1,7 +1,11 @@
 import { Checkbox, Slider, Switch, Typography } from '@material-tailwind/react'
 import { NerkhYabSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
-import { getSupportedCurrencies, SupportedCurrencies } from '../../../api/api'
+import {
+  getSupportedCurrencies,
+  sendEvent,
+  SupportedCurrencies,
+} from '../../../api/api'
 import { widgetKey } from '../../../../shared/widgetKey'
 
 export function NerkhYabSetting() {
@@ -32,6 +36,14 @@ export function NerkhYabSetting() {
 
     if (key == 'transparentStatus') {
       window.ipcRenderer.send('toggle-transparent', widgetKey.NerkhYab)
+    }
+
+    if (!['borderRadius'].includes(key)) {
+      sendEvent({
+        name: `setting_${key}`,
+        value: value,
+        widget: widgetKey.NerkhYab,
+      })
     }
 
     if (key === 'enable') {

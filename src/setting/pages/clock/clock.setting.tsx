@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
 import { ClockSettingStore } from 'electron/store'
 import { Timezone } from '../../../api/api.interface'
-import { getTimezones } from '../../../api/api'
+import { getTimezones, sendEvent } from '../../../api/api'
 
 export function ClockSetting() {
   const [setting, setSetting] = useState<ClockSettingStore>(null)
@@ -35,6 +35,14 @@ export function ClockSetting() {
     applyChanges()
     if (key == 'transparentStatus') {
       window.ipcRenderer.send('toggle-transparent', widgetKey.Clock)
+    }
+
+    if (!['borderRadius'].includes(key)) {
+      sendEvent({
+        name: `setting_${key}`,
+        value: value,
+        widget: widgetKey.NerkhYab,
+      })
     }
 
     if (key === 'enable') {

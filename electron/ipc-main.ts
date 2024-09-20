@@ -1,5 +1,5 @@
 import { app, BrowserWindow, ipcMain, nativeTheme, shell } from 'electron'
-import { store, StoreKey } from './store'
+import { store, MainSettingStore } from './store'
 import { widgetKey } from '../shared/widgetKey'
 import { createSettingWindow, createWindow } from './window'
 import { userLogger } from '../shared/logger'
@@ -10,7 +10,7 @@ export function initIpcMain() {
     app.exit()
   })
 
-  ipcMain.on('changeTheme', (event, theme: StoreKey['theme']) => {
+  ipcMain.on('changeTheme', (event, theme: MainSettingStore['theme']) => {
     nativeTheme.themeSource = theme
   })
 
@@ -80,7 +80,7 @@ export function initIpcMain() {
       (win) => win.title === windowKey
     )[0]
     const setting = store.get(widgetKey[windowKey])
-    const moveable = store.get('moveable')
+    const moveable = store.get('main').moveable
     if (!setting) {
       userLogger.error(`Setting not found for ${windowKey}`)
       return

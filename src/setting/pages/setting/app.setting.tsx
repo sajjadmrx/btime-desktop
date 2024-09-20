@@ -1,30 +1,45 @@
-import { Theme } from 'electron/store'
+import { MainSettingStore, Theme } from 'electron/store'
 import { useEffect, useState } from 'react'
 import { ThemeComponent } from './theme.component'
 import { Checkbox, Typography } from '@material-tailwind/react'
+import { sendEvent } from '../../../api/api'
 
 export function AppSetting() {
-  const [themeState, setTheme] = useState<Theme>(null)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [moveable, setMoveable] = useState<boolean>(
-    window.store.get('moveable')
+  const [theme, setTheme] = useState<Theme>('light')
+  const [mainSetting, setMainSetting] = useState<MainSettingStore>(
+    window.store.get('main')
   )
 
   useEffect(() => {
-    setTheme(window.store.get('theme') as Theme)
+    setMainSetting(window.store.get('main'))
+    setTheme(mainSetting.theme)
   }, [])
 
-  function onMoveableChange(value: boolean) {
-    window.store.set('moveable', value)
-  }
-
   function setThemeValue(value: Theme) {
-    setTheme(value)
-    window.store.set('theme', value)
     window.ipcMain.changeTheme(value)
+    setSettingValue('theme', value)
   }
 
-  if (!themeState) return null
+  function setSettingValue<T extends keyof MainSettingStore>(
+    key: T,
+    value: MainSettingStore[T]
+  ) {
+    mainSetting[key] = value
+    setMainSetting({ ...mainSetting })
+    applyChanges()
+    sendEvent({
+      name: `setting_${key}`,
+      value: value,
+      widget: 'main',
+    })
+  }
+
+  function applyChanges() {
+    window.store.set<'main', MainSettingStore>('main', {
+      ...mainSetting,
+    })
+  }
 
   const thmes = [
     {
@@ -59,7 +74,7 @@ export function AppSetting() {
                 <ThemeComponent
                   key={index}
                   setThemeValue={setThemeValue}
-                  themeState={themeState}
+                  themeState={mainSetting.theme}
                   theme={item.theme}
                   text={item.text}
                   icon={item.icon}
@@ -70,8 +85,8 @@ export function AppSetting() {
           <div>
             <Checkbox
               ripple={true}
-              defaultChecked={moveable}
-              onClick={() => onMoveableChange(!moveable)}
+              defaultChecked={mainSetting.moveable}
+              onClick={() => setSettingValue('moveable', !mainSetting.moveable)}
               label={
                 <div>
                   <Typography
@@ -82,6 +97,31 @@ export function AppSetting() {
                     قابل جابجایی{' '}
                     <span className="font-light">
                       ( مدیریت جابجایی ویجت ها - نیاز به راه اندازی مجدد برنامه)
+                    </span>
+                  </Typography>
+                </div>
+              }
+              containerProps={{
+                className: 'flex',
+              }}
+            />
+            <Checkbox
+              ripple={true}
+              defaultChecked={mainSetting.enableAnalytics}
+              onClick={() =>
+                setSettingValue('enableAnalytics', !mainSetting.enableAnalytics)
+              }
+              label={
+                <div>
+                  <Typography
+                    variant={'h5'}
+                    color="blue-gray"
+                    className="dark:text-[#c7c7c7] text-gray-600  text-[13px] font-[Vazir] font-normal"
+                  >
+                    فعالسازی آنالیتیک{' '}
+                    <span className="font-light">
+                      (با فعالسازی این گزینه اطلاعاتی از برنامه جهت بهبود و
+                      ارتقا برنامه ارسال می شود)
                     </span>
                   </Typography>
                 </div>

@@ -1,7 +1,11 @@
 import { Checkbox, Slider, Switch, Typography } from '@material-tailwind/react'
 import { ArzChandSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
-import { getSupportedCurrencies, SupportedCurrencies } from '../../../api/api'
+import {
+  getSupportedCurrencies,
+  sendEvent,
+  SupportedCurrencies,
+} from '../../../api/api'
 import Select from 'react-tailwindcss-select'
 import { widgetKey } from '../../../../shared/widgetKey'
 
@@ -34,6 +38,14 @@ export function ArzChandSetting() {
 
     if (key == 'transparentStatus') {
       window.ipcRenderer.send('toggle-transparent', widgetKey.ArzChand)
+    }
+
+    if (!['borderRadius'].includes(key)) {
+      sendEvent({
+        name: `setting_${key}`,
+        value: value,
+        widget: widgetKey.NerkhYab,
+      })
     }
 
     if (key === 'enable') {

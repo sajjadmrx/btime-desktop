@@ -27,6 +27,8 @@ export async function getRateByCurrency(
   try {
     api.defaults.baseURL = await getMainApi()
 
+    api.defaults.headers['userid'] = window.store.get('main').userId
+
     const response = await api.get(`/arz/${currency}`)
     return response.data
   } catch (err) {
@@ -47,6 +49,8 @@ export async function getSupportedCurrencies(): Promise<SupportedCurrencies> {
   try {
     api.defaults.baseURL = await getMainApi()
 
+    api.defaults.headers['userid'] = window.store.get('main').userId
+
     const response = await api.get('/supported-currencies')
 
     return response.data.countryFlagMapping
@@ -62,6 +66,8 @@ export async function getWeatherByCity(
   try {
     api.defaults.baseURL = await getMainApi()
 
+    api.defaults.headers['userid'] = window.store.get('main').userId
+
     const response = await api.get(`/weather/current?city=${city}`)
     return response.data
   } catch (err) {
@@ -76,6 +82,8 @@ export async function getWeatherByLatLon(
 ): Promise<WeatherResponse | null> {
   api.defaults.baseURL = await getMainApi()
 
+  api.defaults.headers['userid'] = window.store.get('main').userId
+
   const response = await api.get(`/weather/current?lat=${lat}&lon=${lon}`)
   return response.data
 }
@@ -86,6 +94,8 @@ export async function getWeatherForecastByLatLon(
 ): Promise<ForecastResponse[]> {
   try {
     api.defaults.baseURL = await getMainApi()
+
+    api.defaults.headers['userid'] = window.store.get('main').userId
 
     const response = await api.get(`/weather/forecast?lat=${lat}&lon=${lon}`)
     return response.data
@@ -98,6 +108,8 @@ export async function getRelatedCities(city: string): Promise<any[]> {
   try {
     api.defaults.baseURL = await getMainApi()
 
+    api.defaults.headers['userid'] = window.store.get('main').userId
+
     const response = await api.get(`/weather/direct?q=${city}`)
     return response.data
   } catch (err) {
@@ -108,7 +120,9 @@ export async function getRelatedCities(city: string): Promise<any[]> {
 
 export async function getSponsors() {
   api.defaults.baseURL = await getMainApi()
-  console.log('api.defaults.baseURL', api.defaults.baseURL)
+
+  api.defaults.headers['userid'] = window.store.get('main').userId
+
   const response = await api.get('/sponsors')
   return response.data
 }
@@ -120,10 +134,10 @@ export interface MonthEvent {
   day: string
 }
 export async function getMonthEvents(): Promise<MonthEvent[]> {
-  //mock delay
-  await new Promise((resolve) => setTimeout(resolve, 8000))
   api.defaults.baseURL = await getMainApi()
   try {
+    api.defaults.headers['userid'] = window.store.get('main').userId
+
     const response = await api.get('/date/month')
     return response.data
   } catch {
@@ -134,6 +148,9 @@ export async function getMonthEvents(): Promise<MonthEvent[]> {
 export async function getTimezones(): Promise<Timezone[]> {
   try {
     api.defaults.baseURL = await getMainApi()
+
+    api.defaults.headers['userid'] = window.store.get('main').userId
+
     const response = await api.get('/date/timezones')
     return response.data
   } catch {
@@ -143,6 +160,9 @@ export async function getTimezones(): Promise<Timezone[]> {
 export async function getNotifications() {
   try {
     api.defaults.baseURL = await getMainApi()
+
+    api.defaults.headers['userid'] = window.store.get('main').userId
+
     const response = await api.get('/notifications')
     return response.data
   } catch {
@@ -153,6 +173,9 @@ export async function getNotifications() {
 export async function getTodayEvents(): Promise<TodayEvent[]> {
   try {
     api.defaults.baseURL = await getMainApi()
+
+    api.defaults.headers['userid'] = window.store.get('main').userId
+
     const response = await api.get<{
       todayEvents: TodayEvent[]
     }>('/date/todoy-events')
@@ -165,6 +188,9 @@ export async function getTodayEvents(): Promise<TodayEvent[]> {
 export async function getOurNews(): Promise<News[]> {
   try {
     api.defaults.baseURL = await getMainApi()
+
+    api.defaults.headers['userid'] = window.store.get('main').userId
+
     const response = await api.get('/news')
     return response.data
   } catch {
@@ -182,11 +208,45 @@ export async function getAppLogo(): Promise<string | null> {
   }
 }
 
-async function getMainApi(): Promise<string> {
+export async function getMainApi(): Promise<string> {
   if (import.meta.env.VITE_API) {
     return import.meta.env.VITE_API
   }
 
   const urlResponse = await rawGithubApi.get('/.github/api.txt')
   return urlResponse.data
+}
+
+interface EventData {
+  name: string //ex: 'setting_theme'
+  value: any //ex: 'dark'
+  widget: string
+  attchment?: any
+}
+let MAIN_API = null
+export async function sendEvent(data: EventData) {
+  try {
+    const store = await window.store.get('main')
+    if (!store.enableAnalytics) return
+
+    if (!MAIN_API) {
+      MAIN_API = await getMainApi()
+    }
+
+    api.defaults.baseURL = MAIN_API
+
+    data.attchment = {
+      ...data.attchment,
+      userAgent: navigator.userAgent,
+      userId: store.userId,
+    }
+
+    api.defaults.headers['userid'] = window.store.get('main').userId
+
+    await api.post('/analytics', data)
+
+    return true
+  } catch (err) {
+    return false
+  }
 }

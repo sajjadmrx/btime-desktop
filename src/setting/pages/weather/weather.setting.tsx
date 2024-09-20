@@ -7,7 +7,7 @@ import {
 } from '@material-tailwind/react'
 import { WeatherSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
-import { getRelatedCities } from '../../../api/api'
+import { getRelatedCities, sendEvent } from '../../../api/api'
 import { RelatedCitiy } from './interface'
 import { RelatedCityComponent } from './relatedCity'
 import { widgetKey } from '../../../../shared/widgetKey'
@@ -33,6 +33,14 @@ export function WeatherSetting() {
 
     if (key == 'transparentStatus') {
       window.ipcRenderer.send('toggle-transparent', widgetKey.Weather)
+    }
+
+    if (!['borderRadius'].includes(key)) {
+      sendEvent({
+        name: `setting_${key}`,
+        value: value,
+        widget: widgetKey.NerkhYab,
+      })
     }
 
     if (key === 'enable') {

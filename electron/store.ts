@@ -1,5 +1,6 @@
 import electronStore from 'electron-store'
 import { widgetKey } from '../shared/widgetKey'
+import { randomUUID } from 'crypto'
 
 export interface windowSettings {
   bounds: {
@@ -48,7 +49,14 @@ export interface ClockSettingStore extends windowSettings {
   showDate: boolean
   showTimeZone: boolean
 }
-
+export interface MainSettingStore {
+  startup: boolean
+  theme: Theme
+  moveable: boolean
+  currentVersion: string
+  enableAnalytics: boolean
+  userId: string
+}
 export type Theme = 'system' | 'light' | 'dark'
 
 export type StoreKey = {
@@ -57,10 +65,7 @@ export type StoreKey = {
   [widgetKey.ArzChand]: ArzChandSettingStore
   [widgetKey.Weather]: WeatherSettingStore
   [widgetKey.Clock]: ClockSettingStore
-  startup: boolean
-  theme: Theme
-  moveable: boolean
-  currentVersion: string
+  ['main']: MainSettingStore
 }
 export const store = new electronStore<StoreKey>({
   defaults: {
@@ -156,10 +161,14 @@ export const store = new electronStore<StoreKey>({
       showTimeZone: false,
       html: 'clock.html',
     },
-    startup: true,
-    theme: 'light',
-    moveable: true,
-    currentVersion: null,
+    main: {
+      userId: randomUUID(),
+      enableAnalytics: true,
+      startup: true,
+      theme: 'light',
+      moveable: true,
+      currentVersion: null,
+    },
   },
   name: 'widgetify-app',
 })
