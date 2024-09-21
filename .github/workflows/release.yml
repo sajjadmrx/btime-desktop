@@ -25,10 +25,20 @@ jobs:
       - name: Install electron-builder
         run: npm i electron-builder -g
 
+      - name: 🧪 Run tests
+        run: npm test
+
+      - name: 🧹 Lint the code
+        run: npm run lint
+
+      - name: 📊 Generate code coverage reports
+        run: npm run coverage
+
       - name: Publish
         env:
           GH_TOKEN: ${{ secrets.TOKEN }}
         run: npm run publish:linux
+
   publish_on_win:
     runs-on: windows-latest
     steps:
@@ -47,46 +57,75 @@ jobs:
       - name: Install electron-builder
         run: npm i electron-builder -g
 
+      - name: 🧪 Run tests
+        run: npm test
+
+      - name: 🧹 Lint the code
+        run: npm run lint
+
+      - name: 📊 Generate code coverage reports
+        run: npm run coverage
+
       - name: Publish
         env:
           GH_TOKEN: ${{ secrets.TOKEN }}
         run: npm run publish:win
+
   publish_on_macos:
     runs-on: macOS-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Install Node v20
-      uses: actions/setup-node@v3
-      with:
-        node-version: 20
-        cache: npm
+      - name: Install Node v20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: npm
 
-    - name: Install Python
-      run: brew install python@3.11
+      - name: Install Python
+        run: brew install python@3.11
     
-    - name: "Install Python setuptools"
-      run: brew install python-setuptools
+      - name: "Install Python setuptools"
+        run: brew install python-setuptools
 
-    - name: Install Build Tools
-      run: |
-        brew install libtool automake autoconf
-        sudo xcode-select --reset
+      - name: Install Build Tools
+        run: |
+          brew install libtool automake autoconf
+          sudo xcode-select --reset
 
-    - name: Update node-gyp
-      run: npm install -g node-gyp
+      - name: Update node-gyp
+        run: npm install -g node-gyp
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Install dmglicense
-      run: npm install dmg-license -f
+      - name: Install dmglicense
+        run: npm install dmg-license -f
 
-    - name: Install electron-builder
-      run: npm i electron-builder -g
+      - name: Install electron-builder
+        run: npm i electron-builder -g
 
-    - name: Publish
-      env:
-        GH_TOKEN: ${{ secrets.TOKEN }}
-      run: npm run publish:mac
+      - name: 🧪 Run tests
+        run: npm test
+
+      - name: 🧹 Lint the code
+        run: npm run lint
+
+      - name: 📊 Generate code coverage reports
+        run: npm run coverage
+
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ secrets.TOKEN }}
+        run: npm run publish:mac
+
+  deploy_to_staging:
+    runs-on: ubuntu-latest
+    needs: [publish_on_linux, publish_on_win, publish_on_macos]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Deploy to staging environment
+        run: echo "Deploying to staging environment..."
