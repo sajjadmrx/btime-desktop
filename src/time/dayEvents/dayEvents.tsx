@@ -11,6 +11,10 @@ export function DayEventsComponent({ currentDate }: Prop) {
 	const [events, setEvents] = useState<TodayEvent[]>([])
 	const [gif, setGif] = useState<string | null>(null)
 
+	const [isTransparent, setIsTransparent] = useState<boolean>(
+		document.body.classList.contains('transparent-active'),
+	)
+
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		async function fetchEvents() {
@@ -40,11 +44,32 @@ export function DayEventsComponent({ currentDate }: Prop) {
 		fetchEvents()
 	}, [currentDate])
 
+	useEffect(() => {
+		const observer = new MutationObserver(() => {
+			setIsTransparent(document.body.classList.contains('transparent-active'))
+		})
+
+		observer.observe(document.body, {
+			attributes: true,
+			attributeFilter: ['class'],
+		})
+
+		return () => {
+			observer.disconnect()
+		}
+	}, [])
+
 	return (
 		<div>
-			<div className="w-full bg-gray-400 dark:bg-[#a8a8a8] h-0.5 mt-1 sm:invisible xs:invisible h-xs:invisible"></div>
+			<div
+				className={`w-full ${isTransparent ? 'bg-gray-400/20 dark:bg-[#85858536]' : 'bg-gray-400 dark:bg-[#a8a8a8]'} h-0.5 mt-1 sm:invisible xs:invisible h-xs:invisible`}
+			></div>
 			<div className="flex flex-row-reverse  justify-between p-2 lg:p-0 h-28 sm:invisible xs:invisible h-xs:invisible">
-				<div className="flex-col items-end w-72 h-24 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100/60 dark:scrollbar-thumb-gray-600/20 dark:scrollbar-track-gray-800/20">
+				<div
+					className={`flex-col items-end w-72 h-24 overflow-y-auto scrollbar-thin 
+						${isTransparent ? 'scrollbar-thumb-gray-300/20 scrollbar-track-gray-100/20 dark:scrollbar-thumb-gray-600/20 dark:scrollbar-track-gray-800/20' : 'scrollbar-thumb-gray-300 scrollbar-track-gray-100/60 dark:scrollbar-thumb-gray-600/20 dark:scrollbar-track-gray-800/20'}
+						`}
+				>
 					<div className="px-4 py-2 w-full text-right">
 						{<EventsDisplay events={events} />}
 						{<NewsDisplay />}
