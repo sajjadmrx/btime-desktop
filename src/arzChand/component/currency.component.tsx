@@ -6,6 +6,13 @@ interface Prop {
 }
 export function CurrencyComponent({ currency }: Prop) {
 	const [imgColor, setImgColor] = useState('')
+	const [isTransparent, setIsTransparent] = useState<boolean>(
+		document.body.classList.contains('transparent-active'),
+	)
+	const [shadow, setShadow] = useState<boolean>(
+		window.store.get('arzChand').shadow,
+	)
+
 	useEffect(() => {
 		function fetchColor() {
 			if (currency?.icon) {
@@ -17,13 +24,33 @@ export function CurrencyComponent({ currency }: Prop) {
 
 		fetchColor()
 
+		const observer = new MutationObserver(() => {
+			setIsTransparent(document.body.classList.contains('transparent-active'))
+		})
+
+		observer.observe(document.body, {
+			attributes: true,
+			attributeFilter: ['class'],
+		})
+
+		window.ipcRenderer.on('updated-setting', () => {
+			const arzChandSetting = window.store.get('arzChand')
+			setShadow(arzChandSetting.shadow)
+		})
+
 		return () => {
 			fetchColor()
+			observer.disconnect()
 		}
 	}, [currency?.icon])
 
 	return (
-		<div className="flex flex-row items-center  justify-around  w-full flex-wrap gap-2">
+		<div
+			className="flex flex-row items-center justify-around w-full flex-wrap gap-2"
+			style={{
+				boxShadow: shadow ? '0 4px 8px rgba(0, 0, 0, 0.2)' : 'none',
+			}}
+		>
 			<div className="flex-1 flex flex-row gap-1 w-52 justify items-end truncate ">
 				<div className="text-[.9rem] flex flex-col text-gray-600 text-gray-trasnparent  dark:text-[#eee] truncate">
 					<div className="flex-1 flex flex-row w-52 items-center justify-end mt-1 p-2 rounded-full truncate ">
