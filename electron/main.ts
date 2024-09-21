@@ -61,7 +61,7 @@ async function onAppReady() {
 	const btimeStore = store.get(widgetKey.BTime)
 	const arzChandStore = store.get(widgetKey.ArzChand)
 	const weatherStore = store.get(widgetKey.Weather)
-	const clockStore = store.get(widgetKey.Clock)
+	const clockStores = store.get(widgetKey.Clock) // P128e
 	const moveable = store.get('main').moveable
 	// Btime widget
 	if (btimeStore.enable) {
@@ -161,27 +161,30 @@ async function onAppReady() {
 		}
 	}
 
-	if (clockStore.enable) {
-		const clockWindow = await createWindow({
-			height: clockStore.bounds.height,
-			width: clockStore.bounds.width,
-			minHeight: clockStore.bounds.minHeight,
-			minWidth: clockStore.bounds.minWidth,
-			maxHeight: clockStore.bounds.maxHeight,
-			maxWidth: clockStore.bounds.maxWidth,
-			x: clockStore.bounds.x,
-			y: clockStore.bounds.y,
-			title: widgetKey.Clock,
-			html: clockStore.html || 'clock.html',
-			devTools: true,
-			alwaysOnTop: clockStore.alwaysOnTop,
-			reziable: true,
-			saveBounds: true,
-			moveable,
-		})
+	// Clock widgets
+	for (const clockStore of clockStores) {
+		if (clockStore.enable) {
+			const clockWindow = await createWindow({
+				height: clockStore.bounds.height,
+				width: clockStore.bounds.width,
+				minHeight: clockStore.bounds.minHeight,
+				minWidth: clockStore.bounds.minWidth,
+				maxHeight: clockStore.bounds.maxHeight,
+				maxWidth: clockStore.bounds.maxWidth,
+				x: clockStore.bounds.x,
+				y: clockStore.bounds.y,
+				title: widgetKey.Clock,
+				html: clockStore.html || 'clock.html',
+				devTools: true,
+				alwaysOnTop: clockStore.alwaysOnTop,
+				reziable: true,
+				saveBounds: true,
+				moveable,
+			})
 
-		if (!mainWin) {
-			mainWin = clockWindow
+			if (!mainWin) {
+				mainWin = clockWindow
+			}
 		}
 	}
 

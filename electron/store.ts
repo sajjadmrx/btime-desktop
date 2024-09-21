@@ -64,7 +64,7 @@ export type StoreKey = {
 	[widgetKey.NerkhYab]: NerkhYabSettingStore
 	[widgetKey.ArzChand]: ArzChandSettingStore
 	[widgetKey.Weather]: WeatherSettingStore
-	[widgetKey.Clock]: ClockSettingStore
+	[widgetKey.Clock]: ClockSettingStore[]
 	main: MainSettingStore
 }
 export const store = new electronStore<StoreKey>({
@@ -139,28 +139,30 @@ export const store = new electronStore<StoreKey>({
 			city: null,
 			html: 'weather.html',
 		},
-		Clock: {
-			alwaysOnTop: false,
-			borderRadius: 28,
-			bounds: {
-				width: 217,
-				height: 180,
-				x: 0,
-				y: 0,
-				minWidth: 150,
-				minHeight: 76,
+		Clock: [
+			{
+				alwaysOnTop: false,
+				borderRadius: 28,
+				bounds: {
+					width: 217,
+					height: 180,
+					x: 0,
+					y: 0,
+					minWidth: 150,
+					minHeight: 76,
+				},
+				enable: false,
+				timeZone: {
+					label: 'آسیا / تهران',
+					value: 'Asia/Tehran',
+				},
+				transparentStatus: false,
+				showDate: true,
+				showSecond: false,
+				showTimeZone: false,
+				html: 'clock.html',
 			},
-			enable: false,
-			timeZone: {
-				label: 'آسیا / تهران',
-				value: 'Asia/Tehran',
-			},
-			transparentStatus: false,
-			showDate: true,
-			showSecond: false,
-			showTimeZone: false,
-			html: 'clock.html',
-		},
+		],
 		main: {
 			userId: randomUUID(),
 			enableAnalytics: true,
