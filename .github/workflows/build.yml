@@ -35,3 +35,12 @@ jobs:
 
       - name: 🏗️ Build the project
         run: npm run build:ts
+
+      - name: 🧪 Run tests
+        run: npm test
+
+      - name: 🧹 Lint the code
+        run: npm run lint
+
+      - name: 📊 Generate code coverage reports
+        run: npm run coverage
