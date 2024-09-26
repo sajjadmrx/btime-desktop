@@ -207,6 +207,7 @@ const clockWidgetStoreData = store.get(widgetKey.Clock)
 if (typeof clockWidgetStoreData.analogA === 'undefined') {
 	store.set(widgetKey.Clock, {
 		...clockWidgetStoreData,
+		currentClock: 'digital',
 		analogA: {
 			showAllHours: false,
 			showTimeZone: true,

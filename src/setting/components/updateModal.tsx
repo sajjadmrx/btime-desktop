@@ -50,8 +50,19 @@ const UpdateModal = ({ onClick }) => {
 	}
 	const updateDetails: Update[] = [
 		{
-			date: '1403/06/29',
+			date: '1403/07/06',
 			last: true,
+			version: '1.4.1',
+			updates: [
+				{
+					emoji: '🕘',
+					text: 'اضافه شدن ساعت آنالوگ',
+				},
+			],
+		},
+		{
+			date: '1403/06/29',
+			last: false,
 			version: '1.4.0',
 			updates: [
 				{
