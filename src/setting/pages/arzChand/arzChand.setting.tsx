@@ -6,8 +6,8 @@ import {
 	sendEvent,
 	type SupportedCurrencies,
 } from '../../../api/api'
-import Select from 'react-tailwindcss-select'
 import { widgetKey } from '../../../../shared/widgetKey'
+import { MultiSelectDropdown } from '../../components/multiSelectDropdown.component'
 
 export function ArzChandSetting() {
 	const [setting, setSetting] = useState<ArzChandSettingStore>(null)
@@ -44,7 +44,7 @@ export function ArzChandSetting() {
 			sendEvent({
 				name: `setting_${key}`,
 				value: value,
-				widget: widgetKey.NerkhYab,
+				widget: widgetKey.ArzChand,
 			})
 		}
 
@@ -228,51 +228,4 @@ function getSelectedCurrencies(
 	return keyes
 		.filter((key) => selected.includes(key))
 		.map((key) => ({ value: key, label: list[key].label }))
-}
-
-interface MultiSelectDropdownProps {
-	options: {
-		value: string
-		label: string
-	}[]
-	values: {
-		value: string
-		label: string
-	}[]
-	color: string
-	isMultiple: boolean
-	limit?: number
-	onChange: (values: string[]) => void
-}
-const MultiSelectDropdown = ({
-	options,
-	values,
-	color,
-	isMultiple,
-	limit,
-	onChange,
-}: MultiSelectDropdownProps) => {
-	const handleChange = (selectedValue) => {
-		if (!selectedValue) return []
-		if (limit && selectedValue?.length > limit) return values
-		const selectedValuesMapped = selectedValue.map((value) => value.value)
-		return onChange(selectedValuesMapped)
-	}
-
-	return (
-		<Select
-			onChange={handleChange}
-			value={values}
-			isMultiple={isMultiple}
-			primaryColor={color}
-			options={options}
-			classNames={{
-				searchBox:
-					'w-full h-10 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500',
-				searchIcon: 'hidden',
-			}}
-			searchInputPlaceholder={'جستجو'}
-			isSearchable={true}
-		/>
-	)
 }

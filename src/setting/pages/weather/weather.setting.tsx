@@ -39,7 +39,7 @@ export function WeatherSetting() {
 			sendEvent({
 				name: `setting_${key}`,
 				value: value,
-				widget: widgetKey.NerkhYab,
+				widget: widgetKey.Weather,
 			})
 		}
 

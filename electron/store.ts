@@ -40,7 +40,16 @@ export interface WeatherSettingStore extends windowSettings {
 		name: string
 	}
 }
-export interface ClockSettingStore extends windowSettings {
+
+export interface AnalogClockASettingStore {
+	timzones: {
+		label: string
+		value: string
+	}[]
+	showAllHours: boolean
+	showTimeZone: boolean
+}
+export interface DigitalClockSettingStore {
 	timeZone: {
 		label: string
 		value: string
@@ -48,6 +57,12 @@ export interface ClockSettingStore extends windowSettings {
 	showSecond: boolean
 	showDate: boolean
 	showTimeZone: boolean
+}
+
+export interface ClockSettingStore extends windowSettings {
+	currentClock: 'digital' | 'analogA'
+	digital: DigitalClockSettingStore
+	analogA: AnalogClockASettingStore
 }
 export interface MainSettingStore {
 	startup: boolean
@@ -140,6 +155,7 @@ export const store = new electronStore<StoreKey>({
 			html: 'weather.html',
 		},
 		Clock: {
+			currentClock: 'digital',
 			alwaysOnTop: false,
 			borderRadius: 28,
 			bounds: {
@@ -151,14 +167,26 @@ export const store = new electronStore<StoreKey>({
 				minHeight: 76,
 			},
 			enable: false,
-			timeZone: {
-				label: 'آسیا / تهران',
-				value: 'Asia/Tehran',
+			analogA: {
+				showAllHours: false,
+				showTimeZone: true,
+				timzones: [
+					{
+						label: 'آسیا / تهران',
+						value: 'Asia/Tehran',
+					},
+				],
+			},
+			digital: {
+				showDate: true,
+				showSecond: true,
+				showTimeZone: true,
+				timeZone: {
+					label: 'آسیا / تهران',
+					value: 'Asia/Tehran',
+				},
 			},
 			transparentStatus: false,
-			showDate: true,
-			showSecond: false,
-			showTimeZone: false,
 			html: 'clock.html',
 		},
 		main: {
@@ -170,5 +198,33 @@ export const store = new electronStore<StoreKey>({
 			currentVersion: null,
 		},
 	},
+	accessPropertiesByDotNotation: true,
 	name: 'widgetify-app',
 })
+
+const clockWidgetStoreData = store.get(widgetKey.Clock)
+
+if (typeof clockWidgetStoreData.analogA === 'undefined') {
+	store.set(widgetKey.Clock, {
+		...clockWidgetStoreData,
+		analogA: {
+			showAllHours: false,
+			showTimeZone: true,
+			timzones: [
+				{
+					label: 'آسیا / تهران',
+					value: 'Asia/Tehran',
+				},
+			],
+		},
+		digital: {
+			showDate: true,
+			showSecond: true,
+			showTimeZone: true,
+			timeZone: {
+				label: 'آسیا / تهران',
+				value: 'Asia/Tehran',
+			},
+		},
+	})
+}

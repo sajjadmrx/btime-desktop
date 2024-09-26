@@ -10,7 +10,6 @@
 
 @media (prefers-color-scheme: light) {
   .h-screen {
-    /* background: #dddddd30; */
     background: #ddd;
     color: black;
   }

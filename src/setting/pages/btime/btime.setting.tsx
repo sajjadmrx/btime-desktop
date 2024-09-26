@@ -28,7 +28,7 @@ export function BtimeSetting() {
 			sendEvent({
 				name: `setting_${key}`,
 				value: value,
-				widget: widgetKey.NerkhYab,
+				widget: widgetKey.BTime,
 			})
 		}
 

@@ -1,9 +1,30 @@
-import { Checkbox, Slider, Switch, Typography } from '@material-tailwind/react'
+import {
+	Checkbox,
+	Slider,
+	Switch,
+	Tab,
+	TabPanel,
+	Tabs,
+	TabsBody,
+	TabsHeader,
+	Typography,
+} from '@material-tailwind/react'
 import { useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
 import type { ClockSettingStore } from 'electron/store'
 import type { Timezone } from '../../../api/api.interface'
 import { getTimezones, sendEvent } from '../../../api/api'
+import { DigitalClockTab } from './tabs/digital'
+import { AnalogAClockTab } from './tabs/analogA'
+
+type T<K extends keyof ClockSettingStore> = ClockSettingStore[K] extends object
+	? Partial<ClockSettingStore[K]>
+	: ClockSettingStore[K]
+
+export type SetSettingValue = <K extends keyof ClockSettingStore>(
+	key: K,
+	value: T<K>,
+) => void
 
 export function ClockSetting() {
 	const [setting, setSetting] = useState<ClockSettingStore>(null)
@@ -25,14 +46,24 @@ export function ClockSetting() {
 			fetchTimezones()
 		}
 	}, [])
+	/// if value is object, convert to optional feild
 
-	function setSettingValue<T extends keyof ClockSettingStore>(
-		key: T,
-		value: ClockSettingStore[T],
+	function setSettingValue<K extends keyof ClockSettingStore>(
+		key: K,
+		value: T<K>,
 	) {
-		setting[key] = value
+		if (typeof value === 'object') {
+			setting[key] = {
+				//@ts-ignore
+				...setting[key],
+				...value,
+			}
+		} else {
+			setting[key] = value as ClockSettingStore[K]
+		}
 		setSetting({ ...setting })
 		applyChanges()
+
 		if (key === 'transparentStatus') {
 			window.ipcRenderer.send('toggle-transparent', widgetKey.Clock)
 		}
@@ -41,7 +72,7 @@ export function ClockSetting() {
 			sendEvent({
 				name: `setting_${key}`,
 				value: value,
-				widget: widgetKey.NerkhYab,
+				widget: widgetKey.Clock,
 			})
 		}
 
@@ -60,10 +91,6 @@ export function ClockSetting() {
 			transparentStatus: setting.transparentStatus,
 			bounds: window.store.get(widgetKey.Clock).bounds,
 			borderRadius: setting.borderRadius,
-			showDate: setting.showDate,
-			showSecond: setting.showSecond,
-			showTimeZone: setting.showTimeZone,
-			timeZone: setting.timeZone,
 		})
 	}
 
@@ -157,102 +184,6 @@ export function ClockSetting() {
 								className: 'flex',
 							}}
 						/>
-						<Checkbox
-							ripple={true}
-							defaultChecked={setting.showSecond}
-							onClick={() => setSettingValue('showSecond', !setting.showSecond)}
-							label={
-								<div>
-									<Typography
-										variant={'h5'}
-										color="blue-gray"
-										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir]"
-									>
-										نمایش ثانیه{' '}
-										<span className="font-light">(نمایش ثانیه در ساعت)</span>
-									</Typography>
-								</div>
-							}
-							containerProps={{
-								className: 'flex',
-							}}
-						/>
-						<Checkbox
-							ripple={true}
-							defaultChecked={setting.showTimeZone}
-							onClick={() =>
-								setSettingValue('showTimeZone', !setting.showTimeZone)
-							}
-							label={
-								<div>
-									<Typography
-										variant={'h5'}
-										color="blue-gray"
-										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir]"
-									>
-										نمایش منطقه زمانی{' '}
-										<span className="font-light">
-											(نمایش منطقه زمانی در ساعت)
-										</span>
-									</Typography>
-								</div>
-							}
-							containerProps={{
-								className: 'flex',
-							}}
-						/>
-						<Checkbox
-							ripple={true}
-							defaultChecked={setting.showDate}
-							onClick={() => setSettingValue('showDate', !setting.showDate)}
-							label={
-								<div>
-									<Typography
-										variant={'h5'}
-										color="blue-gray"
-										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir]"
-									>
-										نمایش تاریخ{' '}
-										<span className="font-light">(نمایش تاریخ در ساعت)</span>
-									</Typography>
-								</div>
-							}
-							containerProps={{
-								className: 'flex',
-							}}
-						/>
-					</div>
-					<div className="flex flex-col w-full gap-2" dir="rtl">
-						<label
-							htmlFor="currency-select"
-							className="text-gray-600 dark:text-[#eee] font-semibold"
-						>
-							انتخاب منطقه زمانی:
-						</label>
-						<select
-							id="currency-select"
-							className="form-select block w-80 mr-2 h-11 mt-1 text-gray-600 dark:text-[#eee] bg-white dark:bg-gray-800
-                 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none
-                focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm p-2 px-3"
-							onChange={(e) =>
-								setSettingValue(
-									'timeZone',
-									getTimeZoneItem(timezones, e.target.value),
-								)
-							}
-							value={setting?.timeZone.value}
-							disabled={timezones.length === 0}
-						>
-							{timezones.map((timezone: Timezone, index) => (
-								<option
-									key={index}
-									value={timezone.value}
-									className="font-light"
-								>
-									{timezone.label} ( {timezone.offset} )
-								</option>
-							))}
-						</select>
 					</div>
 					<div className="flex flex-col  w-full gap-2">
 						<label
@@ -279,36 +210,63 @@ export function ClockSetting() {
 						<label className="text-gray-600 dark:text-[#eee] font-semibold text-sm">
 							قالب ساعت
 						</label>
-						<div className="flex mt-2 gap-2 w-full h-14 rounded-lg px-2 py-2 dark:bg-[#464545] bg-[#e8e6e6]">
-							<div
-								className={
-									'w-full h-10 flex justify-center items-center rounded-lg text-gray-600 dark:text-[#eee] cursor-pointer bg-[#f5f5f5] dark:bg-[#3a3a3a] '
-								}
-							>
-								دیجیتال 1
-							</div>
-							<div
-								className={
-									'w-full h-10 flex justify-center items-center rounded-lg text-gray-600 opacity-60 dark:text-[#eee]'
-								}
-							>
-								به‌زودی
-							</div>
-							<div
-								className={
-									'w-full h-10 flex justify-center items-center rounded-lg text-gray-600 opacity-60 dark:text-[#eee]'
-								}
-							>
-								به‌زودی
-							</div>
+						<div className="flex flex-col gap-2 w-full h-full rounded-lg p-2 dark:bg-[#464545] bg-[#e8e6e6]">
+							<Tabs id="clock-tabs" value={setting.currentClock || 'digital'}>
+								<TabsHeader
+									className="dark:bg-[#363636] bg-[#cac8c8]"
+									indicatorProps={{
+										className: 'bg-white dark:bg-[#1d1d1d]',
+									}}
+								>
+									<Tab
+										id="digital"
+										value={'digital'}
+										className="hover:bg-gray-100  dark:hover:bg-[#313131] transition-colors duration-200"
+										onClick={() => setSettingValue('currentClock', 'digital')}
+									>
+										<Typography
+											variant="h5"
+											color="gray"
+											className="text-gray-600 dark:text-[#b5b5b5] text-[12px] font-[Vazir]"
+										>
+											دیجیتال
+										</Typography>
+									</Tab>
+									<Tab
+										id="analog"
+										value={'analogA'}
+										className="hover:bg-gray-100  dark:hover:bg-[#313131] transition-colors duration-200"
+										onClick={() => setSettingValue('currentClock', 'analogA')}
+									>
+										<Typography
+											variant="h5"
+											color="gray"
+											className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir]"
+										>
+											آنالوگ
+										</Typography>
+									</Tab>
+								</TabsHeader>
+								<TabsBody
+									className="h-full
+									overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-500 dark:scrollbar-track-gray-800"
+								>
+									<DigitalClockTab
+										digital={setting.digital}
+										timezones={timezones}
+										setSettingValue={setSettingValue}
+									/>
+									<AnalogAClockTab
+										analog={setting.analogA}
+										timezones={timezones}
+										setSettingValue={setSettingValue}
+									/>
+								</TabsBody>
+							</Tabs>
 						</div>
 					</div>
 				</div>
 			</div>
 		</>
 	)
-}
-
-function getTimeZoneItem(timezoes: Timezone[], value: string) {
-	return timezoes.find((timezone) => timezone.value === value)
 }
