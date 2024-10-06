@@ -103,7 +103,7 @@ function App() {
 
 	return (
 		<div className="moveable h-screen w-screen overflow-hidden">
-			<div className="h-full">
+			<div className="h-full" style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
 				<div className="flex flex-col p-2 h-full  items-center">
 					<div
 						className="flex flex-col items-center w-full px-2  h-64 overflow-y-scroll 

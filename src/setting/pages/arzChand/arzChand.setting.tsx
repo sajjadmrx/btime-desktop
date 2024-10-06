@@ -40,7 +40,7 @@ export function ArzChandSetting() {
 			window.ipcRenderer.send('toggle-transparent', widgetKey.ArzChand)
 		}
 
-		if (!['borderRadius'].includes(key)) {
+		if (!['borderRadius', 'shadow'].includes(key)) {
 			sendEvent({
 				name: `setting_${key}`,
 				value: value,
@@ -50,7 +50,7 @@ export function ArzChandSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.ArzChand)
-		} else if (!['transparentStatus', 'borderRadius'].includes(key)) {
+		} else if (!['transparentStatus', 'borderRadius', 'shadow'].includes(key)) {
 			window.ipcRenderer.send('updated-setting', widgetKey.ArzChand)
 		}
 	}
@@ -64,6 +64,7 @@ export function ArzChandSetting() {
 			bounds: window.store.get(widgetKey.ArzChand).bounds,
 			currencies: setting.currencies,
 			borderRadius: setting.borderRadius,
+			shadow: setting.shadow,
 		})
 	}
 
@@ -147,6 +148,28 @@ export function ArzChandSetting() {
 									>
 										اولویت بالا{' '}
 										<span className="font-light">(همیشه بالای همه باشد)</span>
+									</Typography>
+								</div>
+							}
+							containerProps={{
+								className: 'flex',
+							}}
+						/>
+						<Checkbox
+							ripple={true}
+							defaultChecked={setting.shadow}
+							onClick={() =>
+								setSettingValue('shadow', !setting.shadow)
+							}
+							label={
+								<div>
+									<Typography
+										variant={'h5'}
+										color="blue-gray"
+										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir]"
+									>
+										سایه{' '}
+										<span className="font-light">(افزودن سایه به ویجت)</span>
 									</Typography>
 								</div>
 							}
