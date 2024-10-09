@@ -141,7 +141,8 @@ export const ipcPreload = {
 	updatedSetting: (windowKey: string) =>
 		ipcRenderer.send('updated-setting', windowKey),
 
-	send: (channel: string, ...args: any[]) =>
+	send: (channel: string, ...args: any[]) => ipcRenderer.send(channel, ...args),
+	invoke: (channel: string, ...args: any[]) =>
 		ipcRenderer.invoke(channel, ...args),
 }
 

@@ -110,4 +110,21 @@ export function initIpcMain() {
 			userLogger.info(`Widget ${windowKey} enabled`)
 		}
 	})
+
+	ipcMain.on('reset-setting', async (event) => {
+		const mainSetting = store.get('main')
+
+		store.clear()
+
+		const newMainSetting = store.get('main')
+
+		store.set('main', {
+			...newMainSetting,
+			currentVersion: mainSetting.currentVersion,
+			userId: mainSetting.userId,
+		} as MainSettingStore)
+
+		app.relaunch()
+		app.exit()
+	})
 }
