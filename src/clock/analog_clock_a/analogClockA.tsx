@@ -73,6 +73,13 @@ export const AnalogClockComponent = ({ timeZone, analogA }: ClockProps) => {
 
 			<div className="absolute  rounded-full origin-bottom z-40">
 				<div
+					className="absolute -right-[2px] -top-[34px] w-1 h-8 bg-gray-700 rounded-full origin-bottom"
+					style={{ transform: `rotate(${minuteDegrees}deg)` }}
+				/>
+			</div>
+
+			<div className="absolute  rounded-full origin-bottom z-40">
+				<div
 					className="absolute -right-[2px] -top-[36px] w-1 h-9 bg-red-500 rounded-full origin-bottom transition-transform duration-1000"
 					style={{ transform: `rotate(${secondDegrees}deg)` }}
 				/>
