@@ -31,6 +31,7 @@ export interface NerkhYabSettingStore extends windowSettings {
 
 export interface ArzChandSettingStore extends windowSettings {
 	currencies: string[]
+	template: 'classic' | 'default'
 }
 
 export interface WeatherSettingStore extends windowSettings {
@@ -137,6 +138,7 @@ export const store = new electronStore<StoreKey>({
 			transparentStatus: false,
 			html: 'arzchand.html',
 			currencies: ['usd', 'eur'],
+			template: 'classic',
 		},
 		Weather: {
 			enable: false,

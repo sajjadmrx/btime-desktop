@@ -155,6 +155,21 @@ export function ArzChandSetting() {
 							}}
 						/>
 					</div>
+					<div className="w-full">
+						<label className="text-gray-600 dark:text-[#eee] font-semibold text-sm"></label>
+						<div className="flex mt-2 gap-2 w-full h-14 rounded-lg px-2 py-2 dark:bg-[#464545] bg-[#e8e6e6]">
+							<TemplateItem
+								title={'پیشفرض'}
+								selected={setting.template === 'default' || !setting.template}
+								onClick={() => setSettingValue('template', 'default')}
+							/>
+							<TemplateItem
+								title={'کلاسیک'}
+								selected={setting.template === 'classic'}
+								onClick={() => setSettingValue('template', 'classic')}
+							/>
+						</div>
+					</div>
 					<div className="flex flex-col justify-between w-full ">
 						<label
 							htmlFor="currency-select"
@@ -192,7 +207,7 @@ export function ArzChandSetting() {
 							</label>
 							{supportedCurrencies && (
 								<MultiSelectDropdown
-									options={getCurrencyOptions(supportedCurrencies)}
+									options={getCurrencyOptions(supportedCurrencies) as any}
 									values={getSelectedCurrencies(
 										setting.currencies,
 										supportedCurrencies,
@@ -210,13 +225,38 @@ export function ArzChandSetting() {
 		</>
 	)
 }
-function getCurrencyOptions(
-	supported: SupportedCurrencies,
-): { value: string; label: string }[] {
-	return Object.keys(supported).map((key) => ({
-		value: key,
-		label: supported[key].label,
-	}))
+
+interface Option {
+	label: string
+	options: {
+		value: string
+		label: string
+	}[]
+}
+function getCurrencyOptions(supported: SupportedCurrencies): Option[] {
+	const keyes = Object.keys(supported)
+
+	const isCrypto = keyes.filter((key) => supported[key].isCrypto)
+	const isCurrency = keyes.filter((key) => !supported[key].isCrypto)
+
+	const options = [
+		{
+			label: '🪙 ارزهای دیجیتال',
+			options: isCrypto.map((key) => ({
+				value: key,
+				label: supported[key].label,
+			})),
+		},
+		{
+			label: '💵 ارزها',
+			options: isCurrency.map((key) => ({
+				value: key,
+				label: supported[key].label,
+			})),
+		},
+	]
+
+	return options
 }
 
 function getSelectedCurrencies(
@@ -228,4 +268,21 @@ function getSelectedCurrencies(
 	return keyes
 		.filter((key) => selected.includes(key))
 		.map((key) => ({ value: key, label: list[key].label }))
+}
+
+function TemplateItem({ title, selected, onClick }) {
+	return (
+		<div
+			onClick={onClick}
+			className={`w-full h-10 flex justify-center items-center rounded-lg text-gray-600 dark:text-[#eee] cursor-pointer ${
+				selected
+					? 'bg-[#f5f5f5] dark:bg-[#3a3a3a]'
+					: 'hover:bg-[#f5f5f578] dark:hover:bg-[#3a3a3a5c]'
+			} 
+        ${selected && 'text-gray-600 dark:text-gray-300'}
+        transition-all  ease-in-out duration-2000`}
+		>
+			{title}
+		</div>
+	)
 }

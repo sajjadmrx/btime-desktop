@@ -43,6 +43,7 @@ export type SupportedCurrencies = Record<
 		flag: string
 		country: string
 		label: string
+		isCrypto: boolean | undefined
 	}
 >
 export async function getSupportedCurrencies(): Promise<SupportedCurrencies> {

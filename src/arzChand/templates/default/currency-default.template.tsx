@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import type { CurrencyData } from '../../api/api'
-import { extractMainColorFromImage } from '../../utils/colorUtils'
+import type { CurrencyData } from '../../../api/api'
+import { extractMainColorFromImage } from '../../../utils/colorUtils'
 interface Prop {
 	currency: (CurrencyData & { imgColor; code }) | null
 }
-export function CurrencyComponent({ currency }: Prop) {
+export function CurrencyDefaultComponent({ currency }: Prop) {
 	const [imgColor, setImgColor] = useState('')
 	useEffect(() => {
 		function fetchColor() {
