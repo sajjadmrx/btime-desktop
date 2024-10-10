@@ -44,7 +44,7 @@ function App() {
 	}, [])
 
 	return (
-		<div className="h-screen w-screen overflow-hidden bg-[#33333330]">
+		<div className="h-screen w-screen overflow-hidden">
 			<div className="moveable px-0 h-full">
 				{setting.currentClock === 'digital' ? (
 					<DigitalClock digital={setting.digital} />
