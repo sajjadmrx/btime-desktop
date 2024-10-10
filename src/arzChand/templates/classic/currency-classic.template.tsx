@@ -51,7 +51,7 @@ export function CurrencyClassicComponent({ currency, isTransparent }: Prop) {
 							</div>
 						</div>
 						<p className="xs:text-xs sm:text-sm lg:text-[1rem] text-gray-600 text-gray-trasnparent dark:text-[#d3d3d3]">
-							{currency.code}
+							{currency.code?.toUpperCase()}
 						</p>
 					</>
 				) : (

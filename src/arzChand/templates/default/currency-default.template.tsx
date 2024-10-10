@@ -70,7 +70,7 @@ export function CurrencyDefaultComponent({ currency }: Prop) {
 							className="text-xs font-light text-gray-600 text-gray-trasnparent dark:text-[#cbc9c9]"
 							dir="ltr"
 						>
-							1 {currency.code}
+							1 {currency.code?.toUpperCase()}
 						</p>
 					</>
 				) : (
