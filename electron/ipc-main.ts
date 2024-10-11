@@ -33,6 +33,17 @@ export function initIpcMain() {
 		}
 	})
 
+	ipcMain.on('toggle-disableBackground', (event, windowKey: string) => {
+		const win = BrowserWindow.getAllWindows().filter(
+			(win) => win.title === windowKey,
+		)[0]
+		if (win) {
+			win.webContents.send('background_status', {
+				newStatus: store.get(widgetKey[windowKey]).disableBackground,
+			})
+		}
+	})
+
 	ipcMain.handle('getBorderRadius', async (event, window: string) => {
 		try {
 			const win = BrowserWindow.getAllWindows().filter(

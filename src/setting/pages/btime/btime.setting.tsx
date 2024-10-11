@@ -24,6 +24,10 @@ export function BtimeSetting() {
 			window.ipcRenderer.send('toggle-transparent', widgetKey.BTime)
 		}
 
+		if (key === 'disableBackground') {
+			window.ipcRenderer.send('toggle-disableBackground', widgetKey.BTime)
+		}
+
 		if (!['borderRadius'].includes(key)) {
 			sendEvent({
 				name: `setting_${key}`,
@@ -34,7 +38,9 @@ export function BtimeSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.BTime)
-		} else if (!['transparentStatus', 'borderRadius'].includes(key)) {
+		} else if (
+			!['transparentStatus', 'borderRadius', 'disableBackground'].includes(key)
+		) {
 			window.ipcRenderer.send('updated-setting', widgetKey.BTime)
 		}
 	}
@@ -109,6 +115,30 @@ export function BtimeSetting() {
 										className="dark:text-[#c7c7c7] text-gray-600  text-[13px] font-[Vazir] items-center "
 									>
 										شفاف <span className="font-light">(پس زمینه شفاف)</span>
+									</Typography>
+								</div>
+							}
+							containerProps={{
+								className: 'flex',
+							}}
+						/>
+						<Checkbox
+							ripple={true}
+							defaultChecked={setting.disableBackground}
+							onClick={() =>
+								setSettingValue('disableBackground', !setting.disableBackground)
+							}
+							label={
+								<div>
+									<Typography
+										variant={'h5'}
+										color="blue-gray"
+										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] items-center "
+									>
+										غیرفعال کردن پشت زمینه{' '}
+										<span className="font-light">
+											(غیرفعال کردن نمایش پشت زمینه برای ویجت)
+										</span>
 									</Typography>
 								</div>
 							}

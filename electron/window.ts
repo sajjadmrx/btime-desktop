@@ -66,6 +66,10 @@ export async function createWindow(payload: Window) {
 			newStatus: store.get(widgetKey[payload.title]).transparentStatus,
 		})
 
+		win.webContents.send('background_status', {
+			newStatus: store.get(widgetKey[payload.title]).disableBackground,
+		})
+
 		const borderRadius = store.get(widgetKey[payload.title]).borderRadius
 
 		win.webContents.send('border-radius', {

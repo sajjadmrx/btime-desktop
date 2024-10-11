@@ -40,6 +40,10 @@ export function ArzChandSetting() {
 			window.ipcRenderer.send('toggle-transparent', widgetKey.ArzChand)
 		}
 
+		if (key === 'disableBackground') {
+			window.ipcRenderer.send('toggle-disableBackground', widgetKey.ArzChand)
+		}
+
 		if (!['borderRadius'].includes(key)) {
 			sendEvent({
 				name: `setting_${key}`,
@@ -50,7 +54,9 @@ export function ArzChandSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.ArzChand)
-		} else if (!['transparentStatus', 'borderRadius'].includes(key)) {
+		} else if (
+			!['transparentStatus', 'borderRadius', 'disableBackground'].includes(key)
+		) {
 			window.ipcRenderer.send('updated-setting', widgetKey.ArzChand)
 		}
 	}
@@ -134,6 +140,30 @@ export function ArzChandSetting() {
 						/>
 						<Checkbox
 							ripple={true}
+							defaultChecked={setting.disableBackground}
+							onClick={() =>
+								setSettingValue('disableBackground', !setting.disableBackground)
+							}
+							label={
+								<div>
+									<Typography
+										variant={'h5'}
+										color="blue-gray"
+										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] items-center "
+									>
+										غیرفعال کردن پشت زمینه{' '}
+										<span className="font-light">
+											(غیرفعال کردن نمایش پشت زمینه برای ویجت)
+										</span>
+									</Typography>
+								</div>
+							}
+							containerProps={{
+								className: 'flex',
+							}}
+						/>
+						<Checkbox
+							ripple={true}
 							defaultChecked={setting.alwaysOnTop}
 							onClick={() =>
 								setSettingValue('alwaysOnTop', !setting.alwaysOnTop)
@@ -156,7 +186,9 @@ export function ArzChandSetting() {
 						/>
 					</div>
 					<div className="w-full">
-						<label className="text-gray-600 dark:text-[#eee] font-semibold text-sm"></label>
+						<label className="text-gray-600 dark:text-[#eee] font-semibold text-sm">
+							قالب ها
+						</label>
 						<div className="flex mt-2 gap-2 w-full h-14 rounded-lg px-2 py-2 dark:bg-[#464545] bg-[#e8e6e6]">
 							<TemplateItem
 								title={'پیشفرض'}

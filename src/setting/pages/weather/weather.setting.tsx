@@ -35,6 +35,10 @@ export function WeatherSetting() {
 			window.ipcRenderer.send('toggle-transparent', widgetKey.Weather)
 		}
 
+		if (key === 'disableBackground') {
+			window.ipcRenderer.send('toggle-disableBackground', widgetKey.Weather)
+		}
+
 		if (!['borderRadius'].includes(key)) {
 			sendEvent({
 				name: `setting_${key}`,
@@ -45,7 +49,9 @@ export function WeatherSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.Weather)
-		} else if (!['transparentStatus', 'borderRadius'].includes(key)) {
+		} else if (
+			!['transparentStatus', 'borderRadius', 'disableBackground'].includes(key)
+		) {
 			window.ipcRenderer.send('updated-setting', widgetKey.Weather)
 		}
 	}
@@ -151,7 +157,8 @@ export function WeatherSetting() {
 							}}
 						/>
 					</div>
-					<div className="flex flex-row items-center justify-between w-full gap-2">
+
+					<div className="flex flex-col">
 						<Checkbox
 							ripple={true}
 							defaultChecked={setting.transparentStatus}
@@ -163,25 +170,40 @@ export function WeatherSetting() {
 									<Typography
 										variant={'h5'}
 										color="blue-gray"
-										className="dark:text-[#c7c7c7] text-gray-600  text-[13px] font-[Vazir] flex flex-row items-center "
+										className="dark:text-[#c7c7c7] text-gray-600  text-[13px] font-[Vazir]"
 									>
-										شفاف
-									</Typography>
-									<Typography
-										variant="h5"
-										color="gray"
-										className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir]"
-									>
-										استفاده از پس زمینه شفاف
+										شفاف <span className="font-light">(پس زمینه شفاف)</span>
 									</Typography>
 								</div>
 							}
 							containerProps={{
-								className: '-mt-5 mr-2',
+								className: 'flex',
 							}}
 						/>
-					</div>
-					<div className="flex flex-row items-center justify-between w-full gap-2">
+						<Checkbox
+							ripple={true}
+							defaultChecked={setting.disableBackground}
+							onClick={() =>
+								setSettingValue('disableBackground', !setting.disableBackground)
+							}
+							label={
+								<div>
+									<Typography
+										variant={'h5'}
+										color="blue-gray"
+										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] items-center "
+									>
+										غیرفعال کردن پشت زمینه{' '}
+										<span className="font-light">
+											(غیرفعال کردن نمایش پشت زمینه برای ویجت)
+										</span>
+									</Typography>
+								</div>
+							}
+							containerProps={{
+								className: 'flex',
+							}}
+						/>
 						<Checkbox
 							ripple={true}
 							defaultChecked={setting.alwaysOnTop}
@@ -193,21 +215,15 @@ export function WeatherSetting() {
 									<Typography
 										variant={'h5'}
 										color="blue-gray"
-										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] flex flex-row items-center "
+										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir]"
 									>
-										اولویت بالا
-									</Typography>
-									<Typography
-										variant="h5"
-										color="gray"
-										className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir]"
-									>
-										اولویت بالایی برای نمایش
+										اولویت بالا{' '}
+										<span className="font-light">(همیشه بالای همه باشد)</span>
 									</Typography>
 								</div>
 							}
 							containerProps={{
-								className: '-mt-5 mr-2',
+								className: 'flex',
 							}}
 						/>
 					</div>

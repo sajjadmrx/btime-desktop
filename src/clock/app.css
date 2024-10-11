@@ -1,20 +1,20 @@
 @media (prefers-color-scheme: dark) {
-  .h-screen {
+  body.background {
     background: #333;
   }
 
-  body.transparent-active .h-screen {
+  body.background.transparent-active {
     background: #33333330;
   }
 }
 
 @media (prefers-color-scheme: light) {
-  .h-screen {
+  body.background {
     background: #ddd;
     color: black;
   }
 
-  body.transparent-active .h-screen {
+  body.background.transparent-active {
     background: #dddddd30;
   }
 
