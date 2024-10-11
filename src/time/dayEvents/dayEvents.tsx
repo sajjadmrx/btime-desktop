@@ -75,9 +75,11 @@ export function DayEventsComponent({ currentDate }: Prop) {
 						{<NewsDisplay />}
 					</div>
 				</div>
-				<div className="w-2/5 h-full flex items-center pb-px justify-center">
-					{<img className="h-16" src={gif} />}
-				</div>
+				{gif && (
+					<div className="w-2/5 h-full flex items-center pb-px justify-center">
+						{<img className="h-16" src={gif} />}
+					</div>
+				)}
 			</div>
 		</div>
 	)
