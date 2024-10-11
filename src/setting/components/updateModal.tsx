@@ -52,6 +52,18 @@ const UpdateModal = ({ onClick }) => {
 		{
 			date: '1403/07/20',
 			last: true,
+			version: '1.4.3',
+			updates: [
+				{
+					text: 'رفع مشکل  border radius در ویجت ها',
+					emoji: '🐛',
+				},
+			],
+		},
+
+		{
+			date: '1403/07/20',
+			last: false,
 			version: '1.4.2',
 			updates: [
 				{
