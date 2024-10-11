@@ -7,9 +7,7 @@ interface JalaliCalendarProp {
 	currentDate: moment.Moment
 }
 export function JalaliCalendar({ currentDate }: JalaliCalendarProp) {
-	const [isTransparent, setIsTransparent] = useState<boolean>(
-		document.body.classList.contains('transparent-active'),
-	)
+	const [isTransparent, setIsTransparent] = useState<boolean>(false)
 
 	const [events, setEvents] = useState<MonthEvent[]>([])
 
@@ -49,11 +47,20 @@ export function JalaliCalendar({ currentDate }: JalaliCalendarProp) {
 	const jalaliFirstDay = getJalaliFirstDayOfMonth(jalaliYear, jalaliMonth)
 
 	useEffect(() => {
+		setIsTransparent(
+			document
+				.querySelector('.h-screen')
+				.classList.contains('transparent-active'),
+		)
 		const observer = new MutationObserver(() => {
-			setIsTransparent(document.body.classList.contains('transparent-active'))
+			setIsTransparent(
+				document
+					.querySelector('.h-screen')
+					.classList.contains('transparent-active'),
+			)
 		})
 
-		observer.observe(document.body, {
+		observer.observe(document.querySelector('.h-screen'), {
 			attributes: true,
 			attributeFilter: ['class'],
 		})
@@ -129,7 +136,6 @@ function DayComponent({
 	const dayOfWeek = (jalaliFirstDay + index) % 7
 	const isHolidayDay = isHoliday(day, dayOfWeek)
 	const isCurrentDay = day === jalaliDay
-
 	let textColor = isTransparent
 		? 'dark:text-gray-200 text-gray-300'
 		: 'dark:text-gray-400 text-gray-600'

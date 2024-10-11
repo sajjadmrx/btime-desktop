@@ -3,7 +3,7 @@
         background: #333;
     }
 
-    .h-screen.background.transparent-active {
+    .h-screen.transparent-active {
         background: #33333330;
     }
 }
@@ -14,7 +14,7 @@
         color: black;
     }
 
-    .h-screen.background.transparent-active {
+    .h-screen.transparent-active {
         background: #dddddd30;
     }
 
@@ -22,7 +22,4 @@
         color: #e0e0e0;
     }
 
-    .h-screen.transparent-active .arrow_btn {
-        color: #e0e0e0;
-    }
 }

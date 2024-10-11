@@ -11,9 +11,7 @@ export function DayEventsComponent({ currentDate }: Prop) {
 	const [events, setEvents] = useState<TodayEvent[]>([])
 	const [gif, setGif] = useState<string | null>(null)
 
-	const [isTransparent, setIsTransparent] = useState<boolean>(
-		document.body.classList.contains('transparent-active'),
-	)
+	const [isTransparent, setIsTransparent] = useState<boolean>(false)
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -45,11 +43,21 @@ export function DayEventsComponent({ currentDate }: Prop) {
 	}, [currentDate])
 
 	useEffect(() => {
+		setIsTransparent(
+			document
+				.querySelector('.h-screen')
+				?.classList?.contains('transparent-active'),
+		)
+
 		const observer = new MutationObserver(() => {
-			setIsTransparent(document.body.classList.contains('transparent-active'))
+			setIsTransparent(
+				document
+					.querySelector('.h-screen')
+					?.classList?.contains('transparent-active'),
+			)
 		})
 
-		observer.observe(document.body, {
+		observer.observe(document.querySelector('.h-screen'), {
 			attributes: true,
 			attributeFilter: ['class'],
 		})

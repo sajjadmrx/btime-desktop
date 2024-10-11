@@ -27,8 +27,6 @@ function App() {
 
 		handleColorSchemeChange(colorSchemeMediaQuery)
 
-		document.body.classList.add('transparent-active')
-
 		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
 
 		return () => {

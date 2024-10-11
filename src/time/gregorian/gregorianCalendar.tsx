@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react'
 
 export function GregorianCalendar() {
 	const [currentDate] = useState(new Date())
-	const [isTransparent, setIsTransparent] = useState<boolean>(
-		document.body.classList.contains('transparent-active'),
-	)
+	const [isTransparent, setIsTransparent] = useState<boolean>(false)
 
 	const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
@@ -25,11 +23,20 @@ export function GregorianCalendar() {
 	)
 
 	useEffect(() => {
+		setIsTransparent(
+			document
+				.querySelector('.h-screen')
+				.classList.contains('transparent-active'),
+		)
 		const observer = new MutationObserver(() => {
-			setIsTransparent(document.body.classList.contains('transparent-active'))
+			setIsTransparent(
+				document
+					.querySelector('.h-screen')
+					.classList.contains('transparent-active'),
+			)
 		})
 
-		observer.observe(document.body, {
+		observer.observe(document.querySelector('.h-screen'), {
 			attributes: true,
 			attributeFilter: ['class'],
 		})

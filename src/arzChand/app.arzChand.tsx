@@ -15,9 +15,7 @@ function App() {
 		window.store.get(widgetKey.ArzChand),
 	)
 
-	const [isTransparent, setIsTransparent] = useState<boolean>(
-		document.body.classList.contains('transparent-active'),
-	)
+	const [isTransparent, setIsTransparent] = useState<boolean>(false)
 
 	useEffect(() => {
 		const handleColorSchemeChange = (e) => {
@@ -34,10 +32,14 @@ function App() {
 		handleColorSchemeChange(colorSchemeMediaQuery)
 
 		const observer = new MutationObserver(() => {
-			setIsTransparent(document.body.classList.contains('transparent-active'))
+			setIsTransparent(
+				document
+					.querySelector('.h-screen')
+					?.classList?.contains('transparent-active'),
+			)
 		})
 
-		observer.observe(document.body, {
+		observer.observe(document.querySelector('.h-screen'), {
 			attributes: true,
 			attributeFilter: ['class'],
 		})

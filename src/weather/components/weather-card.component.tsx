@@ -16,16 +16,24 @@ export function WeatherComponent({
 	forecast,
 }: WeatherComponentProps) {
 	const [iconColor, setIconColor] = useState('')
-	const [isTransparent, setIsTransparent] = useState(
-		document.body.classList.contains('transparent-active'),
-	)
+	const [isTransparent, setIsTransparent] = useState(false)
 
 	useEffect(() => {
+		setIsTransparent(
+			document
+				.querySelector('.h-screen')
+				?.classList?.contains('transparent-active'),
+		)
+
 		const observer = new MutationObserver(() => {
-			setIsTransparent(document.body.classList.contains('transparent-active'))
+			setIsTransparent(
+				document
+					.querySelector('.h-screen')
+					?.classList?.contains('transparent-active'),
+			)
 		})
 
-		observer.observe(document.body, {
+		observer.observe(document.querySelector('.h-screen'), {
 			attributes: true,
 			attributeFilter: ['class'],
 		})
