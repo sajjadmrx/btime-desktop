@@ -52,6 +52,17 @@ const UpdateModal = ({ onClick }) => {
 		{
 			date: '1403/07/20',
 			last: true,
+			version: '1.4.4',
+			updates: [
+				{
+					text: 'رفع مشکل شفافیت ویجت ها',
+					emoji: '🐛',
+				},
+			],
+		},
+		{
+			date: '1403/07/20',
+			last: false,
 			version: '1.4.3',
 			updates: [
 				{
