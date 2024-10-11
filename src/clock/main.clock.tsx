@@ -32,7 +32,7 @@ window.ipcRenderer.on('transparent_status', (evt, message) => {
 })
 
 window.ipcRenderer.on('background_status', (evt, message) => {
-	const bodyElement = document.body
+	const bodyElement = document.querySelector('.h-screen')
 	if (message.newStatus) {
 		bodyElement.classList.remove('background')
 	} else bodyElement.classList.add('background')

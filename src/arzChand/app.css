@@ -1,28 +1,28 @@
 @media (prefers-color-scheme: dark) {
-  body.background {
+  .h-screen.background {
     background: #333;
   }
 
-  body.background.transparent-active {
+  .h-screen.background.transparent-active {
     background: #33333330;
   }
 }
 
 @media (prefers-color-scheme: light) {
-  body.background {
+  .h-screen.background {
     background: #ddd;
     color: black;
   }
 
-  body.background.transparent-active {
+  .h-screen.background.transparent-active {
     background: #dddddd30;
   }
 
-  body.transparent-active .text-gray-trasnparent {
+  .h-screen.transparent-active .text-gray-trasnparent {
     color: #e0e0e0;
   }
 
-  body.transparent-active .arrow_btn {
+  .h-screen.transparent-active .arrow_btn {
     color: #e0e0e0;
   }
 }
