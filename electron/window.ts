@@ -53,6 +53,7 @@ export async function createWindow(payload: Window) {
 		skipTaskbar: true,
 		fullscreenable: false,
 		movable: payload.moveable,
+		minimizable: false,
 		center: true,
 		x: payload.x || undefined,
 		y: payload.y || undefined,
