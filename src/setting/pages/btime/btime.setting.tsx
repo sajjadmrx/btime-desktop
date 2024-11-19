@@ -207,7 +207,7 @@ export function BtimeSetting() {
 									>
 										نمایش تقویم{' '}
 										<span className="font-light">
-											(نمایش روزهای ماه در سمت جپ ویجت)
+											(نمایش روزهای ماه در سمت چپ ویجت)
 										</span>
 									</Typography>
 								</div>
