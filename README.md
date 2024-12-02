@@ -31,6 +31,7 @@
   - [📝 تغییرات](#-تغییرات)
 - [🛡️ حریم خصوصی](#️-حریم-خصوصی)
   - [🛠 همکاری](#-همکاری)
+  - [🚀 CI/CD Pipelines](#-cicd-pipelines)
 
 ## 📥 دانلود
 
@@ -56,5 +57,15 @@
 ## 🛠 همکاری
 
 [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+## 🚀 CI/CD Pipelines
+
+This project uses GitHub Actions for continuous integration (CI) and continuous deployment (CD). The CI/CD pipelines are configured in the following workflow files:
+
+- `.github/workflows/build.yml`: This workflow runs on `push` events, excluding changes to `.yml` files and files in the `.github` directory. It includes steps for checking out the repository, setting up Node.js, caching dependencies, installing dependencies, building the project, running tests, linting the code, and generating code coverage reports.
+
+- `.github/workflows/pull.yml`: This workflow runs on `pull_request` events, excluding changes to `.md` files and files in the `.github` directory. It includes steps for checking out the repository, setting up Node.js, caching dependencies, installing dependencies, building the project, running tests, linting the code, and generating code coverage reports.
+
+- `.github/workflows/release.yml`: This workflow runs on `push` events to the `main` branch, excluding changes to `README.md`, `README-*.md`, and files in the `.github/ISSUE_TEMPLATE` directory. It includes steps for checking out the repository, setting up Node.js, caching dependencies, installing dependencies, building the project, running tests, linting the code, generating code coverage reports, and deploying the project to a staging environment. Additionally, it includes steps for publishing the built project to GitHub for Linux, Windows, and macOS.
 
 درحال تکمیل فایل توضیحات....
