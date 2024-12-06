@@ -21,6 +21,7 @@ export interface Window {
 	alwaysOnTop: boolean
 	reziable: boolean
 	saveBounds: boolean
+	closable?: boolean
 }
 export async function createWindow(payload: Window) {
 	//validate x and y
@@ -55,7 +56,7 @@ export async function createWindow(payload: Window) {
 		movable: payload.moveable,
 		maximizable: false,
 		minimizable: false,
-		closable: false,
+		closable: payload.closable,
 		center: true,
 		x: payload.x || undefined,
 		y: payload.y || undefined,
@@ -211,5 +212,6 @@ export async function createSettingWindow() {
 		alwaysOnTop: true,
 		reziable: false,
 		saveBounds: false,
+		closable: true,
 	})
 }
