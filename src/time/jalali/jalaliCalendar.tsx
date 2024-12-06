@@ -41,7 +41,7 @@ export function JalaliCalendar({ currentDate }: JalaliCalendarProp) {
 			`${year}-${month + 1}-01`,
 			'jYYYY-jM-D',
 		).day()
-		return (firstDayOfMonth + 1) % 7 // Adjust to start the week from Saturday
+		return firstDayOfMonth // بدون تغییر
 	}
 
 	const jalaliFirstDay = getJalaliFirstDayOfMonth(jalaliYear, jalaliMonth)
