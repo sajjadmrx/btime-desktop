@@ -8,7 +8,8 @@ module.exports = withMT({
   darkMode: 'class',
   theme: {
     screens: {
-      xs: { min: '0px', max: '200px' },
+      xxs: { min: '0px', max: '150px' },
+      xs: { min: '151px', max: '200px' },
       sm: { min: '200px', max: '400px' },
       md: { min: '400px', max: '500px' },
       lg: { min: '500px' },

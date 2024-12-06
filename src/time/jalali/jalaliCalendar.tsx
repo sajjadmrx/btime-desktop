@@ -1,19 +1,25 @@
-import moment from 'jalali-moment'
 import { useEffect, useState } from 'react'
 import { getMonthEvents, type MonthEvent } from '../../api/api'
 import { Tooltip } from '@material-tailwind/react'
+import moment from 'jalali-moment'
+import { getJalaliFirstDayOfMonth } from './utils'
 
 interface JalaliCalendarProp {
-	currentDate: moment.Moment
+	isTransparent: boolean
+	currentTime: moment.Moment
+	isHoliday: (day: number, dayOfWeek: number) => boolean
+	events: MonthEvent[]
 }
-export function JalaliCalendar({ currentDate }: JalaliCalendarProp) {
-	const [isTransparent, setIsTransparent] = useState<boolean>(false)
-
-	const [events, setEvents] = useState<MonthEvent[]>([])
-
+export function JalaliCalendar({
+	isTransparent,
+	currentTime,
+	isHoliday,
+	events,
+}: JalaliCalendarProp) {
+	const daysInMonth = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29]
 	const weekDays = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج']
 
-	const jalaliDate = moment(currentDate)
+	const jalaliDate = moment(currentTime)
 		.locale('fa')
 		.format('jYYYY-jM-jD')
 		.split('-')
@@ -22,64 +28,7 @@ export function JalaliCalendar({ currentDate }: JalaliCalendarProp) {
 	const jalaliMonth = Number.parseInt(jalaliDate[1]) - 1 // Months in your code are 0-indexed
 	const jalaliDay = Number.parseInt(jalaliDate[2])
 
-	const daysInMonth = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29]
-
-	const isHoliday = (day, dayOfWeek) => {
-		// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
-		const eventDay = events.filter((event) => event.day == day) || []
-		const isHoliday = eventDay.find((event) => event.isHoliday)
-
-		if (eventDay && isHoliday) {
-			return true
-		}
-
-		return dayOfWeek === 6 // 6 represents Friday (0-indexed)
-	}
-
-	const getJalaliFirstDayOfMonth = (year, month) => {
-		const firstDayOfMonth = moment(
-			`${year}-${month + 1}-01`,
-			'jYYYY-jM-D',
-		).day()
-		return firstDayOfMonth // بدون تغییر
-	}
-
 	const jalaliFirstDay = getJalaliFirstDayOfMonth(jalaliYear, jalaliMonth)
-
-	useEffect(() => {
-		setIsTransparent(
-			document
-				.querySelector('.h-screen')
-				.classList.contains('transparent-active'),
-		)
-		const observer = new MutationObserver(() => {
-			setIsTransparent(
-				document
-					.querySelector('.h-screen')
-					.classList.contains('transparent-active'),
-			)
-		})
-
-		observer.observe(document.querySelector('.h-screen'), {
-			attributes: true,
-			attributeFilter: ['class'],
-		})
-
-		return () => {
-			observer.disconnect()
-		}
-	}, [])
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		getMonthEvents().then((data) => {
-			setEvents(data)
-		})
-
-		return () => {
-			setEvents([])
-		}
-	}, [currentDate])
 
 	return (
 		<div
