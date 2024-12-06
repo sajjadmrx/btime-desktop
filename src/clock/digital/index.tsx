@@ -1,12 +1,14 @@
 import type { DigitalClockSettingStore } from 'electron/store'
 import moment from 'jalali-moment'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 interface Prop {
 	digital: DigitalClockSettingStore
 }
 export function DigitalClock({ digital }: Prop) {
 	const timeRef = useRef(null)
 	const dateRef = useRef(null)
+	const [isTransparent, setIsTransparent] = useState<boolean>(false)
+	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(false)
 
 	useEffect(() => {
 		const updateClock = () => {
@@ -49,10 +51,49 @@ export function DigitalClock({ digital }: Prop) {
 		return () => clearInterval(timerId)
 	}, [digital])
 
+	useEffect(() => {
+		setIsTransparent(
+			document
+				.querySelector('.h-screen')
+				.classList.contains('transparent-active'),
+		)
+		const observer = new MutationObserver(() => {
+			setIsTransparent(
+				document
+					.querySelector('.h-screen')
+					.classList.contains('transparent-active'),
+			)
+		})
+
+		const observerBackground = new MutationObserver(() => {
+			setBackgroundActive(
+				document.querySelector('.h-screen')?.classList?.contains('background'),
+			)
+		})
+
+		observer.observe(document.querySelector('.h-screen'), {
+			attributes: true,
+			attributeFilter: ['class'],
+		})
+		observerBackground.observe(document.querySelector('.h-screen'), {
+			attributes: true,
+			attributeFilter: ['class'],
+		})
+
+		return () => {
+			observer.disconnect()
+			observerBackground.disconnect()
+		}
+	}, [])
+
 	return (
 		<div className="flex h-full items-center text-center justify-center px-2">
-			<div className="text-6xl flex-col font-bold text-gray-600 text-gray-trasnparent dark:text-[#eee] font-mono relative w-60 overflow-clip px-2 font-[digital7]">
-				<div ref={timeRef}>00:00:00</div>
+			<div
+				className={`flex flex-col text-6xl font-bold font-mono relative w-60 overflow-clip justify-center items-center font-[digital7] ${getTextColor(isTransparent, isBackgroundActive)}`}
+			>
+				<div ref={timeRef} className=" min-w-44 max-w-44">
+					00:00:00
+				</div>
 				<div
 					className={'font-[vazir] text-sm flex flex-col gap-1'}
 					ref={dateRef}
@@ -68,4 +109,12 @@ export function DigitalClock({ digital }: Prop) {
 			</div>
 		</div>
 	)
+}
+
+function getTextColor(isTransparent: boolean, isBackgroundActive: boolean) {
+	let textColor = 'text-gray-600 dark:text-[#d3d3d3]'
+	if (isTransparent || !isBackgroundActive) {
+		textColor = 'text-gray-100 text-gray-trasnparent'
+	}
+	return textColor
 }

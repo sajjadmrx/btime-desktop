@@ -17,6 +17,7 @@ export function WeatherComponent({
 }: WeatherComponentProps) {
 	const [iconColor, setIconColor] = useState('')
 	const [isTransparent, setIsTransparent] = useState(false)
+	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(false)
 
 	useEffect(() => {
 		setIsTransparent(
@@ -33,15 +34,31 @@ export function WeatherComponent({
 			)
 		})
 
+		const observerBackground = new MutationObserver(() => {
+			setBackgroundActive(
+				document.querySelector('.h-screen')?.classList?.contains('background'),
+			)
+		})
+
 		observer.observe(document.querySelector('.h-screen'), {
+			attributes: true,
+			attributeFilter: ['class'],
+		})
+		observerBackground.observe(document.querySelector('.h-screen'), {
 			attributes: true,
 			attributeFilter: ['class'],
 		})
 
 		return () => {
 			observer.disconnect()
+			observerBackground.disconnect()
 		}
 	}, [])
+
+	let textColor = 'text-gray-600 text-gray-trasnparent dark:text-[#d3d3d3]'
+	if (isTransparent || !isBackgroundActive) {
+		textColor = 'text-gray-300'
+	}
 
 	useEffect(() => {
 		if (weather) {
@@ -83,12 +100,20 @@ export function WeatherComponent({
 				</div>
 			</div>
 			<div className="flex flex-col  text-center text-gray-600 text-gray-trasnparent dark:text-[#eee] font-bold z-10">
-				<div className="w-auto truncate font-normal text-center text-gray-600 text-gray-trasnparent dark:text-[#e7e4e4] xs:text-xs sm:text-sm">
+				<div
+					className={`w-auto truncate font-normal text-center xs:text-xs sm:text-sm ${textColor}`}
+				>
 					{weather.weather.temperature.temp_description}
 				</div>
 				<div className="flex flex-row mt-2 justify-around font-light rounded-md py-2 xs:w-40 sm:w-52 md:w-80 lg:w-96 ">
 					{forecast.map((item, index) => {
-						return <ForecastComponent weather={item} key={index} />
+						return (
+							<ForecastComponent
+								weather={item}
+								key={index}
+								isBackgroundActive={isBackgroundActive}
+							/>
+						)
 					})}
 				</div>
 			</div>
@@ -108,21 +133,33 @@ interface ForecastComponentProps {
 		icon: string
 		date: string
 	}
+	isBackgroundActive: boolean
 }
-function ForecastComponent({ weather }: ForecastComponentProps) {
+function ForecastComponent({
+	weather,
+	isBackgroundActive,
+}: ForecastComponentProps) {
 	const time = weather.date.split(' ')[1]
 	const h = time.split(':')[0]
 	const m = time.split(':')[1]
+
+	let textColor = 'text-gray-600 text-gray-trasnparent dark:text-[#d3d3d3]'
+	if (!isBackgroundActive) {
+		textColor = 'text-gray-300'
+	}
+
 	return (
 		<div className="flex flex-col items-center justify-around w-full  h-10 gap-1 p-1 sm:h-12 sm:w-16 md:h-20 md:px-4 md:w-full  lg:h-16 lg:w-60">
-			<p className="xs:text-[.60rem] sm:text-[.70rem] md:text-[.90rem] lg:text-[.90rem] xs:w-10 sm:w-14">
+			<p
+				className={`xs:text-[.60rem] sm:text-[.70rem] md:text-[.90rem] lg:text-[.90rem] xs:w-10 sm:w-14 ${textColor}`}
+			>
 				{h}:{m}
 			</p>
 			<img
 				src={weather.icon}
 				className="xs:w-4 xs:h-4 sm:w-6 sm:h-6 md:w-8 md:h-w-8 lg:w-10 lg:h-10"
 			/>
-			<p className="text-[.80rem] w-10">
+			<p className={`text-[.80rem] w-10 ${textColor}`}>
 				{weather.temp.toFixed(0)}
 				<sup className="font-[balooTamma] text-[.50rem]">°</sup>
 			</p>

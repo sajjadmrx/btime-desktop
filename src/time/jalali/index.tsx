@@ -11,6 +11,8 @@ interface Prop {
 
 export function JalaliComponent(prop: Prop) {
 	const [isTransparent, setIsTransparent] = useState<boolean>(false)
+	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(false)
+
 	const { currentDate: currentTime, setting } = prop
 	const [events, setEvents] = useState<MonthEvent[]>([])
 
@@ -42,13 +44,24 @@ export function JalaliComponent(prop: Prop) {
 			)
 		})
 
+		const observerBackground = new MutationObserver(() => {
+			setBackgroundActive(
+				document.querySelector('.h-screen')?.classList?.contains('background'),
+			)
+		})
+
 		observer.observe(document.querySelector('.h-screen'), {
+			attributes: true,
+			attributeFilter: ['class'],
+		})
+		observerBackground.observe(document.querySelector('.h-screen'), {
 			attributes: true,
 			attributeFilter: ['class'],
 		})
 
 		return () => {
 			observer.disconnect()
+			observerBackground.disconnect()
 		}
 	}, [])
 
@@ -67,13 +80,19 @@ export function JalaliComponent(prop: Prop) {
 		<div className="flex w-full items-center justify-center h-full flex-row-reverse">
 			<div className="flex flex-col items-center lg:gap-4 gap-2 moveable w-[40%] relative">
 				{isHoliday && <Holiday />}
-				<div className="select-none text-gray-600 text-gray-trasnparent dark:text-[#eee]">
+				<div
+					className={`select-none ${getTextColor(isTransparent, isBackgroundActive)}`}
+				>
 					{currentTime.locale('fa').format('dddd')}
 				</div>
-				<div className="text-6xl select-none text-gray-600 text-gray-trasnparent dark:text-[#eee]  ">
+				<div
+					className={`text-6xl select-none ${getTextColor(isTransparent, isBackgroundActive)}`}
+				>
 					{currentTime.locale('fa').jDate()}
 				</div>
-				<div className="flex flex-row gap-1 text-gray-600 text-gray-trasnparent dark:text-[#eee]">
+				<div
+					className={`flex flex-row gap-1 ${getTextColor(isTransparent, isBackgroundActive)}`}
+				>
 					<div>{currentTime.locale('fa').jYear()}</div>
 					<div>{currentTime.locale('fa').format('jMMMM')}</div>
 				</div>
@@ -111,4 +130,12 @@ function Holiday() {
 			تعطیل
 		</div>
 	)
+}
+
+function getTextColor(isTransparent: boolean, isBackgroundActive: boolean) {
+	let textColor = 'text-gray-600 dark:text-[#d3d3d3]'
+	if (isTransparent || !isBackgroundActive) {
+		textColor = 'text-[#ccc] text-gray-trasnparent'
+	}
+	return textColor
 }

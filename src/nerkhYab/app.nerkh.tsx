@@ -8,6 +8,8 @@ function App() {
 	const [currency, setCurrency] = useState<string>()
 	const [imgColor, setImgColor] = useState<string>()
 	const [currencyData, setCurrencyData] = useState<CurrencyData>(null)
+	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(false)
+	const [isTransparent, setIsTransparent] = useState<boolean>(false)
 
 	useEffect(() => {
 		const currencyStore = window.store.get(widgetKey.NerkhYab)
@@ -29,12 +31,38 @@ function App() {
 			setCurrency(currencyStore.currencies[0])
 		})
 
+		const observerBackground = new MutationObserver(() => {
+			setBackgroundActive(
+				document.querySelector('.h-screen')?.classList?.contains('background'),
+			)
+		})
+
+		const observer = new MutationObserver(() => {
+			setIsTransparent(
+				document
+					.querySelector('.h-screen')
+					.classList.contains('transparent-active'),
+			)
+		})
+
+		observer.observe(document.querySelector('.h-screen'), {
+			attributes: true,
+			attributeFilter: ['class'],
+		})
+
+		observerBackground.observe(document.querySelector('.h-screen'), {
+			attributes: true,
+			attributeFilter: ['class'],
+		})
+
 		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
 		return () => {
 			colorSchemeMediaQuery.removeEventListener(
 				'change',
 				handleColorSchemeChange,
 			)
+			observerBackground.disconnect()
+			observer.disconnect()
 		}
 	}, [])
 
@@ -111,7 +139,7 @@ function App() {
 										<div className="h-5 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-2.5"></div>
 									) : (
 										<h3
-											className="lg:text-[1.1rem] sm:text-sm font-normal  text-gray-600 text-gray-trasnparent dark:text-[#eee] truncate w-32"
+											className={`lg:text-[1.1rem] sm:text-sm font-normal  truncate w-32 ${getTextColor(isTransparent, isBackgroundActive)}`}
 											dir="rtl"
 										>
 											{currencyData.name}
@@ -125,7 +153,9 @@ function App() {
 										{loading ? (
 											<div className="h-2 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-10 mb-2.5"></div>
 										) : (
-											<p className="lg:text-[1.2rem] sm:text-sm md:text-[.9rem]  text-gray-600 text-gray-trasnparent dark:text-[#d3d3d3]">
+											<p
+												className={`lg:text-[1.2rem] sm:text-sm md:text-[.9rem] ${getTextColor(isTransparent, isBackgroundActive)}`}
+											>
 												{currencyData.todyPrice.toLocaleString()}
 											</p>
 										)}
@@ -134,7 +164,9 @@ function App() {
 										{loading ? (
 											<div className="h-2 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-5 mb-2.5"></div>
 										) : (
-											<p className="text-xs font-light text-gray-600 text-gray-trasnparent dark:text-[#cbc9c9]">
+											<p
+												className={`text-xs font-light ${getTextColor(isTransparent, isBackgroundActive)}`}
+											>
 												1 {currency.toUpperCase()}
 											</p>
 										)}
@@ -150,3 +182,11 @@ function App() {
 }
 
 export default App
+
+function getTextColor(isTransparent: boolean, isBackgroundActive: boolean) {
+	let textColor = 'text-gray-600 dark:text-[#d3d3d3]'
+	if (isTransparent || !isBackgroundActive) {
+		textColor = 'text-gray-200 text-gray-trasnparent'
+	}
+	return textColor
+}
