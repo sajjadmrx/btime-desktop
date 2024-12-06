@@ -16,6 +16,7 @@ function App() {
 	)
 
 	const [isTransparent, setIsTransparent] = useState<boolean>(false)
+	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(false)
 
 	useEffect(() => {
 		const handleColorSchemeChange = (e) => {
@@ -39,7 +40,18 @@ function App() {
 			)
 		})
 
+		const observerBackground = new MutationObserver(() => {
+			setBackgroundActive(
+				document.querySelector('.h-screen')?.classList?.contains('background'),
+			)
+		})
+
 		observer.observe(document.querySelector('.h-screen'), {
+			attributes: true,
+			attributeFilter: ['class'],
+		})
+
+		observerBackground.observe(document.querySelector('.h-screen'), {
 			attributes: true,
 			attributeFilter: ['class'],
 		})
@@ -58,6 +70,7 @@ function App() {
 				handleColorSchemeChange,
 			)
 			observer.disconnect()
+			observerBackground.disconnect()
 		}
 	}, [])
 
@@ -109,11 +122,16 @@ function App() {
 			<div className="h-full">
 				<div className="flex flex-col p-2 h-full  items-center">
 					{setting.template === 'default' || !setting.template ? (
-						<CurrenciesDefault currencies={currencies} />
+						<CurrenciesDefault
+							currencies={currencies}
+							isBackgroundActive={isBackgroundActive}
+							isTransparent={isTransparent}
+						/>
 					) : (
 						<CurrenciesClassic
 							currencies={currencies}
 							isTransparent={isTransparent}
+							isBackgroundActive={isBackgroundActive}
 						/>
 					)}
 					<div
@@ -122,10 +140,10 @@ function App() {
 					>
 						<button
 							className={`w-7 h-7 not-moveable flex justify-center items-center rounded-full 
-                cursor-pointer  hover:bg-gray-500 hover:text-gray-300 dark:hover:bg-[#3c3c3c8a] dark:text-gray-400/90
+                cursor-pointer   hover:text-gray-300 dark:hover:bg-[#3c3c3c8a] dark:text-gray-400/90
                 dark:bg-transparent
                  ${isTransparent ? 'text-gray-300' : 'text-gray-500'} 
-                bg-gray-300/20
+                
                 ${reloading ? 'animate-spin' : 'animate-none'}
                 `}
 							style={{ backdropFilter: 'blur(20px)' }}

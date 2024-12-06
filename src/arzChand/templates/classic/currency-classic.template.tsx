@@ -5,8 +5,18 @@ import { extractMainColorFromImage } from '../../../utils/colorUtils'
 interface Prop {
 	currency: (CurrencyData & { code }) | null
 	isTransparent: boolean
+	isBackgroundActive: boolean
 }
-export function CurrencyClassicComponent({ currency, isTransparent }: Prop) {
+export function CurrencyClassicComponent({
+	currency,
+	isTransparent,
+	isBackgroundActive,
+}: Prop) {
+	let textColor = 'text-gray-600 text-gray-trasnparent dark:text-[#d3d3d3]'
+	if (isTransparent || !isBackgroundActive) {
+		textColor = 'text-gray-400'
+	}
+
 	return (
 		<div className="flex flex-row items-center  justify-around  w-full flex-wrap font-[balooTamma]">
 			<div className="flex-1 flex flex-row gap-1 w-52 justify items-end truncate ">
@@ -15,7 +25,9 @@ export function CurrencyClassicComponent({ currency, isTransparent }: Prop) {
 						<div className="flex-1 w-40">
 							{currency ? (
 								<div className="flex flex-col">
-									<p className="lg:text-[1.2rem] sm:text-sm md:text-[.9rem]  text-gray-600 text-gray-trasnparent dark:text-[#d3d3d3]">
+									<p
+										className={`lg:text-[1.2rem] sm:text-sm md:text-[.9rem]  ${textColor}`}
+									>
 										{currency.todyPrice.toLocaleString()}
 									</p>
 								</div>
@@ -50,7 +62,7 @@ export function CurrencyClassicComponent({ currency, isTransparent }: Prop) {
 								)}
 							</div>
 						</div>
-						<p className="xs:text-xs sm:text-sm lg:text-[1rem] text-gray-600 text-gray-trasnparent dark:text-[#d3d3d3]">
+						<p className={`xs:text-xs sm:text-sm lg:text-[1rem] ${textColor}`}>
 							{currency.code?.toUpperCase()}
 						</p>
 					</>

@@ -3,8 +3,19 @@ import type { CurrencyData } from '../../../api/api'
 import { extractMainColorFromImage } from '../../../utils/colorUtils'
 interface Prop {
 	currency: (CurrencyData & { imgColor; code }) | null
+	isBackgroundActive: boolean
+	isTransparent: boolean
 }
-export function CurrencyDefaultComponent({ currency }: Prop) {
+export function CurrencyDefaultComponent({
+	currency,
+	isBackgroundActive,
+	isTransparent,
+}: Prop) {
+	let textColor = 'text-gray-600 text-gray-trasnparent dark:text-[#d3d3d3]'
+	if (isTransparent || !isBackgroundActive) {
+		textColor = 'text-gray-400'
+	}
+
 	const [imgColor, setImgColor] = useState('')
 	useEffect(() => {
 		function fetchColor() {
@@ -28,11 +39,11 @@ export function CurrencyDefaultComponent({ currency }: Prop) {
 				<div className="text-[.9rem] flex flex-col text-gray-600 text-gray-trasnparent  dark:text-[#eee] truncate">
 					<div className="flex-1 flex flex-row w-52 items-center justify-end mt-1 p-2 rounded-full truncate ">
 						<div className="w-10 flex justify-center" dir="rtl">
-							<div className={'w-8 h-8 relative flex rounded-full'}>
+							<div className={'w-4 h-4 relative flex rounded-full'}>
 								{currency ? (
 									<>
 										<div
-											className="absolute inset-0 h-8 w-8 rounded-full z-0"
+											className="absolute inset-0 h-4 w-4 rounded-full z-0"
 											style={{
 												backdropFilter: 'blur(100px)',
 												boxShadow: `0px 0px 5px 2px ${imgColor}`,
@@ -40,7 +51,7 @@ export function CurrencyDefaultComponent({ currency }: Prop) {
 										></div>
 										<img
 											src={currency.icon}
-											className="object-cover rounded-full w-8 h-8 z-10"
+											className="object-cover rounded-full w-4 h-4 z-10"
 										/>
 									</>
 								) : (
@@ -50,7 +61,9 @@ export function CurrencyDefaultComponent({ currency }: Prop) {
 						</div>
 						<div className="flex-1 w-40">
 							{currency ? (
-								<p className="mr-3 truncate w-40 xs:text-xs sm:text-sm md:text-base">
+								<p
+									className={`mr-3 truncate w-40 xs:text-xs sm:text-sm md:text-base ${textColor}`}
+								>
 									{currency.name}
 								</p>
 							) : (
@@ -63,13 +76,10 @@ export function CurrencyDefaultComponent({ currency }: Prop) {
 			<div className="flex-2 flex flex-col justify items-end truncate ">
 				{currency ? (
 					<>
-						<p className="xs:text-xs sm:text-sm lg:text-[1rem] text-gray-600 text-gray-trasnparent dark:text-[#d3d3d3]">
+						<p className={`xs:text-xs sm:text-sm lg:text-[1rem] ${textColor}`}>
 							{currency.todyPrice.toLocaleString()}
 						</p>
-						<p
-							className="text-xs font-light text-gray-600 text-gray-trasnparent dark:text-[#cbc9c9]"
-							dir="ltr"
-						>
+						<p className={`text-xs font-light ${textColor}`} dir="ltr">
 							1 {currency.code?.toUpperCase()}
 						</p>
 					</>
