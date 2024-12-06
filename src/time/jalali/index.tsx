@@ -79,7 +79,7 @@ export function JalaliComponent(prop: Prop) {
 	return (
 		<div className="flex w-full items-center justify-center h-full flex-row-reverse">
 			<div className="flex flex-col items-center lg:gap-4 gap-2 moveable w-[40%] relative">
-				{isHoliday && <Holiday />}
+				{isHoliday && <Holiday isBackgroundActive={isBackgroundActive} />}
 				<div
 					className={`select-none ${getTextColor(isTransparent, isBackgroundActive)}`}
 				>
@@ -110,22 +110,21 @@ export function JalaliComponent(prop: Prop) {
 		</div>
 	)
 }
-
-function Holiday() {
+interface WeekDayComponentProp {
+	isBackgroundActive: boolean
+}
+function Holiday({ isBackgroundActive }: WeekDayComponentProp) {
 	return (
 		<div
-			className="
-		 
-		 absolute -top-5 right-10 bg-red-500 text-gray-100 text-center
+			className={`
+		 absolute -top-5 right-10 text-center ${isBackgroundActive ? 'bg-red-500 text-gray-100' : 'bg-red-600/20 text-red-400'}
 		 text-sm select-none transform 
 		 lg:hidden
 		 md:hidden
 		 sm:hidden
 		 xs:top-0 xs:-rotate-45 xs:right-10  xs:w-32
 		 xxs:w-24 xxs:top-0 xxs:-rotate-45
-		 font-extralight
-
-		  "
+		 `}
 		>
 			تعطیل
 		</div>
