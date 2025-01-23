@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { type CurrencyData, getRateByCurrency } from '../api/api'
 import { widgetKey } from '../../shared/widgetKey'
+import { type CurrencyData, getRateByCurrency } from '../api/api'
 import { extractMainColorFromImage } from '../utils/colorUtils'
 
 function App() {
@@ -156,7 +156,7 @@ function App() {
 											<p
 												className={`lg:text-[1.2rem] sm:text-sm md:text-[.9rem] ${getTextColor(isTransparent, isBackgroundActive)}`}
 											>
-												{currencyData.todyPrice.toLocaleString()}
+												{currencyData.rialPrice.toLocaleString()}
 											</p>
 										)}
 									</div>

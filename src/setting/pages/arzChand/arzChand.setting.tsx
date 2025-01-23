@@ -1,18 +1,18 @@
 import { Checkbox, Slider, Switch, Typography } from '@material-tailwind/react'
 import type { ArzChandSettingStore } from 'electron/store'
-import { useEffect, useState } from 'react'
+import { lazy, useEffect, useState } from 'react'
+import { widgetKey } from '../../../../shared/widgetKey'
 import {
+	type SupportedCurrencies,
 	getSupportedCurrencies,
 	sendEvent,
-	type SupportedCurrencies,
 } from '../../../api/api'
-import { widgetKey } from '../../../../shared/widgetKey'
 import { MultiSelectDropdown } from '../../components/multiSelectDropdown.component'
 
 export function ArzChandSetting() {
 	const [setting, setSetting] = useState<ArzChandSettingStore>(null)
 	const [supportedCurrencies, setSupportedCurrencies] =
-		useState<SupportedCurrencies>()
+		useState<SupportedCurrencies>([])
 
 	useEffect(() => {
 		const ArzChand: ArzChandSettingStore = window.store.get(widgetKey.ArzChand)
@@ -21,6 +21,7 @@ export function ArzChandSetting() {
 
 		function fetchSupportedCurrencies() {
 			getSupportedCurrencies().then((data) => {
+				setSupportedCurrencies([])
 				setSupportedCurrencies(data)
 			})
 		}
@@ -209,7 +210,7 @@ export function ArzChandSetting() {
 						>
 							حاشیه ها
 						</label>
-						<div className="flex items-center gap-2 w-36 h-fit rounded px-2 py-2">
+						<div className="flex items-center gap-2 px-2 py-2 rounded w-36 h-fit">
 							<Slider
 								size="md"
 								color="blue"
@@ -228,7 +229,7 @@ export function ArzChandSetting() {
 						dir="rtl"
 					>
 						<div
-							className="flex flex-col justify-between w-96 gap-2 "
+							className="flex flex-col justify-between gap-2 w-96 "
 							dir="rtl"
 						>
 							<label
@@ -237,7 +238,7 @@ export function ArzChandSetting() {
 							>
 								انتخاب ارز:
 							</label>
-							{supportedCurrencies && (
+							{supportedCurrencies.length ? (
 								<MultiSelectDropdown
 									options={getCurrencyOptions(supportedCurrencies) as any}
 									values={getSelectedCurrencies(
@@ -249,6 +250,8 @@ export function ArzChandSetting() {
 									onChange={(values) => setSettingValue('currencies', values)}
 									color={'blue'}
 								/>
+							) : (
+								<div>در حال بارگذاری...</div>
 							)}
 						</div>
 					</div>
@@ -266,24 +269,32 @@ interface Option {
 	}[]
 }
 function getCurrencyOptions(supported: SupportedCurrencies): Option[] {
-	const keyes = Object.keys(supported)
+	const keys = Object.keys(supported)
 
-	const isCrypto = keyes.filter((key) => supported[key].isCrypto)
-	const isCurrency = keyes.filter((key) => !supported[key].isCrypto)
+	const isCrypto = keys.filter((key) => supported[key].type === 'crypto')
+	const isCurrency = keys.filter((key) => supported[key].type === 'currency')
+	const supportedCoins = keys.filter((key) => supported[key].type === 'coin')
 
 	const options = [
 		{
 			label: '🪙 ارزهای دیجیتال',
-			options: isCrypto.map((key) => ({
-				value: key,
-				label: supported[key].label,
+			options: isCrypto.map((indx) => ({
+				value: supported[indx].key,
+				label: supported[indx].label.fa,
 			})),
 		},
 		{
 			label: '💵 ارزها',
 			options: isCurrency.map((key) => ({
-				value: key,
-				label: supported[key].label,
+				value: supported[key].key,
+				label: supported[key].label.fa,
+			})),
+		},
+		{
+			label: '🥇 طلا و سکه',
+			options: supportedCoins.map((indx) => ({
+				value: supported[indx].key,
+				label: supported[indx].label.fa,
 			})),
 		},
 	]
@@ -295,11 +306,12 @@ function getSelectedCurrencies(
 	selected: string[],
 	list: SupportedCurrencies,
 ): { value: string; label: string }[] {
-	const keyes = Object.keys(list)
-
-	return keyes
-		.filter((key) => selected.includes(key))
-		.map((key) => ({ value: key, label: list[key].label }))
+	console.log(selected, list)
+	return selected.map((key) => ({
+		value: key,
+		// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
+		label: list.find((item) => item.key == key)?.label?.fa,
+	}))
 }
 
 function TemplateItem({ title, selected, onClick }) {

@@ -11,7 +11,7 @@ import { widgetKey } from '../../../../shared/widgetKey'
 export function NerkhYabSetting() {
 	const [setting, setSetting] = useState<NerkhYabSettingStore>(null)
 	const [supportedCurrencies, setSupportedCurrencies] =
-		useState<SupportedCurrencies>(null)
+		useState<SupportedCurrencies>([])
 
 	useEffect(() => {
 		const NerkhYab: NerkhYabSettingStore = window.store.get(widgetKey.NerkhYab)
@@ -212,10 +212,14 @@ export function NerkhYabSetting() {
 								}
 								value={setting.currencies[0]}
 							>
-								{supportedCurrencies &&
-									Object.keys(supportedCurrencies).map((key) => (
-										<option key={key} value={key} className="font-light">
-											{supportedCurrencies[key].label}
+								{supportedCurrencies.length &&
+									supportedCurrencies.map((item) => (
+										<option
+											key={item.key}
+											value={item.key}
+											className="font-light"
+										>
+											{item.label.fa}
 										</option>
 									))}
 							</select>

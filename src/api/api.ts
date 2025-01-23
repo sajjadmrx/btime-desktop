@@ -1,6 +1,6 @@
 import axios from 'axios'
-import type { ForecastResponse, WeatherResponse } from './weather.interface'
 import type { News, Timezone, TodayEvent } from './api.interface'
+import type { ForecastResponse, WeatherResponse } from './weather.interface'
 
 const api = axios.create()
 const rawGithubApi = axios.create({
@@ -8,9 +8,13 @@ const rawGithubApi = axios.create({
 })
 
 export interface CurrencyData {
-	name: string
+	name: {
+		fa: string
+		en: string
+	}
 	icon: string
-	todyPrice: number
+	price: number
+	rialPrice: number
 }
 
 export interface History {
@@ -29,7 +33,7 @@ export async function getRateByCurrency(
 
 		api.defaults.headers.userid = window.store.get('main').userId
 
-		const response = await api.get(`/arz/${currency}`)
+		const response = await api.get(`/v2/arz/${currency}`)
 		return response.data
 	} catch (err) {
 		console.log(err)
@@ -37,27 +41,27 @@ export async function getRateByCurrency(
 	}
 }
 
-export type SupportedCurrencies = Record<
-	string,
-	{
-		flag: string
-		country: string
-		label: string
-		isCrypto: boolean | undefined
+export type SupportedCurrencies = {
+	key: string
+	type: 'coin' | 'crypto' | 'currency'
+	country?: string
+	label: {
+		fa: string
+		en: string
 	}
->
+}[]
+
 export async function getSupportedCurrencies(): Promise<SupportedCurrencies> {
 	try {
 		api.defaults.baseURL = await getMainApi()
 
 		api.defaults.headers.userid = window.store.get('main').userId
 
-		const response = await api.get('/supported-currencies')
-
-		return response.data.countryFlagMapping
+		const response = await api.get('/v2/supported-currencies')
+		return response.data.currencies
 	} catch (err) {
 		console.log(err)
-		return {}
+		return []
 	}
 }
 

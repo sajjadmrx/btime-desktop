@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react'
 import type { CurrencyData } from '../../../api/api'
-import { extractMainColorFromImage } from '../../../utils/colorUtils'
+import { convertPriceToMillions } from '../../../utils/formatPrice'
 
 interface Prop {
 	currency: (CurrencyData & { code }) | null
@@ -19,16 +18,19 @@ export function CurrencyClassicComponent({
 
 	return (
 		<div className="flex flex-row items-center  justify-around  w-full flex-wrap font-[balooTamma]">
-			<div className="flex-1 flex flex-row gap-1 w-52 justify items-end truncate ">
+			<div className="flex flex-row items-end flex-1 gap-1 truncate w-52 justify ">
 				<div className="text-[.9rem] flex flex-col text-gray-600 text-gray-trasnparent  dark:text-[#eee] truncate">
-					<div className="flex-1 flex flex-row w-52 items-center justify-end mt-1 p-2 rounded-full truncate ">
+					<div className="flex flex-row items-center justify-end flex-1 p-2 mt-1 truncate rounded-full w-52 ">
 						<div className="flex-1 w-40">
 							{currency ? (
 								<div className="flex flex-col">
 									<p
 										className={`lg:text-[1.2rem] sm:text-sm md:text-[.9rem]  ${textColor}`}
 									>
-										{currency.todyPrice.toLocaleString()}
+										{convertPriceToMillions(
+											currency.rialPrice.toString(),
+											'en',
+										)}
 									</p>
 								</div>
 							) : (
@@ -41,10 +43,10 @@ export function CurrencyClassicComponent({
 					</div>
 				</div>
 			</div>
-			<div className="flex-2 flex flex-col justify items-end truncate">
+			<div className="flex flex-col items-end truncate flex-2 justify">
 				{currency ? (
 					<>
-						<div className=" flex justify-center">
+						<div className="flex justify-center ">
 							<div
 								className={
 									'w-5 h-5 relative flex rounded-full justify-end items-end'
@@ -58,7 +60,7 @@ export function CurrencyClassicComponent({
 										/>
 									</>
 								) : (
-									<div className="animate-pulse bg-gray-200 w-5 h-5 rounded-full object-cover"></div>
+									<div className="object-cover w-5 h-5 bg-gray-200 rounded-full animate-pulse"></div>
 								)}
 							</div>
 						</div>
@@ -68,8 +70,8 @@ export function CurrencyClassicComponent({
 					</>
 				) : (
 					<>
-						<p className="mr-3 items-center truncate w-5 h-3 animate-pulse bg-gray-200/70  rounded-full"></p>
-						<p className="mr-3 items-center truncate w-3 h-2 mt-1 animate-pulse bg-gray-200/70  rounded-full"></p>
+						<p className="items-center w-5 h-3 mr-3 truncate rounded-full animate-pulse bg-gray-200/70"></p>
+						<p className="items-center w-3 h-2 mt-1 mr-3 truncate rounded-full animate-pulse bg-gray-200/70"></p>
 					</>
 				)}
 			</div>

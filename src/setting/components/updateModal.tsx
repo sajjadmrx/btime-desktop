@@ -2,7 +2,7 @@ import React from 'react'
 
 const EmojiWithText = ({ emoji, text }) => (
 	<li className="flex items-center justify-end space-x-2 rtl:space-x-reverse">
-		<span className="dark:text-white text-gray-600">{text}</span>
+		<span className="text-gray-600 dark:text-white">{text}</span>
 		<span className="text-2xl">{emoji}</span>
 	</li>
 )
@@ -17,15 +17,12 @@ const Button = ({ primary, children, onClick }) => (
 )
 
 const UpdateList = ({ date, version, updates, last }) => (
-	<div
-		className="dark:bg-gray-700 bg-gray-100 
-  rounded-lg p-4 relative"
-	>
+	<div className="relative p-4 bg-gray-100 rounded-lg dark:bg-gray-700">
 		{last && (
-			<div className="absolute top-3 right-0 bg-green-500 text-white px-2 py-1 rounded-bl-lg rounded-tr-lg"></div>
+			<div className="absolute right-0 px-2 py-1 text-white bg-green-500 rounded-tr-lg rounded-bl-lg top-3"></div>
 		)}
 		<p
-			className="dark:text-white text-gray-700 text-right font-bold mb-2"
+			className="mb-2 font-bold text-right text-gray-700 dark:text-white"
 			dir="rtl"
 		>
 			(نسخه {version}) {date}
@@ -50,8 +47,23 @@ const UpdateModal = ({ onClick }) => {
 	}
 	const updateDetails: Update[] = [
 		{
+			date: '1403/08/16',
+			last: false,
+			version: '1.4.5',
+			updates: [
+				{
+					text: 'اضافه شدن بدج "تعطیل" به ویجت تاریخ ( در سایز کوچک ))',
+					emoji: '🎨',
+				},
+				{
+					text: 'بهبود رنگ ها در وضعیت بدون بک گراند',
+					emoji: '🌈',
+				},
+			],
+		},
+		{
 			date: '1403/07/20',
-			last: true,
+			last: false,
 			version: '1.4.4',
 			updates: [
 				{
@@ -148,11 +160,8 @@ const UpdateModal = ({ onClick }) => {
 	]
 
 	return (
-		<div className="fixed z-50 inset-0 bg-opacity-50 flex items-center justify-center p-4 bg-black">
-			<div
-				className="dark:bg-gray-800 bg-white
-       rounded-lg max-w-md w-full p-6 space-y-4 h-full overflow-y-clip"
-			>
+		<div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+			<div className="w-full h-full max-w-md p-6 space-y-4 bg-white rounded-lg dark:bg-gray-800 overflow-y-clip">
 				<div className="flex items-center justify-center space-x-2 text-blue-400">
 					<span className="text-3xl">🎉</span>
 					<h2 className="text-xl font-bold">بروز رسانی جدید نصب شد</h2>
