@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
-import { getMonthEvents, type MonthEvent } from '../../api/api'
 import { Tooltip } from '@material-tailwind/react'
 import moment from 'jalali-moment'
+import { useEffect, useState } from 'react'
+import { type MonthEvent, getMonthEvents } from '../../api/api'
 import { getJalaliFirstDayOfMonth } from './utils'
 
 interface JalaliCalendarProp {
@@ -25,41 +25,39 @@ export function JalaliCalendar({
 		.split('-')
 
 	const jalaliYear = Number.parseInt(jalaliDate[0])
-	const jalaliMonth = Number.parseInt(jalaliDate[1]) - 1 // Months in your code are 0-indexed
+	const jalaliMonth = Number.parseInt(jalaliDate[1]) - 1
 	const jalaliDay = Number.parseInt(jalaliDate[2])
 
 	const jalaliFirstDay = getJalaliFirstDayOfMonth(jalaliYear, jalaliMonth)
 
 	return (
 		<div
-			className="w-full max-w-96 h-full rounded-lg overflow-hidden not-moveable pt-2 lg:pt-4 px-1"
+			className="w-full h-full px-1 pt-2 overflow-hidden rounded-lg max-w-96 not-moveable lg:pt-4"
 			dir="rtl"
 		>
 			<div className="grid grid-cols-7 space-x-2 sm:p-2 lg:space-x-4">
 				{weekDays.map((day, index) => (
 					<WeekDayComponent
+						key={day}
 						day={day}
 						isTransparent={isTransparent}
 						index={index}
-						key={day}
 					/>
 				))}
 				{[...Array(jalaliFirstDay)].map((_, index) => (
-					<div key={index} className="text-center p-1 sm:p-2"></div>
+					<div key={index} className="p-1 text-center sm:p-2"></div>
 				))}
-				{[...Array(daysInMonth[jalaliMonth])].map((_, index) => {
-					return (
-						<DayComponent
-							index={index}
-							isHoliday={isHoliday}
-							isTransparent={isTransparent}
-							jalaliDay={jalaliDay}
-							jalaliFirstDay={jalaliFirstDay}
-							key={index}
-							events={events}
-						/>
-					)
-				})}
+				{[...Array(daysInMonth[jalaliMonth])].map((_, index) => (
+					<DayComponent
+						key={index}
+						index={index}
+						isHoliday={isHoliday}
+						isTransparent={isTransparent}
+						jalaliDay={jalaliDay}
+						jalaliFirstDay={jalaliFirstDay}
+						events={events}
+					/>
+				))}
 			</div>
 		</div>
 	)
@@ -122,7 +120,7 @@ function DayComponent({
 
 	function DayEvents() {
 		return dayEventsList.map((eventInfo, index) => (
-			<li key={index} className="truncate max-w-full">
+			<li key={index} className="max-w-full truncate">
 				<span
 					className={`whitespace-break-spaces font-[Vazir] font-light text-xs ${eventInfo.isHoliday ? 'dark:text-red-400 text-red-600' : 'dark:text-gray-300 text-gray-600/80'}`}
 				>
@@ -135,11 +133,11 @@ function DayComponent({
 	return (
 		<>
 			<Tooltip
-				className={`rounded-bl-3xl rounded-tr-3xl ${toolTipBgColor} w-52 h-24 truncate
+				className={`rounded-bl-3xl rounded-tr-3xl ${toolTipBgColor} w-52 min-h-2 truncate
           dark:bg-gray-900 bg-[#d2d2d2] dark:text-gray-200 text-gray-800 shadow-lg
           `}
 				content={
-					<div className="flex flex-col justify-between items-center w-full">
+					<div className="flex flex-col items-center justify-between w-full">
 						<ul
 							className="px-4 text-xs bg-gray-lightest text-blue-darkest dark:bg-d-black-30 dark:text-d-black-70"
 							dir="rtl"
@@ -152,7 +150,7 @@ function DayComponent({
 								</li>
 							)}
 						</ul>
-						<div className="flex justify-between text-gray text-xs w-full dark:bg-d-black-40 px-4 py-1"></div>
+						<div className="flex justify-between w-full px-4 py-1 text-xs text-gray dark:bg-d-black-40"></div>
 					</div>
 				}
 				animate={{
