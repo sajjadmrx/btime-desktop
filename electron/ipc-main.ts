@@ -1,8 +1,8 @@
-import { app, BrowserWindow, ipcMain, nativeTheme, shell } from 'electron'
-import { store, type MainSettingStore } from './store'
-import { widgetKey } from '../shared/widgetKey'
-import { createSettingWindow, createWindow } from './window'
+import { BrowserWindow, app, ipcMain, nativeTheme, shell } from 'electron'
 import { userLogger } from '../shared/logger'
+import { widgetKey } from '../shared/widgetKey'
+import { type MainSettingStore, store } from './store'
+import { createSettingWindow, createWindow } from './window'
 
 export function initIpcMain() {
 	ipcMain.on('reOpen', () => {
@@ -98,7 +98,10 @@ export function initIpcMain() {
 		}
 		if (!setting.enable) {
 			if (win.closable) {
+				console.log(`closed ${windowKey}`)
 				win.close()
+			} else {
+				console.log(`can't close ${windowKey}`)
 			}
 		} else {
 			await createWindow({

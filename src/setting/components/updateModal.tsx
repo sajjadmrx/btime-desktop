@@ -40,17 +40,36 @@ const UpdateModal = ({ onClick }) => {
 		date: string
 		version: string //import.meta.env.PACKAGE_VERSION,
 		last: boolean
-		updates: {
+		changes: {
 			emoji: string
 			text: string
 		}[]
 	}
 	const updateDetails: Update[] = [
 		{
-			date: '1403/08/16',
+			date: '1403/11/08',
+			last: true,
+			version: '1.4.6',
+			changes: [
+				{
+					text: 'اضافه شدن قیمت طلا و سکه',
+					emoji: '💰',
+				},
+				{
+					text: 'بهبود نمایش قیمت ارزها',
+					emoji: '⚒️',
+				},
+				{
+					text: 'رفع مشکل تقویم',
+					emoji: '🐛',
+				},
+			],
+		},
+		{
+			date: '1403/09/16',
 			last: false,
 			version: '1.4.5',
-			updates: [
+			changes: [
 				{
 					text: 'اضافه شدن بدج "تعطیل" به ویجت تاریخ ( در سایز کوچک ))',
 					emoji: '🎨',
@@ -65,7 +84,7 @@ const UpdateModal = ({ onClick }) => {
 			date: '1403/07/20',
 			last: false,
 			version: '1.4.4',
-			updates: [
+			changes: [
 				{
 					text: 'رفع مشکل شفافیت ویجت ها',
 					emoji: '🐛',
@@ -76,7 +95,7 @@ const UpdateModal = ({ onClick }) => {
 			date: '1403/07/20',
 			last: false,
 			version: '1.4.3',
-			updates: [
+			changes: [
 				{
 					text: 'رفع مشکل  border radius در ویجت ها',
 					emoji: '🐛',
@@ -88,7 +107,7 @@ const UpdateModal = ({ onClick }) => {
 			date: '1403/07/20',
 			last: false,
 			version: '1.4.2',
-			updates: [
+			changes: [
 				{
 					text: 'اضافه شدن قالب کلاسیک به ویجت ارزچند',
 					emoji: '🎨',
@@ -115,7 +134,7 @@ const UpdateModal = ({ onClick }) => {
 			date: '1403/07/06',
 			last: false,
 			version: '1.4.1',
-			updates: [
+			changes: [
 				{
 					emoji: '🕘',
 					text: 'اضافه شدن ساعت آنالوگ',
@@ -126,7 +145,7 @@ const UpdateModal = ({ onClick }) => {
 			date: '1403/06/29',
 			last: false,
 			version: '1.4.0',
-			updates: [
+			changes: [
 				{
 					emoji: '🕰️',
 					text: 'اضافه شدن ساعت دیجیتال',
@@ -175,7 +194,7 @@ const UpdateModal = ({ onClick }) => {
 							key={index}
 							date={update.date}
 							version={update.version}
-							updates={update.updates}
+							updates={update.changes}
 							last={update.last}
 						/>
 					))}

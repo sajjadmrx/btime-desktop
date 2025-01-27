@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { widgetKey } from '../../shared/widgetKey'
 import { type CurrencyData, getRateByCurrency } from '../api/api'
 import { extractMainColorFromImage } from '../utils/colorUtils'
+import { convertPriceToMillions } from '../utils/formatPrice'
 
 function App() {
 	const [loading, setLoading] = useState(true)
@@ -94,25 +95,25 @@ function App() {
 	}, [currencyData, currency])
 
 	return (
-		<div className="h-screen w-screen overflow-hidden" dir="rtl">
-			<div className="moveable py-3 px-0 h-full" dir="rtl">
+		<div className="w-screen h-screen overflow-hidden" dir="rtl">
+			<div className="h-full px-0 py-3 moveable" dir="rtl">
 				<div
-					className="flex flex-col gap-6 h-full justify-around items-center"
+					className="flex flex-col items-center justify-around h-full gap-6"
 					dir="rtl"
 				>
 					<div
-						className="h-full flex flex-col items-center justify-around w-full px-2 flex-wrap gap-5"
+						className="flex flex-col flex-wrap items-center justify-around w-full h-full gap-5 px-2"
 						style={{ maxHeight: '80vh' }}
 						dir="rtl"
 					>
 						<div
-							className="flex flex-col gap-6 h-full justify-around items-center relative"
+							className="relative flex flex-col items-center justify-around h-full gap-6"
 							dir="ltr"
 						>
-							<div className="flex flex-row items-center justify-around  w-full flex-wrap space-x-1">
+							<div className="flex flex-row flex-wrap items-center justify-around w-full space-x-1">
 								<div>
 									{loading ? (
-										<div className="h-10 w-10 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700"></div>
+										<div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse dark:bg-gray-700"></div>
 									) : (
 										<div
 											className={'w-10 h-10 relative flex rounded-full'}
@@ -129,12 +130,12 @@ function App() {
 											></div>
 											<img
 												src={currencyData.icon}
-												className="object-cover z-10 rounded-full"
+												className="z-10 object-cover rounded-full"
 											/>
 										</div>
 									)}
 								</div>
-								<div className="flex flex-col w-32 justify items-end truncate ">
+								<div className="flex flex-col items-end w-32 truncate justify ">
 									{loading ? (
 										<div className="h-5 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-20 mb-2.5"></div>
 									) : (
@@ -142,12 +143,12 @@ function App() {
 											className={`lg:text-[1.1rem] sm:text-sm font-normal  truncate w-32 ${getTextColor(isTransparent, isBackgroundActive)}`}
 											dir="rtl"
 										>
-											{currencyData.name}
+											{currencyData.name.en}
 										</h3>
 									)}
 								</div>
 							</div>
-							<div className="flex flex-row w-full  items-center">
+							<div className="flex flex-row items-center w-full">
 								<div className="flex flex-col">
 									<div>
 										{loading ? (
@@ -156,7 +157,10 @@ function App() {
 											<p
 												className={`lg:text-[1.2rem] sm:text-sm md:text-[.9rem] ${getTextColor(isTransparent, isBackgroundActive)}`}
 											>
-												{currencyData.rialPrice.toLocaleString()}
+												{convertPriceToMillions(
+													currencyData.rialPrice.toString(),
+													'en',
+												)}
 											</p>
 										)}
 									</div>
