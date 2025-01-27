@@ -107,7 +107,6 @@ function DayComponent({
 
 	// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
 	const dayEvents = events.filter((event) => Number(event.day) == day)
-
 	const dayEventsList = dayEvents.length ? dayEvents.map((d) => d) : []
 
 	const toolTipBgColor = isTransparent

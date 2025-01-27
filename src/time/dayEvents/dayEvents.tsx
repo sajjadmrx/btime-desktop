@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
-import type { TodayEvent } from '../../api/api.interface'
-import { getAppLogo, getTodayEvents } from '../../api/api'
 import type moment from 'jalali-moment'
+import { useEffect, useState } from 'react'
+import { getAppLogo, getTodayEvents } from '../../api/api'
+import type { TodayEvent } from '../../api/api.interface'
 import { EventsDisplay } from './events/eventsDisplay'
 import { NewsDisplay } from './news/newsDisplay'
 interface Prop {
@@ -72,19 +72,19 @@ export function DayEventsComponent({ currentDate }: Prop) {
 			<div
 				className={`w-full ${isTransparent ? 'bg-gray-400/20 dark:bg-[#85858536]' : 'bg-gray-400 dark:bg-[#a8a8a8]'} h-0.5 mt-1 sm:invisible xs:invisible h-xs:invisible`}
 			></div>
-			<div className="flex flex-row-reverse  justify-between p-2 lg:p-0 h-28 sm:invisible xs:invisible h-xs:invisible">
+			<div className="flex flex-row-reverse justify-between p-2 lg:p-0 h-28 sm:invisible xs:invisible h-xs:invisible">
 				<div
 					className={`flex-col items-end w-72 h-24 overflow-y-auto scrollbar-thin 
 						${isTransparent ? 'scrollbar-thumb-gray-300/20 scrollbar-track-gray-100/20 dark:scrollbar-thumb-gray-600/20 dark:scrollbar-track-gray-800/20' : 'scrollbar-thumb-gray-300 scrollbar-track-gray-100/60 dark:scrollbar-thumb-gray-600/20 dark:scrollbar-track-gray-800/20'}
 						`}
 				>
-					<div className="px-4 py-2 w-full text-right">
+					<div className="w-full px-4 py-2 text-right">
 						{<EventsDisplay events={events} />}
 						{<NewsDisplay />}
 					</div>
 				</div>
 				{gif && (
-					<div className="w-2/5 h-full flex items-center pb-px justify-center">
+					<div className="flex items-center justify-center w-2/5 h-full pb-px">
 						{<img className="h-16" src={gif} />}
 					</div>
 				)}

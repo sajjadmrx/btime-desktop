@@ -1,8 +1,8 @@
-import { JalaliCalendar } from './jalaliCalendar'
-import React, { useEffect, useState } from 'react'
 import type { BtimeSettingStore } from 'electron/store'
-import { getMonthEvents, type MonthEvent } from '../../api/api'
 import type moment from 'jalali-moment'
+import React, { useEffect, useState } from 'react'
+import { type MonthEvent, getMonthEvents } from '../../api/api'
+import { JalaliCalendar } from './jalaliCalendar'
 
 interface Prop {
 	currentDate: moment.Moment
@@ -77,7 +77,7 @@ export function JalaliComponent(prop: Prop) {
 	}, [currentTime])
 
 	return (
-		<div className="flex w-full items-center justify-center h-full flex-row-reverse">
+		<div className="flex flex-row-reverse items-center justify-center w-full h-full">
 			<div className="flex flex-col items-center lg:gap-4 gap-2 moveable w-[40%] relative">
 				{isHoliday && <Holiday isBackgroundActive={isBackgroundActive} />}
 				<div
@@ -98,7 +98,7 @@ export function JalaliComponent(prop: Prop) {
 				</div>
 			</div>
 			{setting.showCalendar && (
-				<div className="hidden md:flex lg:flex justify-center  not-moveable h-xs:hidden">
+				<div className="justify-center hidden md:flex lg:flex not-moveable h-xs:hidden">
 					<JalaliCalendar
 						events={events}
 						isHoliday={checkIfHoliday}
