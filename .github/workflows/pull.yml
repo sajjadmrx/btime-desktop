@@ -46,10 +46,18 @@ jobs:
           npm install -D dmg-license -f
           npm install electron-builder -g
 
-
       - name: ⚙️ Install additional tools (linux , win)
         if: matrix.os != 'macOS-latest'
         run: npm install electron-builder -g
 
       - name: 🏗️ Build the project
         run: npm run build
+
+      - name: 🧪 Run tests
+        run: npm test
+
+      - name: 🧹 Lint the code
+        run: npm run lint
+
+      - name: 📊 Generate code coverage reports
+        run: npm run coverage
