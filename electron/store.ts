@@ -1,6 +1,6 @@
+import { randomUUID } from 'node:crypto'
 import electronStore from 'electron-store'
 import { widgetKey } from '../shared/widgetKey'
-import { randomUUID } from 'node:crypto'
 
 export interface windowSettings {
 	bounds: {
@@ -41,6 +41,7 @@ export interface WeatherSettingStore extends windowSettings {
 		lon: number
 		name: string
 	}
+	stateColor: boolean
 }
 
 export interface AnalogClockASettingStore {
@@ -159,6 +160,7 @@ const storeDefaults: StoreKey = {
 		transparentStatus: false,
 		disableBackground: false,
 		city: null,
+		stateColor: true,
 		html: 'weather.html',
 	},
 	Clock: {

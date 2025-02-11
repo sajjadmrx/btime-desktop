@@ -1,12 +1,12 @@
+import ms from 'ms'
 import { useEffect, useState } from 'react'
+import { widgetKey } from '../../shared/widgetKey'
 import { getWeatherByLatLon, getWeatherForecastByLatLon } from '../api/api'
 import type {
 	ForecastResponse,
 	WeatherResponse,
 } from '../api/weather.interface'
-import ms from 'ms'
 import { WeatherComponent } from './components/weather-card.component'
-import { widgetKey } from '../../shared/widgetKey'
 
 function App() {
 	const [weather, setWeather] = useState<WeatherResponse>(null)
@@ -86,11 +86,11 @@ function App() {
 	}, [weather, weatherStore.city?.lat, weatherStore.city?.lon])
 
 	return (
-		<div className="h-screen w-screen overflow-hidden">
-			<div className="moveable px-0 h-full">
-				<div className="flex flex-col  h-full justify-around items-center">
+		<div className="w-screen h-screen overflow-hidden">
+			<div className="h-full px-0 moveable">
+				<div className="flex flex-col items-center justify-around h-full">
 					<div
-						className=" flex flex-col items-center py-8 justify-between w-full px-2  h-64"
+						className="flex flex-col items-center justify-between w-full h-64 px-2 py-8 "
 						dir="rtl"
 					>
 						{weather ? (
@@ -98,6 +98,7 @@ function App() {
 								weather={weather}
 								isDarkMode={isDarkMode}
 								forecast={forecast}
+								weatherStore={weatherStore}
 							/>
 						) : weatherStore.city ? (
 							<div className="flex flex-col items-center justify-center w-full h-64 text-gray-600 dark:text-[#eee] font-light text-center  rounded-md p-2">
@@ -109,7 +110,7 @@ function App() {
 									لطفا در تنظیمات شهر مورد نظر خود را انتخاب کنید
 								</div>
 								<button
-									className=" mt-4 bg-blue-500 hover:bg-blue-700 text-white font-light py-2 px-4 rounded cursor-pointer"
+									className="px-4 py-2 mt-4 font-light text-white bg-blue-500 rounded cursor-pointer  hover:bg-blue-700"
 									onClick={() => window.ipcMain.openSettingWindow()}
 								>
 									تنظیمات

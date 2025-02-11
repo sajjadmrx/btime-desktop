@@ -7,10 +7,10 @@ import {
 } from '@material-tailwind/react'
 import type { WeatherSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
+import { widgetKey } from '../../../../shared/widgetKey'
 import { getRelatedCities, sendEvent } from '../../../api/api'
 import type { RelatedCitiy } from './interface'
 import { RelatedCityComponent } from './relatedCity'
-import { widgetKey } from '../../../../shared/widgetKey'
 
 export function WeatherSetting() {
 	const [setting, setSetting] = useState<WeatherSettingStore>(null)
@@ -182,6 +182,25 @@ export function WeatherSetting() {
 						/>
 						<Checkbox
 							ripple={true}
+							defaultChecked={setting.stateColor}
+							onClick={() => setSettingValue('stateColor', !setting.stateColor)}
+							label={
+								<div>
+									<Typography
+										variant={'h5'}
+										color="blue-gray"
+										className="dark:text-[#c7c7c7] text-gray-600  text-[13px] font-[Vazir]"
+									>
+										رنگ وضعیت
+									</Typography>
+								</div>
+							}
+							containerProps={{
+								className: 'flex',
+							}}
+						/>
+						<Checkbox
+							ripple={true}
 							defaultChecked={setting.disableBackground}
 							onClick={() =>
 								setSettingValue('disableBackground', !setting.disableBackground)
@@ -235,7 +254,7 @@ export function WeatherSetting() {
 						>
 							حاشیه ها
 						</label>
-						<div className="flex items-center gap-2 w-36 h-fit rounded px-2 py-2">
+						<div className="flex items-center gap-2 px-2 py-2 rounded w-36 h-fit">
 							<Slider
 								size="md"
 								color="blue"
@@ -251,11 +270,11 @@ export function WeatherSetting() {
 					</div>
 
 					<div
-						className="flex flex-col items-center justify-between w-full gap-2 relative"
+						className="relative flex flex-col items-center justify-between w-full gap-2"
 						dir="rtl"
 					>
 						<div
-							className="flex flex-col justify-between w-full gap-2 relative not-moveable"
+							className="relative flex flex-col justify-between w-full gap-2 not-moveable"
 							dir="rtl"
 						>
 							<label
@@ -278,13 +297,8 @@ export function WeatherSetting() {
 								placeholder="نام شهر را وارد کنید ... (فارسی یا انگلیسی)"
 							/>
 							{loading ? (
-								<div
-									className="w-10 h-10
-              absolute bottom-0 left-1 transition-all duration-300
-              rounded-full z-0 flex justify-center items-center
-              "
-								>
-									<Spinner className="h-4 w-4" />
+								<div className="absolute bottom-0 z-0 flex items-center justify-center w-10 h-10 transition-all duration-300 rounded-full left-1 ">
+									<Spinner className="w-4 h-4" />
 								</div>
 							) : (
 								''
