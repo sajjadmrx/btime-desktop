@@ -1,4 +1,4 @@
-export interface WeatherResponse {
+export interface FetchedWeather {
 	city: {
 		fa: string
 		en: string
@@ -25,6 +25,8 @@ export interface WeatherResponse {
 			wind_speed: number
 		}
 	}
+
+	forecast: ForecastResponse[]
 }
 
 export interface ForecastResponse {

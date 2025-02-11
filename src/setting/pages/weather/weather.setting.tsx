@@ -8,14 +8,17 @@ import {
 import type { WeatherSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
-import { getRelatedCities, sendEvent } from '../../../api/api'
-import type { RelatedCitiy } from './interface'
+import { sendEvent } from '../../../api/api'
+import { useGetRelatedCities } from '../../../api/hooks/weather/getRelatedCities'
+import type { RelatedCities } from './interface'
 import { RelatedCityComponent } from './relatedCity'
 
 export function WeatherSetting() {
 	const [setting, setSetting] = useState<WeatherSettingStore>(null)
-	const [relatedCities, setRelatedCities] = useState<RelatedCitiy[]>([])
+	const [relatedCities, setRelatedCities] = useState<RelatedCities[]>([])
 	const [loading, setLoading] = useState(false)
+	const [cityInput, setCityInput] = useState('')
+
 	useEffect(() => {
 		const Weather: WeatherSettingStore = window.store.get(widgetKey.Weather)
 		Weather.borderRadius = Weather.borderRadius || 28
@@ -84,25 +87,19 @@ export function WeatherSetting() {
 	}
 
 	async function onChangeCityInput(event: React.ChangeEvent<HTMLInputElement>) {
-		await new Promise((resolve) => setTimeout(resolve, 500)) //wait for user to stop typing
-
 		const value = event.target.value
-		if (!value) {
-			setRelatedCities([])
-			return
-		}
-		if (value.length < 2) return
-		if (value === setting.city?.name) return
-		setLoading(true)
-		try {
-			const cities = await getRelatedCities(value)
-			setRelatedCities(cities)
-		} finally {
-			setLoading(false)
-		}
+		setCityInput(value)
 	}
 
-	function selectedCity(city: RelatedCitiy) {
+	const { data: cities, isLoading } = useGetRelatedCities(cityInput)
+
+	useEffect(() => {
+		if (cities) {
+			setRelatedCities(cities)
+		}
+	}, [cities])
+
+	function selectedCity(city: RelatedCities) {
 		setRelatedCities([...new Set([])])
 		setSettingValue('city', {
 			lat: city.lat,
@@ -296,7 +293,7 @@ export function WeatherSetting() {
 								onChange={onChangeCityInput}
 								placeholder="نام شهر را وارد کنید ... (فارسی یا انگلیسی)"
 							/>
-							{loading ? (
+							{isLoading ? (
 								<div className="absolute bottom-0 z-0 flex items-center justify-center w-10 h-10 transition-all duration-300 rounded-full left-1 ">
 									<Spinner className="w-4 h-4" />
 								</div>

@@ -1,22 +1,19 @@
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { widgetKey } from '../../shared/widgetKey'
-import { getWeatherByLatLon, getWeatherForecastByLatLon } from '../api/api'
-import type {
-	ForecastResponse,
-	WeatherResponse,
-} from '../api/weather.interface'
-import { WeatherComponent } from './components/weather-card.component'
+import { useGetWeatherByLatLon } from '../api/hooks/weather/getWeatherByLatLon'
+import { WeatherLayout } from './layout/weather-layout'
 
 function App() {
-	const [weather, setWeather] = useState<WeatherResponse>(null)
-	const [forecast, setForecast] = useState<ForecastResponse[]>([])
 	const [weatherStore, setWeatherStore] = useState(
 		window.store.get('Weather' as widgetKey.Weather),
 	)
 	const [isDarkMode, setIsDarkMode] = useState(
 		window.matchMedia('(prefers-color-scheme: dark)').matches,
 	)
+
+	const [isTransparent, setIsTransparent] = useState(false)
+	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(false)
 
 	useEffect(() => {
 		const handleColorSchemeChange = (e: MediaQueryListEvent) => {
@@ -41,49 +38,69 @@ function App() {
 
 		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
 
+		const isContainClass = (className: string) => {
+			const element = document.querySelector('.h-screen')
+			if (!element) return false
+			return element.classList.contains(className)
+		}
+
+		setIsTransparent(isContainClass('transparent-active'))
+
+		const observer = new MutationObserver(() => {
+			setIsTransparent(isContainClass('transparent-active'))
+		})
+
+		const observerBackground = new MutationObserver(() => {
+			setBackgroundActive(isContainClass('background'))
+		})
+
+		if (document.querySelector('.h-screen'))
+			observer.observe(document.querySelector('.h-screen'), {
+				attributes: true,
+				attributeFilter: ['class'],
+			})
+
+		if (document.querySelector('.h-screen'))
+			observerBackground.observe(document.querySelector('.h-screen'), {
+				attributes: true,
+				attributeFilter: ['class'],
+			})
+
 		return () => {
 			colorSchemeMediaQuery.removeEventListener(
 				'change',
 				handleColorSchemeChange,
 			)
+
+			observer.disconnect()
+			observerBackground.disconnect()
 		}
 	}, [])
 
-	useEffect(() => {
-		const fetchWeather = () => {
-			getWeatherByLatLon(weatherStore.city.lat, weatherStore.city.lon)
-				.then((data) => {
-					if (!data) return
-					setWeather(data)
-				})
-				.catch((error) => {
-					console.error('Failed to fetch weather data:', error)
-				})
-		}
-		if (weatherStore.city?.lat) fetchWeather() // Initial fetch
+	const {
+		data: weather,
+		error,
+		isLoading,
+		isSuccess,
+	} = useGetWeatherByLatLon(weatherStore.city.lat, weatherStore.city.lon, {
+		refetchInterval: ms('2h'),
+	})
 
-		const weatherInterval = setInterval(fetchWeather, ms('2h')) // Fetch weather every 2 hour
+	if (isLoading) {
+		return (
+			<div className="flex h-full flex-col items-center justify-center w-full  text-gray-600 dark:text-[#eee] font-light text-center  rounded-md p-2">
+				لطفا صبر کنید ...
+			</div>
+		)
+	}
 
-		return () => {
-			clearInterval(weatherInterval)
-		}
-	}, [weatherStore])
-
-	useEffect(() => {
-		function fetch() {
-			getWeatherForecastByLatLon(
-				weatherStore.city.lat,
-				weatherStore.city.lon,
-			).then((data) => {
-				setForecast([...new Set(data)])
-			})
-		}
-		if (weather) {
-			fetch()
-		}
-
-		return () => {}
-	}, [weather, weatherStore.city?.lat, weatherStore.city?.lon])
+	if (error) {
+		return (
+			<div className="flex flex-col overflow-hidden items-center justify-center h-full w-full text-gray-600 dark:text-[#eee] font-light text-center  rounded-md p-2">
+				خطا در دریافت اطلاعات آب و هوا
+			</div>
+		)
+	}
 
 	return (
 		<div className="w-screen h-screen overflow-hidden">
@@ -93,12 +110,13 @@ function App() {
 						className="flex flex-col items-center justify-between w-full h-64 px-2 py-8 "
 						dir="rtl"
 					>
-						{weather ? (
-							<WeatherComponent
-								weather={weather}
+						{weather && isSuccess ? (
+							<WeatherLayout
 								isDarkMode={isDarkMode}
-								forecast={forecast}
+								weatherData={weather}
 								weatherStore={weatherStore}
+								isTransparent={isTransparent}
+								isBackgroundActive={isBackgroundActive}
 							/>
 						) : weatherStore.city ? (
 							<div className="flex flex-col items-center justify-center w-full h-64 text-gray-600 dark:text-[#eee] font-light text-center  rounded-md p-2">
@@ -110,7 +128,7 @@ function App() {
 									لطفا در تنظیمات شهر مورد نظر خود را انتخاب کنید
 								</div>
 								<button
-									className="px-4 py-2 mt-4 font-light text-white bg-blue-500 rounded cursor-pointer  hover:bg-blue-700"
+									className="px-4 py-2 mt-4 font-light text-white bg-blue-500 rounded cursor-pointer hover:bg-blue-700"
 									onClick={() => window.ipcMain.openSettingWindow()}
 								>
 									تنظیمات

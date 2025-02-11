@@ -1,8 +1,8 @@
-import type { RelatedCitiy } from './interface'
+import type { RelatedCities } from './interface'
 
 interface RelatedCityComponentProps {
-	city: RelatedCitiy
-	selectedCity: (city: RelatedCitiy) => void
+	city: RelatedCities
+	selectedCity: (city: RelatedCities) => void
 }
 export function RelatedCityComponent({
 	city,

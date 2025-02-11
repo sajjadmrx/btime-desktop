@@ -1,62 +1,24 @@
 import { useEffect, useState } from 'react'
 import type { WeatherSettingStore } from '../../../electron/store'
-import type {
-	ForecastResponse,
-	WeatherResponse,
-} from '../../api/weather.interface'
+import type { FetchedWeather } from '../../api/hooks/weather/weather.interface'
 import { extractMainColorFromImage } from '../../utils/colorUtils'
+import { ForecastComponent } from '../components/forecast.component'
 
 interface WeatherComponentProps {
-	weather: WeatherResponse
-	forecast: ForecastResponse[]
 	isDarkMode: boolean
 	weatherStore: WeatherSettingStore
+	weatherData: FetchedWeather
+	isTransparent: boolean
+	isBackgroundActive: boolean
 }
-export function WeatherComponent({
-	weather,
+export function WeatherLayout({
 	isDarkMode,
-	forecast,
 	weatherStore,
+	isBackgroundActive,
+	isTransparent,
+	weatherData,
 }: WeatherComponentProps) {
 	const [iconColor, setIconColor] = useState('')
-	const [isTransparent, setIsTransparent] = useState(false)
-	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(false)
-
-	useEffect(() => {
-		setIsTransparent(
-			document
-				.querySelector('.h-screen')
-				?.classList?.contains('transparent-active'),
-		)
-
-		const observer = new MutationObserver(() => {
-			setIsTransparent(
-				document
-					.querySelector('.h-screen')
-					?.classList?.contains('transparent-active'),
-			)
-		})
-
-		const observerBackground = new MutationObserver(() => {
-			setBackgroundActive(
-				document.querySelector('.h-screen')?.classList?.contains('background'),
-			)
-		})
-
-		observer.observe(document.querySelector('.h-screen'), {
-			attributes: true,
-			attributeFilter: ['class'],
-		})
-		observerBackground.observe(document.querySelector('.h-screen'), {
-			attributes: true,
-			attributeFilter: ['class'],
-		})
-
-		return () => {
-			observer.disconnect()
-			observerBackground.disconnect()
-		}
-	}, [])
 
 	let textColor = 'text-gray-600 text-gray-trasnparent dark:text-[#d3d3d3]'
 	if (isTransparent || !isBackgroundActive) {
@@ -64,22 +26,22 @@ export function WeatherComponent({
 	}
 
 	useEffect(() => {
-		if (weather) {
-			extractMainColorFromImage(weather.weather.icon.url).then((color) => {
+		if (weatherData && weatherStore.stateColor) {
+			extractMainColorFromImage(weatherData.weather.icon.url).then((color) => {
 				setIconColor(color)
 			})
 		}
-	}, [weather])
+	}, [weatherData, weatherStore.stateColor])
 
 	return (
 		<div className="relative flex flex-col items-center justify-around w-full h-64 px-2">
 			<div className="z-10 flex flex-row items-center justify-around w-full">
 				<div className="flex items-center justify-center flex-1 h-14 overflow-clip">
 					<img
-						src={weather.weather.icon.url}
-						width={weather.weather.icon.width}
-						height={weather.weather.icon.height}
-						alt={`${weather.weather.label} ایکون`}
+						src={weatherData.weather.icon.url}
+						width={weatherData.weather.icon.width}
+						height={weatherData.weather.icon.height}
+						alt={`${weatherData.weather.label} ایکون`}
 					/>
 				</div>
 				<div className="relative flex-1 w-20 mt-1 text-2xl text-center truncate">
@@ -89,14 +51,14 @@ export function WeatherComponent({
 							color:
 								isTransparent && !isDarkMode
 									? ''
-									: adjustColorBasedOnTheme(
+									: getMainColorFromImage(
 											iconColor,
 											isDarkMode ? 'dark' : 'light',
 										),
 						}}
 					>
 						<span className="text-3xl">
-							{Math.floor(weather.weather.temperature.temp)}
+							{Math.floor(weatherData.weather.temperature.temp)}
 						</span>
 						<sup className="font-[balooTamma] text-lg">°</sup>
 					</div>
@@ -106,10 +68,10 @@ export function WeatherComponent({
 				<div
 					className={`w-auto truncate font-normal text-center xs:text-xs sm:text-sm ${textColor}`}
 				>
-					{weather.weather.temperature.temp_description}
+					{weatherData.weather.temperature.temp_description}
 				</div>
 				<div className="flex flex-row justify-around py-2 mt-2 font-light rounded-md xs:w-40 sm:w-52 md:w-80 lg:w-96 ">
-					{forecast.map((item, index) => {
+					{weatherData.forecast.map((item, index) => {
 						return (
 							<ForecastComponent
 								weather={item}
@@ -131,47 +93,8 @@ export function WeatherComponent({
 		</div>
 	)
 }
-interface ForecastComponentProps {
-	weather: {
-		temp: number
-		icon: string
-		date: string
-	}
-	isBackgroundActive: boolean
-}
-function ForecastComponent({
-	weather,
-	isBackgroundActive,
-}: ForecastComponentProps) {
-	const time = weather.date.split(' ')[1]
-	const h = time.split(':')[0]
-	const m = time.split(':')[1]
 
-	let textColor = 'text-gray-600 text-gray-trasnparent dark:text-[#d3d3d3]'
-	if (!isBackgroundActive) {
-		textColor = 'text-gray-300'
-	}
-
-	return (
-		<div className="flex flex-col items-center justify-around w-full h-10 gap-1 p-1 sm:h-12 sm:w-16 md:h-20 md:px-4 md:w-full lg:h-16 lg:w-60">
-			<p
-				className={`xs:text-[.60rem] sm:text-[.70rem] md:text-[.90rem] lg:text-[.90rem] xs:w-10 sm:w-14 ${textColor}`}
-			>
-				{h}:{m}
-			</p>
-			<img
-				src={weather.icon}
-				className="xs:w-4 xs:h-4 sm:w-6 sm:h-6 md:w-8 md:h-w-8 lg:w-10 lg:h-10"
-			/>
-			<p className={`text-[.80rem] w-10 ${textColor}`}>
-				{weather.temp.toFixed(0)}
-				<sup className="font-[balooTamma] text-[.50rem]">°</sup>
-			</p>
-		</div>
-	)
-}
-
-function adjustColorBasedOnTheme(hexColor: string, theme: string) {
+function getMainColorFromImage(hexColor: string, theme: string) {
 	// Generate color based on theme with color
 	if (theme === 'light') {
 		return hexColor

@@ -1,6 +1,9 @@
-import axios from 'axios'
+import axios, { type AxiosInstance } from 'axios'
 import type { News, Timezone, TodayEvent } from './api.interface'
-import type { ForecastResponse, WeatherResponse } from './weather.interface'
+import type {
+	FetchedWeather,
+	ForecastResponse,
+} from './hooks/weather/weather.interface'
 
 const api = axios.create()
 const rawGithubApi = axios.create({
@@ -59,64 +62,6 @@ export async function getSupportedCurrencies(): Promise<SupportedCurrencies> {
 
 		const response = await api.get('/v2/supported-currencies')
 		return response.data.currencies
-	} catch (err) {
-		console.log(err)
-		return []
-	}
-}
-
-export async function getWeatherByCity(
-	city: string,
-): Promise<WeatherResponse | null> {
-	try {
-		api.defaults.baseURL = await getMainApi()
-
-		api.defaults.headers.userid = window.store.get('main').userId
-
-		const response = await api.get(`/weather/current?city=${city}`)
-		return response.data
-	} catch (err) {
-		console.log(err)
-		return null
-	}
-}
-
-export async function getWeatherByLatLon(
-	lat: number,
-	lon: number,
-): Promise<WeatherResponse | null> {
-	api.defaults.baseURL = await getMainApi()
-
-	api.defaults.headers.userid = window.store.get('main').userId
-
-	const response = await api.get(`/weather/current?lat=${lat}&lon=${lon}`)
-	return response.data
-}
-
-export async function getWeatherForecastByLatLon(
-	lat: number,
-	lon: number,
-): Promise<ForecastResponse[]> {
-	try {
-		api.defaults.baseURL = await getMainApi()
-
-		api.defaults.headers.userid = window.store.get('main').userId
-
-		const response = await api.get(`/weather/forecast?lat=${lat}&lon=${lon}`)
-		return response.data
-	} catch {
-		return []
-	}
-}
-
-export async function getRelatedCities(city: string): Promise<any[]> {
-	try {
-		api.defaults.baseURL = await getMainApi()
-
-		api.defaults.headers.userid = window.store.get('main').userId
-
-		const response = await api.get(`/weather/direct?q=${city}`)
-		return response.data
 	} catch (err) {
 		console.log(err)
 		return []
@@ -220,6 +165,19 @@ export async function getMainApi(): Promise<string> {
 
 	const urlResponse = await rawGithubApi.get('/.github/api.txt')
 	return urlResponse.data
+}
+
+export async function getMainClient(): Promise<AxiosInstance> {
+	if (import.meta.env.VITE_API) {
+		return axios.create({
+			baseURL: import.meta.env.VITE_API,
+		})
+	}
+
+	const urlResponse = await rawGithubApi.get('/.github/api.txt')
+	return axios.create({
+		baseURL: urlResponse.data,
+	})
 }
 
 interface EventData {

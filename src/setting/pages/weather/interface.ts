@@ -1,6 +1,6 @@
-export interface RelatedCitiy {
-  name: string
-  state: string
-  lat: number
-  lon: number
+export interface RelatedCities {
+	name: string
+	state: string
+	lat: number
+	lon: number
 }
