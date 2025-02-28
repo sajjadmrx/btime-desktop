@@ -97,11 +97,25 @@ export function initIpcMain() {
 			return
 		}
 		if (!setting.enable) {
-			if (win.closable) {
-				console.log(`closed ${windowKey}`)
-				win.close()
+			if (win) {
+				try {
+					userLogger.info(`Attempting to close ${windowKey}`)
+					win.destroy()
+					userLogger.info(`Successfully closed ${windowKey}`)
+				} catch (error) {
+					userLogger.error(`Failed to close ${windowKey}: ${error}`)
+					if (!win.isDestroyed()) {
+						win.webContents.closeDevTools()
+						win.hide()
+						setImmediate(() => {
+							if (!win.isDestroyed()) {
+								win.close()
+							}
+						})
+					}
+				}
 			} else {
-				console.log(`can't close ${windowKey}`)
+				userLogger.error(`Window not found for ${windowKey}`)
 			}
 		} else {
 			await createWindow({
