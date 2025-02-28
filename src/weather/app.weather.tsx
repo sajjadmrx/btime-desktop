@@ -71,9 +71,6 @@ function App() {
 				'change',
 				handleColorSchemeChange,
 			)
-
-			observer.disconnect()
-			observerBackground.disconnect()
 		}
 	}, [])
 
