@@ -1,5 +1,4 @@
 import type { CurrencyData } from '../../../api/api'
-import { convertPriceToMillions } from '../../../utils/formatPrice'
 
 interface Prop {
 	currency: (CurrencyData & { code }) | null
@@ -27,10 +26,7 @@ export function CurrencyClassicComponent({
 									<p
 										className={`lg:text-[1.2rem] sm:text-sm md:text-[.9rem]  ${textColor}`}
 									>
-										{convertPriceToMillions(
-											currency.rialPrice.toString(),
-											'en',
-										)}
+										{currency.rialPrice.toLocaleString()}
 									</p>
 								</div>
 							) : (

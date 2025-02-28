@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { CurrencyData } from '../../../api/api'
 import { extractMainColorFromImage } from '../../../utils/colorUtils'
-import { convertPriceToMillions } from '../../../utils/formatPrice'
 interface Prop {
 	currency: (CurrencyData & { imgColor; code }) | null
 	isBackgroundActive: boolean
@@ -81,7 +80,7 @@ export function CurrencyDefaultComponent({
 							className={`xs:text-xs sm:text-sm lg:text-[1rem] ${textColor}`}
 							dir="ltr"
 						>
-							{convertPriceToMillions(currency.rialPrice.toString(), 'fa')}
+							{currency.rialPrice.toLocaleString()}
 						</p>
 						<p className={`text-xs font-light ${textColor}`} dir="ltr">
 							1 {currency.code?.toUpperCase()}
