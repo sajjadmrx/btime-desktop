@@ -13,55 +13,56 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Node v20
-        uses: actions/setup-node@v3
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 20
-          cache: npm
+          bun-version: "latest"
 
       - name: Install dependencies
-        run: npm install
+        run: bun install
       
       - name: Install electron-builder
-        run: npm i electron-builder -g
+        run: bun install electron-builder -g
 
       - name: Publish
         env:
           GH_TOKEN: ${{ secrets.TOKEN }}
-        run: npm run publish:linux
+        run: bun run publish:linux
   publish_on_win:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Node v20
-        uses: actions/setup-node@v3
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 20
-          cache: npm
+          bun-version: "latest"
 
       - name: Install dependencies
-        run: npm install
+        run: bun install
 
       - name: Install electron-builder
-        run: npm i electron-builder -g
+        run: bun install electron-builder -g
 
       - name: Publish
         env:
           GH_TOKEN: ${{ secrets.TOKEN }}
-        run: npm run publish:win
+        run: bun run publish:win
   publish_on_macos:
     runs-on: macOS-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Install Node v20
-      uses: actions/setup-node@v3
+    - name: Install Bun
+      uses: oven-sh/setup-bun@v2
       with:
-        node-version: 20
-        cache: npm
+        bun-version: "latest"
 
     - name: Install Python
       run: brew install python@3.11
@@ -75,18 +76,18 @@ jobs:
         sudo xcode-select --reset
 
     - name: Update node-gyp
-      run: npm install -g node-gyp
+      run: bun install -g node-gyp
 
     - name: Install dependencies
-      run: npm install
+      run: bun install
 
     - name: Install dmglicense
-      run: npm install dmg-license -f
+      run: bun install dmg-license -f
 
     - name: Install electron-builder
-      run: npm i electron-builder -g
+      run: bun install electron-builder -g
 
     - name: Publish
       env:
         GH_TOKEN: ${{ secrets.TOKEN }}
-      run: npm run publish:mac
+      run: bun run publish:mac

@@ -47,6 +47,25 @@ const UpdateModal = ({ onClick }) => {
 	}
 	const updateDetails: Update[] = [
 		{
+			date: '1403/12/11',
+			last: true,
+			version: '1.4.7',
+			changes: [
+				{
+					text: 'رفع مشکل تقویم',
+					emoji: '🐛',
+				},
+				{
+					text: 'رفع مشکل فعال/غیرفعال سازی ویجت ها',
+					emoji: '🐛',
+				},
+				{
+					text: 'رفع مشکل عدم نمایش ایکون در مک',
+					emoji: '🐛',
+				},
+			],
+		},
+		{
 			date: '1403/11/08',
 			last: true,
 			version: '1.4.6',
