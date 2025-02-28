@@ -61,27 +61,13 @@ export async function getSupportedCurrencies(): Promise<SupportedCurrencies> {
 		api.defaults.headers.userid = window.store.get('main').userId
 
 		const response = await api.get('/currencies/supported-list')
+		if ('currencies' in response.data) {
+			return response.data.currencies
+		}
+
 		return response.data
 	} catch (err) {
-		console.log(err)
-		return []
-	}
-}
-
-export interface MonthEvent {
-	date: string
-	event: string
-	isHoliday: boolean
-	day: string
-}
-export async function getMonthEvents(): Promise<MonthEvent[]> {
-	api.defaults.baseURL = await getMainApi()
-	try {
-		api.defaults.headers.userid = window.store.get('main').userId
-
-		const response = await api.get('/date/month')
-		return response.data
-	} catch {
+		console.log(err.response)
 		return []
 	}
 }

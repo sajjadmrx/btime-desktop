@@ -67,7 +67,7 @@ export function WeatherLayout({
 						width={weatherData.weather.icon.width}
 						height={weatherData.weather.icon.height}
 						alt={`${weatherData.weather.label} ایکون`}
-						className="object-contain w-10 h-10 xs:w-12 sm:w-14 xs:h-12 sm:h-14 drop-shadow-md"
+						className="object-contain w-10 h-10 xs:w-8 sm:w-10 xs:h-8 sm:h-10 drop-shadow-md"
 					/>
 				</div>
 				<div className="relative w-16 mt-1 text-xl text-center truncate xs:w-18 sm:w-20 xs:text-2xl sm:text-3xl">
