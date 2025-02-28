@@ -241,7 +241,7 @@ function createTray() {
 	const contextMenu = getContextMenu()
 
 	appIcon.on('double-click', () => {
-		mainWin.show()
+		createSettingWindow()
 	})
 
 	appIcon.setToolTip('bTime')
