@@ -244,7 +244,7 @@ function createTray() {
 		createSettingWindow()
 	})
 
-	appIcon.setToolTip('bTime')
+	appIcon.setToolTip('Widgetify')
 
 	appIcon.setContextMenu(contextMenu)
 	createdTray = appIcon
