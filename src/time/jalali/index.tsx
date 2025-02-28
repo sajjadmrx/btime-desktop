@@ -1,34 +1,39 @@
 import type { BtimeSettingStore } from 'electron/store'
-import type moment from 'jalali-moment'
+import moment from 'jalali-moment'
+import ms from 'ms'
 import React, { useEffect, useState } from 'react'
 import { type MonthEvent, getMonthEvents } from '../../api/api'
+import { useGetEvents } from '../../api/hooks/events/getEvents.hook'
 import { JalaliCalendar } from './jalaliCalendar'
+import { getHijriEvents, getShamsiEvents } from './utils'
 
 interface Prop {
-	currentDate: moment.Moment
 	setting: BtimeSettingStore
 }
 
 export function JalaliComponent(prop: Prop) {
+	const [today, setToday] = useState(
+		moment().locale('fa').utc().add(3.5, 'hours'),
+	)
 	const [isTransparent, setIsTransparent] = useState<boolean>(false)
 	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(false)
+	const { data: events } = useGetEvents()
 
-	const { currentDate: currentTime, setting } = prop
-	const [events, setEvents] = useState<MonthEvent[]>([])
+	const { setting } = prop
 
-	const checkIfHoliday = (day, dayOfWeek) => {
-		// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
-		const eventDay = events.filter((event) => event.day == day) || []
-		const isHoliday = eventDay.find((event) => event.isHoliday)
-		if (eventDay && isHoliday) {
-			return true
-		}
-		return dayOfWeek === 6 // 6 represents Friday (0-indexed)
+	const checkIfHoliday = (day: moment.Moment, dayOfWeek) => {
+		const todayShamsiEvent = getShamsiEvents(events, day)
+		const todayHijriEvent = getHijriEvents(events, day)
+		if (dayOfWeek === 5) return true
+		const isHoliday =
+			todayShamsiEvent?.some((event) => event.isHoliday) ||
+			todayHijriEvent?.some((event) => event.isHoliday)
+
+		return isHoliday
 	}
 
-	const day = currentTime.locale('fa').format('dddd')
-	const dayOfWeek = (currentTime.locale('fa').day() + 1) % 7
-	const isHoliday = checkIfHoliday(day, dayOfWeek)
+	const dayOfWeek = (today.locale('fa').day() + 1) % 7
+	const isHoliday = checkIfHoliday(today, dayOfWeek)
 
 	useEffect(() => {
 		setIsTransparent(
@@ -59,22 +64,16 @@ export function JalaliComponent(prop: Prop) {
 			attributeFilter: ['class'],
 		})
 
+		const interval = setInterval(() => {
+			setToday(moment().locale('fa').utc().add(3.5, 'hours'))
+		}, ms('5m')) // 5m
+
 		return () => {
 			observer.disconnect()
 			observerBackground.disconnect()
+			clearInterval(interval)
 		}
 	}, [])
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		getMonthEvents().then((data) => {
-			setEvents(data)
-		})
-
-		return () => {
-			setEvents([])
-		}
-	}, [currentTime])
 
 	return (
 		<div className="flex flex-row-reverse items-center justify-center w-full h-full">
@@ -83,26 +82,27 @@ export function JalaliComponent(prop: Prop) {
 				<div
 					className={`select-none ${getTextColor(isTransparent, isBackgroundActive)}`}
 				>
-					{currentTime.locale('fa').format('dddd')}
+					{today.locale('fa').format('dddd')}
 				</div>
 				<div
 					className={`text-6xl select-none ${getTextColor(isTransparent, isBackgroundActive)}`}
 				>
-					{currentTime.locale('fa').jDate()}
+					{today.locale('fa').jDate()}
 				</div>
 				<div
 					className={`flex flex-row gap-1 ${getTextColor(isTransparent, isBackgroundActive)}`}
 				>
-					<div>{currentTime.locale('fa').jYear()}</div>
-					<div>{currentTime.locale('fa').format('jMMMM')}</div>
+					<div>{today.locale('fa').jYear()}</div>
+					<div>{today.locale('fa').format('jMMMM')}</div>
 				</div>
 			</div>
 			{setting.showCalendar && (
 				<div className="justify-center hidden md:flex lg:flex not-moveable h-xs:hidden">
 					<JalaliCalendar
 						events={events}
+						isBackgroundActive={isBackgroundActive}
 						isHoliday={checkIfHoliday}
-						currentTime={currentTime}
+						currentTime={today}
 						isTransparent={isTransparent}
 					/>
 				</div>

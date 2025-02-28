@@ -29,6 +29,7 @@
 		"electron-store": "^8.1.0",
 		"electron-updater": "^6.1.4",
 		"jalali-moment": "^3.3.11",
+		"moment-hijri": "^3.0.0",
 		"moment-jalaali": "^0.10.1",
 		"moment-jalali": "^0.3.9",
 		"ms": "^2.1.3",

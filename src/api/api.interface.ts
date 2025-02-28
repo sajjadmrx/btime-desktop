@@ -3,10 +3,17 @@ export interface Timezone {
 	value: string
 	offset: string
 }
-export interface TodayEvent {
+
+export interface FetchedEvent {
 	isHoliday: boolean
 	title: string
-	gif: string | null
+	day: number
+	month: number
+}
+export interface FetchedAllEvents {
+	shamsiEvents: FetchedEvent[]
+	gregorianEvents: FetchedEvent[]
+	hijriEvents: FetchedEvent[]
 }
 
 export interface News {

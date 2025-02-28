@@ -1,5 +1,5 @@
 import axios, { type AxiosInstance } from 'axios'
-import type { News, Timezone, TodayEvent } from './api.interface'
+import type { FetchedAllEvents, News, Timezone } from './api.interface'
 import type {
 	FetchedWeather,
 	ForecastResponse,
@@ -111,18 +111,20 @@ export async function getNotifications() {
 	}
 }
 
-export async function getTodayEvents(): Promise<TodayEvent[]> {
+export async function getTodayEvents(): Promise<FetchedAllEvents> {
 	try {
 		api.defaults.baseURL = await getMainApi()
 
 		api.defaults.headers.userid = window.store.get('main').userId
 
-		const response = await api.get<{
-			todayEvents: TodayEvent[]
-		}>('/date/todoy-events')
-		return response.data.todayEvents
+		const response = await api.get<FetchedAllEvents>('/date/events')
+		return response.data
 	} catch {
-		return []
+		return {
+			shamsiEvents: [],
+			gregorianEvents: [],
+			hijriEvents: [],
+		}
 	}
 }
 

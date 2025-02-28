@@ -1,46 +1,18 @@
 import type moment from 'jalali-moment'
 import { useEffect, useState } from 'react'
-import { getAppLogo, getTodayEvents } from '../../api/api'
-import type { TodayEvent } from '../../api/api.interface'
+import type { FetchedEvent } from 'src/api/api.interface'
+import { getAppLogo } from '../../api/api'
 import { EventsDisplay } from './events/eventsDisplay'
 import { NewsDisplay } from './news/newsDisplay'
 interface Prop {
 	currentDate: moment.Moment
+	event: FetchedEvent
 }
 export function DayEventsComponent({ currentDate }: Prop) {
-	const [events, setEvents] = useState<TodayEvent[]>([])
+	const [events, setEvents] = useState<any[]>([])
 	const [gif, setGif] = useState<string | null>(null)
 
 	const [isTransparent, setIsTransparent] = useState<boolean>(false)
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		async function fetchEvents() {
-			const data = await getTodayEvents()
-
-			const sorted = data.sort((a, b) =>
-				a.isHoliday === b.isHoliday ? 0 : a.isHoliday ? -1 : 1,
-			)
-			setEvents(sorted)
-
-			let gif = sorted[0]?.gif || null
-			if (!gif) {
-				gif = sorted.find((event) => event.gif !== null)?.gif || null
-			}
-
-			if (gif) {
-				setGif(gif)
-			} else {
-				getAppLogo().then((logo) => {
-					if (logo) {
-						setGif(logo)
-					}
-				})
-			}
-		}
-
-		fetchEvents()
-	}, [currentDate])
 
 	useEffect(() => {
 		setIsTransparent(
