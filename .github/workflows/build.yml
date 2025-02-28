@@ -13,25 +13,16 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v3
 
-      - name: 🔧 Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 18
-          cache: 'npm'
+          bun-version: "latest"
 
-      - name: 📦 Cache node_modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: 📚 Install dependencies
-        run: npm ci
+      - name: Install dependencies
+        run: bun install
 
       - name: ⚙️ Install electron-builder globally
-        run: npm install -g electron-builder
+        run: bun install -g electron-builder
 
       - name: 🏗️ Build the project
-        run: npm run build:ts
+        run: bun run build:ts
