@@ -2,7 +2,6 @@ import { Checkbox, Slider, Switch, Typography } from '@material-tailwind/react'
 import type { BtimeSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
-import { sendEvent } from '../../../api/api'
 
 export function BtimeSetting() {
 	const [setting, setSetting] = useState<BtimeSettingStore>(null)
@@ -26,14 +25,6 @@ export function BtimeSetting() {
 
 		if (key === 'disableBackground') {
 			window.ipcRenderer.send('toggle-disableBackground', widgetKey.BTime)
-		}
-
-		if (!['borderRadius'].includes(key)) {
-			sendEvent({
-				name: `setting_${key}`,
-				value: value,
-				widget: widgetKey.BTime,
-			})
 		}
 
 		if (key === 'enable') {
@@ -239,7 +230,7 @@ export function BtimeSetting() {
 								xmlns="http://www.w3.org/2000/svg"
 								viewBox="0 0 24 24"
 								fill="currentColor"
-								className="h-6 w-6 ml-1"
+								className="w-6 h-6 ml-1"
 							>
 								<path
 									fillRule="evenodd"
@@ -259,7 +250,7 @@ export function BtimeSetting() {
 						>
 							حاشیه ها
 						</label>
-						<div className="flex items-center gap-2 w-36 h-fit rounded px-2 py-2">
+						<div className="flex items-center gap-2 px-2 py-2 rounded w-36 h-fit">
 							<Slider
 								size="md"
 								color="blue"

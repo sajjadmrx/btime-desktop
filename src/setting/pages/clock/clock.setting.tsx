@@ -9,13 +9,13 @@ import {
 	TabsHeader,
 	Typography,
 } from '@material-tailwind/react'
+import type { ClockSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
-import type { ClockSettingStore } from 'electron/store'
+import { getTimezones } from '../../../api/api'
 import type { Timezone } from '../../../api/api.interface'
-import { getTimezones, sendEvent } from '../../../api/api'
-import { DigitalClockTab } from './tabs/digital'
 import { AnalogAClockTab } from './tabs/analogA'
+import { DigitalClockTab } from './tabs/digital'
 
 type T<K extends keyof ClockSettingStore> = ClockSettingStore[K] extends object
 	? Partial<ClockSettingStore[K]>
@@ -70,14 +70,6 @@ export function ClockSetting() {
 
 		if (key === 'disableBackground') {
 			window.ipcRenderer.send('toggle-disableBackground', widgetKey.Clock)
-		}
-
-		if (!['borderRadius'].includes(key)) {
-			sendEvent({
-				name: `setting_${key}`,
-				value: value,
-				widget: widgetKey.Clock,
-			})
 		}
 
 		if (key === 'enable') {
@@ -215,14 +207,14 @@ export function ClockSetting() {
 							}}
 						/>
 					</div>
-					<div className="flex flex-col  w-full gap-2">
+					<div className="flex flex-col w-full gap-2">
 						<label
 							htmlFor="currency-select"
 							className="text-gray-600 dark:text-[#eee] font-semibold text-sm"
 						>
 							حاشیه ها
 						</label>
-						<div className="flex items-center gap-2 w-36 h-fit rounded px-2 py-2">
+						<div className="flex items-center gap-2 px-2 py-2 rounded w-36 h-fit">
 							<Slider
 								size="md"
 								color="blue"
@@ -277,10 +269,7 @@ export function ClockSetting() {
 										</Typography>
 									</Tab>
 								</TabsHeader>
-								<TabsBody
-									className="h-full
-									overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-500 dark:scrollbar-track-gray-800"
-								>
+								<TabsBody className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-500 dark:scrollbar-track-gray-800">
 									<DigitalClockTab
 										digital={setting.digital}
 										timezones={timezones}

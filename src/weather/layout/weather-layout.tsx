@@ -1,5 +1,7 @@
+import ms from 'ms'
 import { useEffect, useState } from 'react'
 import type { WeatherSettingStore } from '../../../electron/store'
+import { useGetForecastWeatherByLatLon } from '../../api/hooks/weather/getForecastWeatherByLatLon'
 import type { FetchedWeather } from '../../api/hooks/weather/weather.interface'
 import { extractMainColorFromImage } from '../../utils/colorUtils'
 import { ForecastComponent } from '../components/forecast.component'
@@ -18,6 +20,16 @@ export function WeatherLayout({
 	isTransparent,
 	weatherData,
 }: WeatherComponentProps) {
+	const { data: forecast } = useGetForecastWeatherByLatLon(
+		weatherStore.city.lat,
+		weatherStore.city.lon,
+		{
+			refetchInterval: ms('5m'),
+			count: 3,
+			units: 'metric',
+		},
+	)
+
 	const [iconColor, setIconColor] = useState('')
 
 	let textColor = 'text-gray-600 text-gray-trasnparent dark:text-[#d3d3d3]'
@@ -71,7 +83,7 @@ export function WeatherLayout({
 					{weatherData.weather.temperature.temp_description}
 				</div>
 				<div className="flex flex-row justify-around py-2 mt-2 font-light rounded-md xs:w-40 sm:w-52 md:w-80 lg:w-96 ">
-					{weatherData.forecast.map((item, index) => {
+					{forecast?.map((item, index) => {
 						return (
 							<ForecastComponent
 								weather={item}

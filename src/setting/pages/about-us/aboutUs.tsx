@@ -1,24 +1,6 @@
 import { useEffect, useState } from 'react'
-import { getSponsors } from '../../../api/api'
 
 export function AboutUs() {
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	const [sponsores, setSponsores] = useState<any[]>([])
-
-	useEffect(() => {
-		async function fetchSponsores() {
-			getSponsors().then((data) => {
-				setSponsores(data)
-			})
-		}
-
-		fetchSponsores()
-
-		return () => {
-			setSponsores([])
-		}
-	}, [])
-
 	return (
 		<div className="p-2 h-96 flex flex-col justify-between not-moveable font-[Vazir]">
 			<div className="flex flex-col px-2">
@@ -35,9 +17,9 @@ export function AboutUs() {
 							<h1 className="text-1xl font-bold text-gray-600 dark:text-[#c7c7c7]">
 								لینک های ما
 							</h1>
-							<div className="flex flex-row  overflow-hidden not-moveable">
+							<div className="flex flex-row overflow-hidden not-moveable">
 								<div
-									className="dark:hover:bg-gray-300/5 hover:bg-gray-400 rounded-full p-1 cursor-pointer"
+									className="p-1 rounded-full cursor-pointer dark:hover:bg-gray-300/5 hover:bg-gray-400"
 									onClick={() =>
 										window.ipcMain.openUrl(
 											'https://github.com/sajjadmrx/btime-desktop',
@@ -57,7 +39,7 @@ export function AboutUs() {
 									</svg>
 								</div>
 								<div
-									className="dark:hover:bg-gray-300/5 hover:bg-gray-400 rounded-full p-1 cursor-pointer"
+									className="p-1 rounded-full cursor-pointer dark:hover:bg-gray-300/5 hover:bg-gray-400"
 									onClick={() =>
 										window.ipcMain.openUrl('https://discord.gg/YwnxbEBYGD')
 									}
@@ -75,7 +57,7 @@ export function AboutUs() {
 									</svg>
 								</div>
 								<div
-									className="dark:hover:bg-gray-300/5 hover:bg-gray-400 rounded-full p-1 cursor-pointer"
+									className="p-1 rounded-full cursor-pointer dark:hover:bg-gray-300/5 hover:bg-gray-400"
 									onClick={() =>
 										window.ipcMain.openUrl('https://t.me/widgetify')
 									}
@@ -120,22 +102,6 @@ export function AboutUs() {
 										/>
 									</svg>
 								</div>
-							</div>
-						</div>
-						<div className="flex flex-col gap-2">
-							<h1 className="text-1xl font-bold text-gray-600 dark:text-[#c7c7c7]">
-								حامیان
-							</h1>
-							<div className="flex flex-row gap-2 p-1 flex-wrap h-16  overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-500 dark:scrollbar-track-gray-300">
-								{sponsores.map((sponsor, index) => (
-									<div
-										key={index}
-										className="hover:underline text-blue-500 cursor-pointer text-sm  h-fit"
-										onClick={() => window.ipcMain.openUrl(sponsor.url)}
-									>
-										{sponsor.description}
-									</div>
-								))}
 							</div>
 						</div>
 					</div>

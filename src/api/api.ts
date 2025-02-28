@@ -60,21 +60,12 @@ export async function getSupportedCurrencies(): Promise<SupportedCurrencies> {
 
 		api.defaults.headers.userid = window.store.get('main').userId
 
-		const response = await api.get('/v2/supported-currencies')
-		return response.data.currencies
+		const response = await api.get('/currencies/supported-list')
+		return response.data
 	} catch (err) {
 		console.log(err)
 		return []
 	}
-}
-
-export async function getSponsors() {
-	api.defaults.baseURL = await getMainApi()
-
-	api.defaults.headers.userid = window.store.get('main').userId
-
-	const response = await api.get('/sponsors')
-	return response.data
 }
 
 export interface MonthEvent {
@@ -178,38 +169,4 @@ export async function getMainClient(): Promise<AxiosInstance> {
 	return axios.create({
 		baseURL: urlResponse.data,
 	})
-}
-
-interface EventData {
-	name: string //ex: 'setting_theme'
-	value: any //ex: 'dark'
-	widget: string
-	attchment?: any
-}
-let MAIN_API = null
-export async function sendEvent(data: EventData) {
-	try {
-		const store = await window.store.get('main')
-		if (!store.enableAnalytics) return
-
-		if (!MAIN_API) {
-			MAIN_API = await getMainApi()
-		}
-
-		api.defaults.baseURL = MAIN_API
-
-		data.attchment = {
-			...data.attchment,
-			userAgent: navigator.userAgent,
-			userId: store.userId,
-		}
-
-		api.defaults.headers.userid = window.store.get('main').userId
-
-		await api.post('/analytics', data)
-
-		return true
-	} catch (err) {
-		return false
-	}
 }

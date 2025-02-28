@@ -25,11 +25,17 @@ export interface FetchedWeather {
 			wind_speed: number
 		}
 	}
-
-	forecast: ForecastResponse[]
 }
 
+export type TemperatureUnit = 'standard' | 'metric' | 'imperial'
+
 export interface ForecastResponse {
+	temp: number
+	icon: string
+	date: string
+}
+
+export interface FetchedForecast {
 	temp: number
 	icon: string
 	date: string

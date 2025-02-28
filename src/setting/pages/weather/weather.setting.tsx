@@ -8,7 +8,7 @@ import {
 import type { WeatherSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
-import { sendEvent } from '../../../api/api'
+
 import { useGetRelatedCities } from '../../../api/hooks/weather/getRelatedCities'
 import type { RelatedCities } from './interface'
 import { RelatedCityComponent } from './relatedCity'
@@ -40,14 +40,6 @@ export function WeatherSetting() {
 
 		if (key === 'disableBackground') {
 			window.ipcRenderer.send('toggle-disableBackground', widgetKey.Weather)
-		}
-
-		if (!['borderRadius'].includes(key)) {
-			sendEvent({
-				name: `setting_${key}`,
-				value: value,
-				widget: widgetKey.Weather,
-			})
 		}
 
 		if (key === 'enable') {

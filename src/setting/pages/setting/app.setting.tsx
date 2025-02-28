@@ -1,8 +1,7 @@
+import { Button, Checkbox, Typography } from '@material-tailwind/react'
 import type { MainSettingStore, Theme } from 'electron/store'
 import { useEffect, useState } from 'react'
 import { ThemeComponent } from './theme.component'
-import { Button, Checkbox, Typography } from '@material-tailwind/react'
-import { sendEvent } from '../../../api/api'
 
 export function AppSetting() {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -29,11 +28,6 @@ export function AppSetting() {
 		mainSetting[key] = value
 		setMainSetting({ ...mainSetting })
 		applyChanges()
-		sendEvent({
-			name: `setting_${key}`,
-			value: value,
-			widget: 'main',
-		})
 	}
 
 	function applyChanges() {
@@ -67,14 +61,14 @@ export function AppSetting() {
 		<>
 			<div className="p-2 mt-2 h-full not-moveable font-[Vazir]">
 				<div
-					className="w-full flex flex-col gap-4 px-5 text-right not-moveable"
+					className="flex flex-col w-full gap-4 px-5 text-right not-moveable"
 					dir="rtl"
 				>
 					<div>
 						<h1 className="dark:text-[#c7c7c7] text-gray-600 text-base font-semibold font-[Vazir]">
 							تم
 						</h1>
-						<div className="w-full flex flex-row justify-around px-3 gap-4 duration-200 h-20 mt-2">
+						<div className="flex flex-row justify-around w-full h-20 gap-4 px-3 mt-2 duration-200">
 							{thmes.map((item, index) => (
 								<ThemeComponent
 									key={index}
@@ -139,7 +133,7 @@ export function AppSetting() {
 
 					<div className="flex flex-col">
 						<button
-							className="mt-4 p-2 bg-red-400 text-white rounded-md hover:bg-red-500 w-32 flex text-xs gap-1 text-center items-center"
+							className="flex items-center w-32 gap-1 p-2 mt-4 text-xs text-center text-white bg-red-400 rounded-md hover:bg-red-500"
 							onClick={resetSettings}
 						>
 							<svg

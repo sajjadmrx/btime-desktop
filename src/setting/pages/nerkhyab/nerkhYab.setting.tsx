@@ -1,12 +1,11 @@
 import { Checkbox, Slider, Switch, Typography } from '@material-tailwind/react'
 import type { NerkhYabSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
-import {
-	getSupportedCurrencies,
-	sendEvent,
-	type SupportedCurrencies,
-} from '../../../api/api'
 import { widgetKey } from '../../../../shared/widgetKey'
+import {
+	type SupportedCurrencies,
+	getSupportedCurrencies,
+} from '../../../api/api'
 
 export function NerkhYabSetting() {
 	const [setting, setSetting] = useState<NerkhYabSettingStore>(null)
@@ -40,14 +39,6 @@ export function NerkhYabSetting() {
 
 		if (key === 'disableBackground') {
 			window.ipcRenderer.send('toggle-disableBackground', widgetKey.NerkhYab)
-		}
-
-		if (!['borderRadius'].includes(key)) {
-			sendEvent({
-				name: `setting_${key}`,
-				value: value,
-				widget: widgetKey.NerkhYab,
-			})
 		}
 
 		if (key === 'enable') {
@@ -212,8 +203,8 @@ export function NerkhYabSetting() {
 								}
 								value={setting.currencies[0]}
 							>
-								{supportedCurrencies.length &&
-									supportedCurrencies.map((item) => (
+								{supportedCurrencies?.length &&
+									supportedCurrencies?.map((item) => (
 										<option
 											key={item.key}
 											value={item.key}
@@ -233,7 +224,7 @@ export function NerkhYabSetting() {
 						>
 							حاشیه ها
 						</label>
-						<div className="flex items-center gap-2 w-36 h-fit rounded px-2 py-2">
+						<div className="flex items-center gap-2 px-2 py-2 rounded w-36 h-fit">
 							<Slider
 								size="md"
 								color="blue"

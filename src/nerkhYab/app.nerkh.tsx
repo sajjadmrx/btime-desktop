@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { widgetKey } from '../../shared/widgetKey'
 import { type CurrencyData, getRateByCurrency } from '../api/api'
 import { extractMainColorFromImage } from '../utils/colorUtils'
-import { convertPriceToMillions } from '../utils/formatPrice'
 
 function App() {
 	const [loading, setLoading] = useState(true)
@@ -157,10 +156,7 @@ function App() {
 											<p
 												className={`lg:text-[1.2rem] sm:text-sm md:text-[.9rem] ${getTextColor(isTransparent, isBackgroundActive)}`}
 											>
-												{convertPriceToMillions(
-													currencyData.rialPrice.toString(),
-													'en',
-												)}
+												{currencyData.rialPrice.toLocaleString()}
 											</p>
 										)}
 									</div>

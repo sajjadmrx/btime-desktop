@@ -5,7 +5,6 @@ import { widgetKey } from '../../../../shared/widgetKey'
 import {
 	type SupportedCurrencies,
 	getSupportedCurrencies,
-	sendEvent,
 } from '../../../api/api'
 import { MultiSelectDropdown } from '../../components/multiSelectDropdown.component'
 
@@ -43,14 +42,6 @@ export function ArzChandSetting() {
 
 		if (key === 'disableBackground') {
 			window.ipcRenderer.send('toggle-disableBackground', widgetKey.ArzChand)
-		}
-
-		if (!['borderRadius'].includes(key)) {
-			sendEvent({
-				name: `setting_${key}`,
-				value: value,
-				widget: widgetKey.ArzChand,
-			})
 		}
 
 		if (key === 'enable') {

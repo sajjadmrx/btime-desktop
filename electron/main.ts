@@ -1,24 +1,23 @@
-import {
-	app,
-	BrowserWindow,
-	Menu,
-	nativeImage,
-	shell,
-	Tray,
-	nativeTheme,
-} from 'electron'
-import { store } from './store'
+import { release } from 'node:os'
 import { join } from 'node:path'
 import { config } from 'dotenv'
-import { getIconPath, getPublicFilePath } from '../shared/getIconPath'
-import { update } from './update'
+import {
+	BrowserWindow,
+	Menu,
+	Tray,
+	app,
+	nativeImage,
+	nativeTheme,
+	shell,
+} from 'electron'
 import isDev from 'electron-is-dev'
-import { release } from 'node:os'
-import { toggleStartUp } from './utils/startup.util'
-import { initIpcMain } from './ipc-main'
+import { getIconPath, getPublicFilePath } from '../shared/getIconPath'
 import { widgetKey } from '../shared/widgetKey'
+import { initIpcMain } from './ipc-main'
+import { store } from './store'
+import { update } from './update'
+import { toggleStartUp } from './utils/startup.util'
 import { createSettingWindow, createWindow } from './window'
-import { sendEvent } from './utils/event'
 
 config()
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
@@ -202,12 +201,6 @@ async function onAppReady() {
 	nativeTheme.themeSource = store.get('main').theme
 	createTray()
 	update(mainWin, app)
-
-	sendEvent({
-		name: 'app_open',
-		value: appVersion,
-		widget: 'main',
-	})
 }
 
 app.on('window-all-closed', () => {
