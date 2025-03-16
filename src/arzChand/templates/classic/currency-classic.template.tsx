@@ -22,7 +22,7 @@ export function CurrencyClassicComponent({
 	)
 
 	const { data, dataUpdatedAt } = useGetCurrencyByCode(currencyCode, {
-		refetchInterval: ms('1m'),
+		refetchInterval: ms('5m'),
 	})
 
 	useEffect(() => {
