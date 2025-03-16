@@ -31,7 +31,7 @@ window.ipcRenderer.on('main-process-message', (_event, message) => {
 
 window.ipcRenderer.on('transparent_status', (evt, message) => {
 	const bodyElement = document.querySelector('.h-screen')
-	if (message.newStatus) {
+	if (message.enableTransparent) {
 		bodyElement.classList.add('transparent-active')
 	} else bodyElement.classList.remove('transparent-active')
 })
@@ -39,7 +39,7 @@ window.ipcRenderer.on('transparent_status', (evt, message) => {
 window.ipcRenderer.on('background_status', (evt, message) => {
 	const bodyElement = document.querySelector('.h-screen')
 
-	if (message.newStatus) {
+	if (message.isBackgroundDisabled) {
 		bodyElement.classList.remove('background')
 	} else bodyElement.classList.add('background')
 })

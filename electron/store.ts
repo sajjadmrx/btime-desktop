@@ -17,7 +17,7 @@ export interface windowSettings {
 	borderRadius: number
 	alwaysOnTop: boolean
 	transparentStatus: boolean
-	disableBackground: boolean
+	isBackgroundDisabled: boolean
 	enable: boolean
 	html: string
 }
@@ -107,7 +107,7 @@ const storeDefaults: StoreKey = {
 		borderRadius: 28,
 		alwaysOnTop: false,
 		transparentStatus: false,
-		disableBackground: false,
+		isBackgroundDisabled: false,
 		html: 'time.html',
 	},
 	NerkhYab: {
@@ -123,7 +123,7 @@ const storeDefaults: StoreKey = {
 		borderRadius: 28,
 		alwaysOnTop: false,
 		transparentStatus: false,
-		disableBackground: false,
+		isBackgroundDisabled: false,
 		html: 'rate.html',
 		currencies: ['usd'],
 	},
@@ -142,7 +142,7 @@ const storeDefaults: StoreKey = {
 		borderRadius: 28,
 		alwaysOnTop: false,
 		transparentStatus: false,
-		disableBackground: false,
+		isBackgroundDisabled: false,
 		html: 'arzchand.html',
 		currencies: ['usd', 'eur'],
 		template: 'classic',
@@ -160,7 +160,7 @@ const storeDefaults: StoreKey = {
 		borderRadius: 28,
 		alwaysOnTop: false,
 		transparentStatus: false,
-		disableBackground: false,
+		isBackgroundDisabled: false,
 		city: null,
 		stateColor: true,
 		html: 'weather.html',
@@ -198,7 +198,7 @@ const storeDefaults: StoreKey = {
 			},
 		},
 		transparentStatus: false,
-		disableBackground: false,
+		isBackgroundDisabled: false,
 		html: 'clock.html',
 	},
 	main: {

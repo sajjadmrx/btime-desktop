@@ -39,7 +39,6 @@ export function WeatherLayout({
 				? 'text-gray-100 drop-shadow-md'
 				: 'text-gray-100 drop-shadow-lg'
 		}
-		console.log('isBackgroundActive', isBackgroundActive)
 		if (!isBackgroundActive) {
 			return isDarkMode ? 'text-gray-200' : 'text-gray-400'
 		}

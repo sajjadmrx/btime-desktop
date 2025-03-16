@@ -31,7 +31,7 @@ export function AppSetting() {
 	}
 
 	function applyChanges() {
-		window.store.set<'main', MainSettingStore>('main', {
+		window.store.set('main', {
 			...mainSetting,
 		})
 	}

@@ -40,21 +40,23 @@ export function ArzChandSetting() {
 			window.ipcRenderer.send('toggle-transparent', widgetKey.ArzChand)
 		}
 
-		if (key === 'disableBackground') {
-			window.ipcRenderer.send('toggle-disableBackground', widgetKey.ArzChand)
+		if (key === 'isBackgroundDisabled') {
+			window.ipcRenderer.send('toggle-isBackgroundDisabled', widgetKey.ArzChand)
 		}
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.ArzChand)
 		} else if (
-			!['transparentStatus', 'borderRadius', 'disableBackground'].includes(key)
+			!['transparentStatus', 'borderRadius', 'isBackgroundDisabled'].includes(
+				key,
+			)
 		) {
 			window.ipcRenderer.send('updated-setting', widgetKey.ArzChand)
 		}
 	}
 
 	function applyChanges() {
-		window.store.set<widgetKey, ArzChandSettingStore>(widgetKey.ArzChand, {
+		window.store.set(widgetKey.ArzChand, {
 			...setting,
 			alwaysOnTop: setting.alwaysOnTop,
 			enable: setting.enable,
@@ -132,9 +134,12 @@ export function ArzChandSetting() {
 						/>
 						<Checkbox
 							ripple={true}
-							defaultChecked={setting.disableBackground}
+							defaultChecked={setting.isBackgroundDisabled}
 							onClick={() =>
-								setSettingValue('disableBackground', !setting.disableBackground)
+								setSettingValue(
+									'isBackgroundDisabled',
+									!setting.isBackgroundDisabled,
+								)
 							}
 							label={
 								<div>

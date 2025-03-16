@@ -25,7 +25,7 @@ window.ipcRenderer.on('main-process-message', (_event, message) => {
 
 window.ipcRenderer.on('transparent_status', (evt, message) => {
 	const bodyElement = document.body
-	if (message.newStatus) {
+	if (message.enableTransparent) {
 		bodyElement.classList.add('transparent-active')
 	} else bodyElement.classList.remove('transparent-active')
 })

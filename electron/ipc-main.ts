@@ -1,7 +1,7 @@
 import { BrowserWindow, app, ipcMain, nativeTheme, shell } from 'electron'
 import { userLogger } from '../shared/logger'
 import { widgetKey } from '../shared/widgetKey'
-import { type MainSettingStore, store } from './store'
+import { type MainSettingStore, store, type windowSettings } from './store'
 import { createSettingWindow, createWindow } from './window'
 
 export function initIpcMain() {
@@ -28,18 +28,24 @@ export function initIpcMain() {
 		)[0]
 		if (win) {
 			win.webContents.send('transparent_status', {
-				newStatus: store.get(widgetKey[windowKey]).transparentStatus,
+				enableTransparent: (
+					store.get(widgetKey[windowKey]) as unknown as windowSettings
+				).transparentStatus,
 			})
 		}
 	})
 
-	ipcMain.on('toggle-disableBackground', (event, windowKey: string) => {
+	ipcMain.on('toggle-isBackgroundDisabled', (event, windowKey: string) => {
 		const win = BrowserWindow.getAllWindows().filter(
 			(win) => win.title === windowKey,
 		)[0]
 		if (win) {
+			const isBackgroundDisabled = (
+				store.get(widgetKey[windowKey]) as unknown as windowSettings
+			).isBackgroundDisabled
+
 			win.webContents.send('background_status', {
-				newStatus: store.get(widgetKey[windowKey]).disableBackground,
+				isBackgroundDisabled: isBackgroundDisabled,
 			})
 		}
 	})
@@ -90,7 +96,7 @@ export function initIpcMain() {
 		const win = BrowserWindow.getAllWindows().filter(
 			(win) => win.title === windowKey,
 		)[0]
-		const setting = store.get(widgetKey[windowKey])
+		const setting = store.get(widgetKey[windowKey]) as unknown as windowSettings
 		const moveable = store.get('main').moveable
 		if (!setting) {
 			userLogger.error(`Setting not found for ${windowKey}`)

@@ -1,9 +1,10 @@
-import { BrowserWindow, screen } from 'electron'
-import { widgetKey } from '../shared/widgetKey'
-import { store } from './store'
-import { getIconPath } from '../shared/getIconPath'
 import os from 'node:os'
 import path from 'node:path'
+import { BrowserWindow, screen } from 'electron'
+import ms from 'ms'
+import { getIconPath } from '../shared/getIconPath'
+import { widgetKey } from '../shared/widgetKey'
+import { store, type windowSettings } from './store'
 
 export interface Window {
 	height: number
@@ -65,16 +66,21 @@ export async function createWindow(payload: Window) {
 	})
 
 	if (os.platform() === 'darwin') win.setWindowButtonVisibility(false)
+
 	win.webContents.on('did-finish-load', () => {
+		const setting: windowSettings = store.get(
+			widgetKey[payload.title],
+		) as unknown as windowSettings
+
 		win.webContents.send('transparent_status', {
-			newStatus: store.get(widgetKey[payload.title]).transparentStatus,
+			enableTransparent: setting.transparentStatus,
 		})
 
 		win.webContents.send('background_status', {
-			newStatus: store.get(widgetKey[payload.title]).disableBackground,
+			isBackgroundDisabled: setting.isBackgroundDisabled,
 		})
 
-		const borderRadius = store.get(widgetKey[payload.title]).borderRadius
+		const borderRadius = setting.borderRadius
 
 		win.webContents.send('border-radius', {
 			radius: borderRadius ? `${borderRadius}px` : '28px',
