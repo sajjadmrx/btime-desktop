@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import electronStore from 'electron-store'
 import { widgetKey } from '../shared/widgetKey'
+import type { FetchedCurrency } from '../src/api/api'
 
 export interface windowSettings {
 	bounds: {
@@ -77,12 +78,13 @@ export interface MainSettingStore {
 }
 export type Theme = 'system' | 'light' | 'dark'
 
-export type StoreKey = {
+export interface StoreKey {
 	[widgetKey.BTime]: BtimeSettingStore
 	[widgetKey.NerkhYab]: NerkhYabSettingStore
 	[widgetKey.ArzChand]: ArzChandSettingStore
 	[widgetKey.Weather]: WeatherSettingStore
 	[widgetKey.Clock]: ClockSettingStore
+	[key: `currency:${string}`]: FetchedCurrency
 	main: MainSettingStore
 }
 
@@ -214,7 +216,6 @@ export const store = new electronStore<StoreKey>({
 	accessPropertiesByDotNotation: true,
 	name: 'widgetify-app',
 })
-
 const clockWidgetStoreData = store.get(widgetKey.Clock)
 
 if (typeof clockWidgetStoreData.analogA === 'undefined') {

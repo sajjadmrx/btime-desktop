@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { widgetKey } from '../../shared/widgetKey'
-import { type CurrencyData, getRateByCurrency } from '../api/api'
+import { type FetchedCurrency, getRateByCurrency } from '../api/api'
 import { extractMainColorFromImage } from '../utils/colorUtils'
 
 function App() {
 	const [loading, setLoading] = useState(true)
 	const [currency, setCurrency] = useState<string>()
 	const [imgColor, setImgColor] = useState<string>()
-	const [currencyData, setCurrencyData] = useState<CurrencyData>(null)
+	const [currencyData, setCurrencyData] = useState<FetchedCurrency>(null)
 	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(false)
 	const [isTransparent, setIsTransparent] = useState<boolean>(false)
 

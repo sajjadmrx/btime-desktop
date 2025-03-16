@@ -2,7 +2,7 @@
 // @ts-nocheck
 
 import { contextBridge, ipcRenderer } from 'electron'
-import { store, type StoreKey, type widgetKey } from './store'
+import { type StoreKey, store, type widgetKey } from './store'
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer))
@@ -122,12 +122,10 @@ setTimeout(removeLoading, 4999)
 
 export const storePreload = {
 	// get: <T>(key: T & keyof StoreKey) => store.get<T>(key),
-	get: <T extends keyof StoreKey | keyof typeof widgetKey>(key: T) =>
-		store.get<T>(key as T),
-	set: <T extends keyof StoreKey | keyof typeof widgetKey, V>(
-		key: T,
-		value: V,
-	) => store.set<T>(key, value as V),
+	get: <K extends keyof StoreKey>(key: K): StoreKey[K] =>
+		store.get<StoreKey[K]>(key),
+	set: <K extends keyof StoreKey>(key: K, value: StoreKey[K]): StoreKey[K] =>
+		store.set<T>(key, value as V),
 }
 
 export const ipcPreload = {

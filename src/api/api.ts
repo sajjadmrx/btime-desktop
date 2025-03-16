@@ -10,7 +10,8 @@ const rawGithubApi = axios.create({
 	baseURL: 'https://raw.githubusercontent.com/sajjadmrx/btime-desktop/main',
 })
 
-export interface CurrencyData {
+export interface FetchedCurrency {
+	code: string
 	name: {
 		fa: string
 		en: string
@@ -18,6 +19,13 @@ export interface CurrencyData {
 	icon: string
 	price: number
 	rialPrice: number
+	changePercentage: number
+	priceHistory: PriceHistory[]
+	type: 'coin' | 'crypto' | 'currency'
+}
+export interface PriceHistory {
+	price: number
+	createdAt: string
 }
 
 export interface History {
@@ -30,7 +38,7 @@ export interface History {
 
 export async function getRateByCurrency(
 	currency: string,
-): Promise<CurrencyData | null> {
+): Promise<FetchedCurrency | null> {
 	try {
 		api.defaults.baseURL = await getMainApi()
 
