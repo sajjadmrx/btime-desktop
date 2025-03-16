@@ -1,5 +1,5 @@
-import fs from 'fs'
-import path from 'path'
+import path from 'node:path'
+import { promisify } from 'node:util'
 import {
 	BrowserWindow,
 	app,
@@ -12,6 +12,9 @@ import { userLogger } from '../shared/logger'
 import { widgetKey } from '../shared/widgetKey'
 import { type MainSettingStore, store, type windowSettings } from './store'
 import { createSettingWindow, createWindow } from './window'
+
+const windowsShortcuts = require('windows-shortcuts')
+const resolveShortcut = promisify(windowsShortcuts.query)
 
 export function initIpcMain() {
 	ipcMain.on('reOpen', () => {
@@ -171,7 +174,6 @@ export function initIpcMain() {
 		app.exit()
 	})
 
-	// App launcher functionality
 	ipcMain.handle('select-app', async () => {
 		try {
 			const { canceled, filePaths } = await dialog.showOpenDialog({
@@ -186,8 +188,6 @@ export function initIpcMain() {
 			const filePath = filePaths[0]
 			const name = path.basename(filePath, path.extname(filePath))
 
-			// You could integrate with node-file-icon-extractor or similar library
-			// to extract app icons, but for simplicity returning just name and path
 			return {
 				name,
 				path: filePath,
@@ -202,6 +202,7 @@ export function initIpcMain() {
 	ipcMain.handle('launch-app', async (_event, appPath) => {
 		try {
 			userLogger.info(`Launching app: ${appPath}`)
+
 			return shell.openPath(appPath)
 		} catch (error) {
 			userLogger.error(`Error launching app: ${error}`)
@@ -209,23 +210,46 @@ export function initIpcMain() {
 		}
 	})
 
-	ipcMain.handle('get-app-info', async (_event, filePath) => {
+	ipcMain.handle('get-app-info', async (_event, filePath: string) => {
 		try {
-			// Validate file exists
-			if (!fs.existsSync(filePath)) {
-				return null
+			let actualPath = filePath
+			let shortcutTarget = null
+
+			if (filePath.toLowerCase().endsWith('.lnk')) {
+				try {
+					const shortcutInfo = await resolveShortcut(filePath)
+					if (shortcutInfo && shortcutInfo.target) {
+						shortcutTarget = shortcutInfo.target
+						actualPath = shortcutInfo.target
+						userLogger.info(`Shortcut resolved to: ${actualPath}`)
+					}
+				} catch (shortcutError) {
+					userLogger.error(`Error resolving shortcut: ${shortcutError}`)
+				}
 			}
 
-			const name = path.basename(filePath, path.extname(filePath))
+			const icon = await app.getFileIcon(actualPath, { size: 'large' })
+			const iconDataUrl = icon.toDataURL()
 
-			// Here you could add icon extraction logic
+			const name = shortcutTarget
+				? path.basename(shortcutTarget, path.extname(shortcutTarget))
+				: path.basename(filePath, path.extname(filePath))
+
+			const appInfo = {
+				name: name,
+				path: filePath,
+				icon: iconDataUrl,
+				actualPath: actualPath,
+			}
+
+			return appInfo
+		} catch (error) {
+			console.error('خطا در استخراج آیکون:', error)
 			return {
-				name,
+				name: path.basename(filePath, path.extname(filePath)),
+				path: filePath,
 				icon: null,
 			}
-		} catch (error) {
-			userLogger.error(`Error getting app info: ${error}`)
-			return null
 		}
 	})
 

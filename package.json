@@ -36,7 +36,8 @@
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-icons": "^5.5.0",
-		"react-tailwindcss-select": "^1.8.5"
+		"react-tailwindcss-select": "^1.8.5",
+		"windows-shortcuts": "^0.1.6"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.2",
