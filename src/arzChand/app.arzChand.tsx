@@ -70,7 +70,7 @@ function App() {
 	}, [])
 
 	return (
-		<div className="w-screen h-screen overflow-hidden moveable">
+		<div className="w-screen h-screen overflow-hidden">
 			<div className="h-full">
 				<div className="flex flex-col items-center h-full p-2">
 					{setting.template === 'default' || !setting.template ? (

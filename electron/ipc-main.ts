@@ -1,4 +1,13 @@
-import { BrowserWindow, app, ipcMain, nativeTheme, shell } from 'electron'
+import fs from 'fs'
+import path from 'path'
+import {
+	BrowserWindow,
+	app,
+	dialog,
+	ipcMain,
+	nativeTheme,
+	shell,
+} from 'electron'
 import { userLogger } from '../shared/logger'
 import { widgetKey } from '../shared/widgetKey'
 import { type MainSettingStore, store, type windowSettings } from './store'
@@ -160,5 +169,85 @@ export function initIpcMain() {
 
 		app.relaunch()
 		app.exit()
+	})
+
+	// App launcher functionality
+	ipcMain.handle('select-app', async () => {
+		try {
+			const { canceled, filePaths } = await dialog.showOpenDialog({
+				properties: ['openFile'],
+				filters: [
+					{ name: 'Applications', extensions: ['exe', 'lnk', 'app', 'msi'] },
+				],
+			})
+
+			if (canceled || filePaths.length === 0) return null
+
+			const filePath = filePaths[0]
+			const name = path.basename(filePath, path.extname(filePath))
+
+			// You could integrate with node-file-icon-extractor or similar library
+			// to extract app icons, but for simplicity returning just name and path
+			return {
+				name,
+				path: filePath,
+				icon: null,
+			}
+		} catch (error) {
+			userLogger.error(`Error selecting app: ${error}`)
+			return null
+		}
+	})
+
+	ipcMain.handle('launch-app', async (_event, appPath) => {
+		try {
+			userLogger.info(`Launching app: ${appPath}`)
+			return shell.openPath(appPath)
+		} catch (error) {
+			userLogger.error(`Error launching app: ${error}`)
+			return { error: error.message }
+		}
+	})
+
+	ipcMain.handle('get-app-info', async (_event, filePath) => {
+		try {
+			// Validate file exists
+			if (!fs.existsSync(filePath)) {
+				return null
+			}
+
+			const name = path.basename(filePath, path.extname(filePath))
+
+			// Here you could add icon extraction logic
+			return {
+				name,
+				icon: null,
+			}
+		} catch (error) {
+			userLogger.error(`Error getting app info: ${error}`)
+			return null
+		}
+	})
+
+	ipcMain.handle('get-apps', async () => {
+		try {
+			if (!store.has('appLauncher.apps')) {
+				return []
+			}
+			return store.get('appLauncher.apps')
+		} catch (error) {
+			userLogger.error(`Error getting saved apps: ${error}`)
+			return []
+		}
+	})
+
+	ipcMain.handle('save-apps', async (_event, apps) => {
+		try {
+			store.set('appLauncher.apps', apps)
+			return true
+		} catch (error) {
+			userLogger.error(`Error saving apps: ${error}`)
+			return false
+		}
 	})
 }

@@ -184,6 +184,24 @@ async function onAppReady() {
 		}
 	}
 
+	await createWindow({
+		height: clockStore.bounds.height,
+		width: clockStore.bounds.width,
+		minHeight: clockStore.bounds.minHeight,
+		minWidth: clockStore.bounds.minWidth,
+		maxHeight: 1000,
+		maxWidth: 1000,
+		x: clockStore.bounds.x,
+		y: clockStore.bounds.y,
+		title: 'v-app',
+		html: 'v-app.html',
+		devTools: true,
+		alwaysOnTop: true,
+		reziable: true,
+		saveBounds: false,
+		moveable,
+	})
+
 	if (!mainWin) {
 		mainWin = await createSettingWindow()
 	}

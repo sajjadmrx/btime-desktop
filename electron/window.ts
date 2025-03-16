@@ -158,19 +158,19 @@ export function onMoved(win: BrowserWindow) {
 				height: win.getBounds().height,
 			})
 
-			// Save the new position
-			const key = win.getTitle()
+			// // Save the new position
+			// const key = win.getTitle()
 
-			store.set(widgetKey[key], {
-				...store.get(widgetKey[key]),
-				bounds: {
-					...store.get(widgetKey[key]).bounds,
-					x: win.getBounds().x,
-					y: win.getBounds().y,
-					width: win.getBounds().width,
-					height: win.getBounds().height,
-				},
-			})
+			// store.set(widgetKey[key], {
+			// 	...store.get(widgetKey[key]),
+			// 	bounds: {
+			// 		...store.get(widgetKey[key]).bounds,
+			// 		x: win.getBounds().x,
+			// 		y: win.getBounds().y,
+			// 		width: win.getBounds().width,
+			// 		height: win.getBounds().height,
+			// 	},
+			// })
 		}
 	})
 }
