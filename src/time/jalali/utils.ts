@@ -38,10 +38,13 @@ export function getHijriEvents(
 
 export function getGregorianEvents(
 	events: FetchedAllEvents,
-	selectedDate: moment.Moment, //  Hijri date
+	date: moment.Moment, //  Hijri date
 ): FetchedEvent[] {
-	const gregorianDay = selectedDate.format('D')
-	const gregorianMonth = selectedDate.format('M')
+	const gregorianDate = date.clone().locale('en').utc().add(3.5, 'hours')
+
+	const gregorianDay = gregorianDate.format('D')
+	const gregorianMonth = gregorianDate.format('M')
+
 	return events.gregorianEvents.filter(
 		(event) => event.month === +gregorianMonth && event.day === +gregorianDay,
 	)
