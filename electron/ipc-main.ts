@@ -84,7 +84,13 @@ export function initIpcMain() {
 			const win = BrowserWindow.getAllWindows().filter(
 				(win) => win.title === window,
 			)[0]
-
+			if (!win) {
+				console.log(
+					`can't find ${window}`,
+					BrowserWindow.getAllWindows().map((f) => f.title),
+				)
+				return
+			}
 			await win.webContents.executeJavaScript(
 				`
         document.querySelector('.h-screen').style.borderRadius = '${value}'
@@ -174,29 +180,30 @@ export function initIpcMain() {
 		app.exit()
 	})
 
-	ipcMain.handle('select-app', async () => {
-		try {
-			const { canceled, filePaths } = await dialog.showOpenDialog({
-				properties: ['openFile'],
-				filters: [
-					{ name: 'Applications', extensions: ['exe', 'lnk', 'app', 'msi'] },
-				],
+	ipcMain.handle('open-file-dialog', async () => {
+		const filters = []
+
+		if (process.platform === 'win32') {
+			filters.push({
+				name: 'Executable Files',
+				extensions: ['exe', 'bat', 'cmd'],
 			})
-
-			if (canceled || filePaths.length === 0) return null
-
-			const filePath = filePaths[0]
-			const name = path.basename(filePath, path.extname(filePath))
-
-			return {
-				name,
-				path: filePath,
-				icon: null,
-			}
-		} catch (error) {
-			userLogger.error(`Error selecting app: ${error}`)
-			return null
+		} else if (process.platform === 'darwin') {
+			filters.push({ name: 'Applications', extensions: ['app'] })
+		} else if (process.platform === 'linux') {
+			filters.push({
+				name: 'Applications',
+				extensions: ['AppImage', 'sh', 'run', 'bin'],
+			})
 		}
+
+		filters.push({ name: 'All Files', extensions: ['*'] })
+
+		return dialog.showOpenDialog({
+			properties: ['openFile'],
+			filters: filters,
+			title: 'انتخاب برنامه',
+		})
 	})
 
 	ipcMain.handle('launch-app', async (_event, appPath) => {
@@ -218,7 +225,7 @@ export function initIpcMain() {
 			if (filePath.toLowerCase().endsWith('.lnk')) {
 				try {
 					const shortcutInfo = await resolveShortcut(filePath)
-					if (shortcutInfo && shortcutInfo.target) {
+					if (shortcutInfo?.target) {
 						shortcutTarget = shortcutInfo.target
 						actualPath = shortcutInfo.target
 						userLogger.info(`Shortcut resolved to: ${actualPath}`)

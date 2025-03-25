@@ -26,8 +26,8 @@ export interface Window {
 }
 export async function createWindow(payload: Window) {
 	//validate x and y
-	const isValdiate = isPointWithinDisplay(payload.x, payload.y)
-	if (!isValdiate) {
+	const isValidate = isPointWithinDisplay(payload.x, payload.y)
+	if (!isValidate) {
 		const displays = screen.getAllDisplays()
 		const { x, y } = displays[0].workArea
 		payload.x = x
@@ -158,19 +158,19 @@ export function onMoved(win: BrowserWindow) {
 				height: win.getBounds().height,
 			})
 
-			// // Save the new position
-			// const key = win.getTitle()
+			// Save the new position
+			const key = win.getTitle()
 
-			// store.set(widgetKey[key], {
-			// 	...store.get(widgetKey[key]),
-			// 	bounds: {
-			// 		...store.get(widgetKey[key]).bounds,
-			// 		x: win.getBounds().x,
-			// 		y: win.getBounds().y,
-			// 		width: win.getBounds().width,
-			// 		height: win.getBounds().height,
-			// 	},
-			// })
+			store.set(widgetKey[key], {
+				...store.get(widgetKey[key]),
+				bounds: {
+					...store.get(widgetKey[key]).bounds,
+					x: win.getBounds().x,
+					y: win.getBounds().y,
+					width: win.getBounds().width,
+					height: win.getBounds().height,
+				},
+			})
 		}
 	})
 }
@@ -179,7 +179,7 @@ export function onResized(win: BrowserWindow) {
 		if (win) {
 			const { width, height } = win.getBounds()
 			const key = win.getTitle()
-
+			console.log(store.get(widgetKey[key]))
 			console.log(`Saving ${key} bounds: ${width}x${height}`)
 			store.set(widgetKey[key], {
 				...store.get(widgetKey[key]),

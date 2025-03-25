@@ -61,6 +61,7 @@ async function onAppReady() {
 	const arzChandStore = store.get(widgetKey.ArzChand)
 	const weatherStore = store.get(widgetKey.Weather)
 	const clockStore = store.get(widgetKey.Clock)
+	const damDasti = store.get(widgetKey.DamDasti)
 	const moveable = store.get('main').moveable
 	// Btime widget
 	if (btimeStore.enable) {
@@ -184,24 +185,25 @@ async function onAppReady() {
 		}
 	}
 
-	await createWindow({
-		height: clockStore.bounds.height,
-		width: clockStore.bounds.width,
-		minHeight: clockStore.bounds.minHeight,
-		minWidth: clockStore.bounds.minWidth,
-		maxHeight: 1000,
-		maxWidth: 1000,
-		x: clockStore.bounds.x,
-		y: clockStore.bounds.y,
-		title: 'v-app',
-		html: 'v-app.html',
-		devTools: true,
-		alwaysOnTop: true,
-		reziable: true,
-		saveBounds: false,
-		moveable,
-	})
-
+	if (damDasti.enable) {
+		await createWindow({
+			height: clockStore.bounds.height,
+			width: clockStore.bounds.width,
+			minHeight: clockStore.bounds.minHeight,
+			minWidth: clockStore.bounds.minWidth,
+			maxHeight: 1000,
+			maxWidth: 1000,
+			x: clockStore.bounds.x,
+			y: clockStore.bounds.y,
+			title: widgetKey.DamDasti,
+			html: damDasti.html,
+			devTools: true,
+			alwaysOnTop: damDasti.alwaysOnTop,
+			reziable: true,
+			saveBounds: false,
+			moveable,
+		})
+	}
 	if (!mainWin) {
 		mainWin = await createSettingWindow()
 	}

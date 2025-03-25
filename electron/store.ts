@@ -45,6 +45,8 @@ export interface WeatherSettingStore extends windowSettings {
 	stateColor: boolean
 }
 
+export interface DamDastiSettingStore extends windowSettings {}
+
 export interface AnalogClockASettingStore {
 	timzones: {
 		label: string
@@ -84,6 +86,7 @@ export interface StoreKey {
 	[widgetKey.ArzChand]: ArzChandSettingStore
 	[widgetKey.Weather]: WeatherSettingStore
 	[widgetKey.Clock]: ClockSettingStore
+	[widgetKey.DamDasti]: DamDastiSettingStore
 	[key: `currency:${string}`]: FetchedCurrency
 	main: MainSettingStore
 }
@@ -200,6 +203,22 @@ const storeDefaults: StoreKey = {
 		transparentStatus: false,
 		isBackgroundDisabled: false,
 		html: 'clock.html',
+	},
+	DamDasti: {
+		alwaysOnTop: false,
+		borderRadius: 12,
+		bounds: {
+			width: 217,
+			height: 180,
+			x: 0,
+			y: 0,
+			minWidth: 150,
+			minHeight: 76,
+		},
+		enable: false,
+		html: 'dam-dasti.html',
+		isBackgroundDisabled: false,
+		transparentStatus: false,
 	},
 	main: {
 		userId: randomUUID(),
