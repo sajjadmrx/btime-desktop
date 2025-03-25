@@ -67,13 +67,6 @@ function App() {
 	}, [])
 
 	useEffect(() => {
-		window.ipcMain.invoke('get-settings').then((settings) => {
-			if (settings) {
-				setIsTransparent(settings.isTransparent ?? false)
-				setBackgroundActive(settings.isBackgroundActive ?? true)
-			}
-		})
-
 		window.ipcMain.invoke('get-apps').then((savedApps: AppItem[]) => {
 			if (savedApps) setApps(savedApps)
 		})
@@ -193,7 +186,7 @@ function App() {
 				{apps.map((app) => (
 					<div
 						key={app.id}
-						className="relative  flex flex-col items-center transition-all group w-[60px] xxs:w-[45px] xs:w-[55px]  sm:w-[75px] md:w-[85px] "
+						className="relative  flex flex-col items-center transition-all group w-[60px] xxs:w-[45px] xs:w-[55px]  sm:w-[55px] md:w-[85px] "
 					>
 						<button
 							className="absolute z-10 flex items-center justify-center w-5 h-5 text-white transition-all bg-red-500 rounded-full opacity-0 cursor-pointer -top-1 -right-1 group-hover:opacity-100 hover:scale-110 hover:bg-red-600"
@@ -207,7 +200,7 @@ function App() {
 						</button>
 
 						<div
-							className={`relative mb-2 transition-all rounded-full shadow-md cursor-pointer w-12 h-12 xs:w-13 xs:h-13 sm:w-14 sm:h-14 hover:scale-110  xxs:w-8 xxs:h-8 
+							className={`relative mb-2 transition-all rounded-full shadow-md cursor-pointer w-12 h-12 xs:w-12 xs:h-12 sm:w-10 sm:h-10 hover:scale-110  xxs:w-8 xxs:h-8 
                                 group-hover:ring-2 group-hover:ring-blue-400 dark:group-hover:ring-blue-500 
                                 ${isTransparent ? 'opacity-90' : 'opacity-100'}`}
 							onClick={() => handleLaunchApp(app)}
@@ -235,7 +228,7 @@ function App() {
 						</div>
 
 						<span
-							className={`w-full px-1 text-xs xxs:text-[10px] sm:text-sm font-medium text-center truncate ${appNameTextColor}`}
+							className={`w-full px-1 text-xs xxs:text-[10px] sm:text-xs font-medium text-center truncate ${appNameTextColor}`}
 						>
 							{app.name.charAt(0).toUpperCase() + app.name.slice(1)}
 						</span>
