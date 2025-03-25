@@ -200,7 +200,7 @@ async function onAppReady() {
 			devTools: true,
 			alwaysOnTop: damDasti.alwaysOnTop,
 			reziable: true,
-			saveBounds: false,
+			saveBounds: true,
 			moveable,
 		})
 	}
