@@ -1,5 +1,5 @@
 appId: btime.github.io
-productName: B Time
+productName: Widgetify
 afterPack: "removeLocales.js"
 artifactName: "${productName}-${os}-${arch}-${version}.${ext}"
 files:
@@ -28,7 +28,7 @@ win:
     - msi
     - nsis
 linux:
-  icon: "public//icons/app/mac/icon.icns"
+  icon: "public/icons/app/mac/icon.icns"
   maintainer: "btime.github.io"
   target:
     - rpm
@@ -55,7 +55,7 @@ nsis:
   runAfterFinish: true
   createDesktopShortcut: true
   allowToChangeInstallationDirectory: true
-  shortcutName: "bTime"
+  shortcutName: "Widgetify"
 npmRebuild: true
 nodeGypRebuild: false
 
