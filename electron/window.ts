@@ -1,9 +1,11 @@
-import { BrowserWindow, screen } from 'electron'
-import { widgetKey } from '../shared/widgetKey'
-import { store } from './store'
-import { getIconPath } from '../shared/getIconPath'
 import os from 'node:os'
 import path from 'node:path'
+import { BrowserWindow, screen } from 'electron'
+import ms from 'ms'
+import { getIconPath } from '../shared/getIconPath'
+import { userLogger } from '../shared/logger'
+import { widgetKey } from '../shared/widgetKey'
+import { store, type windowSettings } from './store'
 
 export interface Window {
 	height: number
@@ -24,9 +26,14 @@ export interface Window {
 	closable?: boolean
 }
 export async function createWindow(payload: Window) {
-	//validate x and y
-	const isValdiate = isPointWithinDisplay(payload.x, payload.y)
-	if (!isValdiate) {
+	const isValidate = isPointWithinDisplay(payload.x, payload.y)
+	if (!isValidate) {
+		userLogger.error(
+			'Invalid point for window',
+			payload.title,
+			payload.x,
+			payload.y,
+		)
 		const displays = screen.getAllDisplays()
 		const { x, y } = displays[0].workArea
 		payload.x = x
@@ -65,16 +72,21 @@ export async function createWindow(payload: Window) {
 	})
 
 	if (os.platform() === 'darwin') win.setWindowButtonVisibility(false)
+
 	win.webContents.on('did-finish-load', () => {
+		const setting: windowSettings = store.get(
+			widgetKey[payload.title],
+		) as unknown as windowSettings
+
 		win.webContents.send('transparent_status', {
-			newStatus: store.get(widgetKey[payload.title]).transparentStatus,
+			enableTransparent: setting.transparentStatus,
 		})
 
 		win.webContents.send('background_status', {
-			newStatus: store.get(widgetKey[payload.title]).disableBackground,
+			isBackgroundDisabled: setting.isBackgroundDisabled,
 		})
 
-		const borderRadius = store.get(widgetKey[payload.title]).borderRadius
+		const borderRadius = setting.borderRadius
 
 		win.webContents.send('border-radius', {
 			radius: borderRadius ? `${borderRadius}px` : '28px',
@@ -88,8 +100,8 @@ export async function createWindow(payload: Window) {
 	}
 
 	if (payload.saveBounds) {
+		onClose(win)
 		onMoved(win)
-		onResized(win)
 	}
 
 	return win
@@ -97,17 +109,17 @@ export async function createWindow(payload: Window) {
 
 export function isPointWithinDisplay(x: number, y: number) {
 	const allDisplays = screen.getAllDisplays()
-	let isValdiate = false
+	let isValidate = false
 
 	for (const display of allDisplays) {
 		const { x: dx, y: dy, width, height } = display.workArea
 		if (x >= dx && x < dx + width && y >= dy && y < dy + height) {
-			isValdiate = true
+			isValidate = true
 			break
 		}
 	}
 
-	return isValdiate
+	return isValidate
 }
 
 export function onMoved(win: BrowserWindow) {
@@ -116,7 +128,6 @@ export function onMoved(win: BrowserWindow) {
 			let { x, y } = win.getBounds()
 			const displays = screen.getAllDisplays()
 
-			// Find the display the window is currently on
 			const currentDisplay =
 				displays.find((display) => {
 					const { x: dx, y: dy, width, height } = display.workArea
@@ -125,7 +136,6 @@ export function onMoved(win: BrowserWindow) {
 
 			const { width, height } = currentDisplay.workArea
 
-			// Check if the window is out of bounds and adjust the position
 			if (x < currentDisplay.workArea.x) {
 				x = currentDisplay.workArea.x
 			} else if (
@@ -144,49 +154,55 @@ export function onMoved(win: BrowserWindow) {
 				y = currentDisplay.workArea.y + height - win.getBounds().height
 			}
 
-			// Set the new bounds if adjustments were made
 			win.setBounds({
 				x,
 				y,
 				width: win.getBounds().width,
 				height: win.getBounds().height,
 			})
-
-			// Save the new position
-			const key = win.getTitle()
-
-			store.set(widgetKey[key], {
-				...store.get(widgetKey[key]),
-				bounds: {
-					...store.get(widgetKey[key]).bounds,
-					x: win.getBounds().x,
-					y: win.getBounds().y,
-					width: win.getBounds().width,
-					height: win.getBounds().height,
-				},
-			})
 		}
 	})
 }
-export function onResized(win: BrowserWindow) {
-	win.on('resize', () => {
-		if (win) {
-			const { width, height } = win.getBounds()
+
+function onClose(win: BrowserWindow) {
+	const saveWindowBounds = () => {
+		if (!win.isDestroyed()) {
 			const key = win.getTitle()
 
-			console.log(`Saving ${key} bounds: ${width}x${height}`)
-			store.set(widgetKey[key], {
-				...store.get(widgetKey[key]),
-				bounds: {
-					...store.get(widgetKey[key]).bounds,
-					x: win.getBounds().x,
-					y: win.getBounds().y,
-					width: win.getBounds().width,
-					height: win.getBounds().height,
-				},
-			})
+			try {
+				const currentSettings = store.get(
+					widgetKey[key],
+				) as unknown as windowSettings
+
+				const { x, y, width, height } = win.getBounds()
+
+				console.log(
+					'Saving window bounds on close for:',
+					widgetKey[key],
+					x,
+					y,
+					width,
+					height,
+				)
+				store.set(widgetKey[key], {
+					...currentSettings,
+					bounds: {
+						...currentSettings.bounds,
+						x,
+						y,
+						width,
+						height,
+					},
+				})
+			} catch (error) {
+				console.error(`Error saving window bounds for ${key}:`, error)
+			}
+		} else {
+			console.error('Window is destroyed')
 		}
-	})
+	}
+	win.on('close', saveWindowBounds)
+	win.on('blur', saveWindowBounds)
 }
 
 export async function createSettingWindow() {

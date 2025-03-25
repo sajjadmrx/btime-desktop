@@ -1,6 +1,6 @@
 # ✍ معرفی
 <p align="center">
-    <img src=".github/assets/banner.png" alt="B time banner" width="600">
+    <img src=".github/assets/banner.png" alt="Widgetify banner" width="600">
 </p>
 
 <p align="center">

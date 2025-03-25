@@ -27,16 +27,19 @@ postMessage({ payload: 'removeLoading' }, '*')
 
 window.ipcRenderer.on('transparent_status', (evt, message) => {
 	const bodyElement = document.querySelector('.h-screen')
-	if (message.newStatus) {
+
+	if (message.enableTransparent) {
 		bodyElement.classList.add('transparent-active')
 	} else bodyElement.classList.remove('transparent-active')
 })
 
 window.ipcRenderer.on('background_status', (evt, message) => {
 	const bodyElement = document.querySelector('.h-screen')
-	if (message.newStatus) {
-		bodyElement.classList.remove('background')
-	} else bodyElement.classList.add('background')
+	if (bodyElement) {
+		if (message.isBackgroundDisabled) {
+			bodyElement.classList.remove('background')
+		} else bodyElement.classList.add('background')
+	}
 })
 
 window.ipcRenderer.on('border-radius', (evt, message) => {

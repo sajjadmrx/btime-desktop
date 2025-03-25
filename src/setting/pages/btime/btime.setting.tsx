@@ -23,21 +23,23 @@ export function BtimeSetting() {
 			window.ipcRenderer.send('toggle-transparent', widgetKey.BTime)
 		}
 
-		if (key === 'disableBackground') {
-			window.ipcRenderer.send('toggle-disableBackground', widgetKey.BTime)
+		if (key === 'isBackgroundDisabled') {
+			window.ipcRenderer.send('toggle-isBackgroundDisabled', widgetKey.BTime)
 		}
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.BTime)
 		} else if (
-			!['transparentStatus', 'borderRadius', 'disableBackground'].includes(key)
+			!['transparentStatus', 'borderRadius', 'isBackgroundDisabled'].includes(
+				key,
+			)
 		) {
 			window.ipcRenderer.send('updated-setting', widgetKey.BTime)
 		}
 	}
 
 	function applyChanges() {
-		window.store.set<widgetKey, BtimeSettingStore>(widgetKey.BTime, {
+		window.store.set(widgetKey.BTime, {
 			...setting,
 			alwaysOnTop: setting.alwaysOnTop,
 			enable: setting.enable,
@@ -115,9 +117,12 @@ export function BtimeSetting() {
 						/>
 						<Checkbox
 							ripple={true}
-							defaultChecked={setting.disableBackground}
+							defaultChecked={setting.isBackgroundDisabled}
 							onClick={() =>
-								setSettingValue('disableBackground', !setting.disableBackground)
+								setSettingValue(
+									'isBackgroundDisabled',
+									!setting.isBackgroundDisabled,
+								)
 							}
 							label={
 								<div>

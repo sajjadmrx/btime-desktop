@@ -38,14 +38,16 @@ export function WeatherSetting() {
 			window.ipcRenderer.send('toggle-transparent', widgetKey.Weather)
 		}
 
-		if (key === 'disableBackground') {
-			window.ipcRenderer.send('toggle-disableBackground', widgetKey.Weather)
+		if (key === 'isBackgroundDisabled') {
+			window.ipcRenderer.send('toggle-isBackgroundDisabled', widgetKey.Weather)
 		}
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.Weather)
 		} else if (
-			!['transparentStatus', 'borderRadius', 'disableBackground'].includes(key)
+			!['transparentStatus', 'borderRadius', 'isBackgroundDisabled'].includes(
+				key,
+			)
 		) {
 			window.ipcRenderer.send('updated-setting', widgetKey.Weather)
 		}
@@ -67,7 +69,7 @@ export function WeatherSetting() {
 	}, [])
 
 	function applyChanges() {
-		window.store.set<widgetKey, WeatherSettingStore>(widgetKey.Weather, {
+		window.store.set(widgetKey.Weather, {
 			...setting,
 			alwaysOnTop: setting.alwaysOnTop,
 			enable: setting.enable,
@@ -190,9 +192,12 @@ export function WeatherSetting() {
 						/>
 						<Checkbox
 							ripple={true}
-							defaultChecked={setting.disableBackground}
+							defaultChecked={setting.isBackgroundDisabled}
 							onClick={() =>
-								setSettingValue('disableBackground', !setting.disableBackground)
+								setSettingValue(
+									'isBackgroundDisabled',
+									!setting.isBackgroundDisabled,
+								)
 							}
 							label={
 								<div>

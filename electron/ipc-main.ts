@@ -1,8 +1,20 @@
-import { BrowserWindow, app, ipcMain, nativeTheme, shell } from 'electron'
+import path from 'node:path'
+import { promisify } from 'node:util'
+import {
+	BrowserWindow,
+	app,
+	dialog,
+	ipcMain,
+	nativeTheme,
+	shell,
+} from 'electron'
 import { userLogger } from '../shared/logger'
 import { widgetKey } from '../shared/widgetKey'
-import { type MainSettingStore, store } from './store'
+import { type MainSettingStore, store, type windowSettings } from './store'
 import { createSettingWindow, createWindow } from './window'
+
+const windowsShortcuts = require('windows-shortcuts')
+const resolveShortcut = promisify(windowsShortcuts.query)
 
 export function initIpcMain() {
 	ipcMain.on('reOpen', () => {
@@ -28,18 +40,24 @@ export function initIpcMain() {
 		)[0]
 		if (win) {
 			win.webContents.send('transparent_status', {
-				newStatus: store.get(widgetKey[windowKey]).transparentStatus,
+				enableTransparent: (
+					store.get(widgetKey[windowKey]) as unknown as windowSettings
+				).transparentStatus,
 			})
 		}
 	})
 
-	ipcMain.on('toggle-disableBackground', (event, windowKey: string) => {
+	ipcMain.on('toggle-isBackgroundDisabled', (event, windowKey: string) => {
 		const win = BrowserWindow.getAllWindows().filter(
 			(win) => win.title === windowKey,
 		)[0]
 		if (win) {
+			const isBackgroundDisabled = (
+				store.get(widgetKey[windowKey]) as unknown as windowSettings
+			).isBackgroundDisabled
+
 			win.webContents.send('background_status', {
-				newStatus: store.get(widgetKey[windowKey]).disableBackground,
+				isBackgroundDisabled: isBackgroundDisabled,
 			})
 		}
 	})
@@ -66,7 +84,13 @@ export function initIpcMain() {
 			const win = BrowserWindow.getAllWindows().filter(
 				(win) => win.title === window,
 			)[0]
-
+			if (!win) {
+				console.log(
+					`can't find ${window}`,
+					BrowserWindow.getAllWindows().map((f) => f.title),
+				)
+				return
+			}
 			await win.webContents.executeJavaScript(
 				`
         document.querySelector('.h-screen').style.borderRadius = '${value}'
@@ -90,7 +114,7 @@ export function initIpcMain() {
 		const win = BrowserWindow.getAllWindows().filter(
 			(win) => win.title === windowKey,
 		)[0]
-		const setting = store.get(widgetKey[windowKey])
+		const setting = store.get(widgetKey[windowKey]) as unknown as windowSettings
 		const moveable = store.get('main').moveable
 		if (!setting) {
 			userLogger.error(`Setting not found for ${windowKey}`)
@@ -154,5 +178,107 @@ export function initIpcMain() {
 
 		app.relaunch()
 		app.exit()
+	})
+
+	ipcMain.handle('open-file-dialog', async () => {
+		const filters = []
+
+		if (process.platform === 'win32') {
+			filters.push({
+				name: 'Executable Files',
+				extensions: ['exe', 'bat', 'cmd'],
+			})
+		} else if (process.platform === 'darwin') {
+			filters.push({ name: 'Applications', extensions: ['app'] })
+		} else if (process.platform === 'linux') {
+			filters.push({
+				name: 'Applications',
+				extensions: ['AppImage', 'sh', 'run', 'bin'],
+			})
+		}
+
+		filters.push({ name: 'All Files', extensions: ['*'] })
+
+		return dialog.showOpenDialog({
+			properties: ['openFile'],
+			filters: filters,
+			title: 'انتخاب برنامه',
+		})
+	})
+
+	ipcMain.handle('launch-app', async (_event, appPath) => {
+		try {
+			userLogger.info(`Launching app: ${appPath}`)
+
+			return shell.openPath(appPath)
+		} catch (error) {
+			userLogger.error(`Error launching app: ${error}`)
+			return { error: error.message }
+		}
+	})
+
+	ipcMain.handle('get-app-info', async (_event, filePath: string) => {
+		try {
+			let actualPath = filePath
+			let shortcutTarget = null
+
+			if (filePath.toLowerCase().endsWith('.lnk')) {
+				try {
+					const shortcutInfo = await resolveShortcut(filePath)
+					if (shortcutInfo?.target) {
+						shortcutTarget = shortcutInfo.target
+						actualPath = shortcutInfo.target
+						userLogger.info(`Shortcut resolved to: ${actualPath}`)
+					}
+				} catch (shortcutError) {
+					userLogger.error(`Error resolving shortcut: ${shortcutError}`)
+				}
+			}
+
+			const icon = await app.getFileIcon(actualPath, { size: 'large' })
+			const iconDataUrl = icon.toDataURL()
+
+			const name = shortcutTarget
+				? path.basename(shortcutTarget, path.extname(shortcutTarget))
+				: path.basename(filePath, path.extname(filePath))
+
+			const appInfo = {
+				name: name,
+				path: filePath,
+				icon: iconDataUrl,
+				actualPath: actualPath,
+			}
+
+			return appInfo
+		} catch (error) {
+			console.error('خطا در استخراج آیکون:', error)
+			return {
+				name: path.basename(filePath, path.extname(filePath)),
+				path: filePath,
+				icon: null,
+			}
+		}
+	})
+
+	ipcMain.handle('get-apps', async () => {
+		try {
+			if (!store.has('appLauncher.apps')) {
+				return []
+			}
+			return store.get('appLauncher.apps')
+		} catch (error) {
+			userLogger.error(`Error getting saved apps: ${error}`)
+			return []
+		}
+	})
+
+	ipcMain.handle('save-apps', async (_event, apps) => {
+		try {
+			store.set('appLauncher.apps', apps)
+			return true
+		} catch (error) {
+			userLogger.error(`Error saving apps: ${error}`)
+			return false
+		}
 	})
 }

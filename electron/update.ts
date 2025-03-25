@@ -1,8 +1,8 @@
-import { autoUpdater } from 'electron-updater'
+import { Notification, nativeImage } from 'electron'
 import isDev from 'electron-is-dev'
-import ms from 'ms'
 import eLogger from 'electron-log'
-import { nativeImage, Notification } from 'electron'
+import { autoUpdater } from 'electron-updater'
+import ms from 'ms'
 import { getIconPath } from '../shared/getIconPath'
 
 export function update(win: Electron.BrowserWindow, app: Electron.App) {
@@ -26,7 +26,7 @@ export function update(win: Electron.BrowserWindow, app: Electron.App) {
 
 	autoUpdater.on('update-available', () => {
 		new Notification({
-			title: '📥 نسخه جدید ویجت فای (بی تایم) در دسترس قرار گرفت',
+			title: '📥 نسخه جدید ویجتی‌فای در دسترس قرار گرفت',
 			body: 'نسخه جدید در حال بارگیری و نصب است لطفا منتظر بمانید...',
 			subtitle: 'بروزرسانی',
 			icon: nativeImage.createFromPath(getIconPath()),

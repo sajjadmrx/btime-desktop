@@ -33,6 +33,9 @@
 			"suspicious": {
 				"noExplicitAny": "off",
 				"noArrayIndexKey": "off"
+			},
+			"correctness": {
+				"useExhaustiveDependencies": "off"
 			}
 		}
 	},

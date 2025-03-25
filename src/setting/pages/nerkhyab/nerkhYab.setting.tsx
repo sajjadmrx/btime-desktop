@@ -37,32 +37,31 @@ export function NerkhYabSetting() {
 			window.ipcRenderer.send('toggle-transparent', widgetKey.NerkhYab)
 		}
 
-		if (key === 'disableBackground') {
-			window.ipcRenderer.send('toggle-disableBackground', widgetKey.NerkhYab)
+		if (key === 'isBackgroundDisabled') {
+			window.ipcRenderer.send('toggle-isBackgroundDisabled', widgetKey.NerkhYab)
 		}
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.NerkhYab)
 		} else if (
-			!['transparentStatus', 'borderRadius', 'disableBackground'].includes(key)
+			!['transparentStatus', 'borderRadius', 'isBackgroundDisabled'].includes(
+				key,
+			)
 		) {
 			window.ipcRenderer.send('updated-setting', widgetKey.NerkhYab)
 		}
 	}
 
 	function applyChanges() {
-		window.store.set<widgetKey.NerkhYab, NerkhYabSettingStore>(
-			widgetKey.NerkhYab,
-			{
-				...setting,
-				alwaysOnTop: setting.alwaysOnTop,
-				enable: setting.enable,
-				transparentStatus: setting.transparentStatus,
-				bounds: window.store.get(widgetKey.NerkhYab).bounds,
-				currencies: setting.currencies,
-				borderRadius: setting.borderRadius,
-			},
-		)
+		window.store.set(widgetKey.NerkhYab, {
+			...setting,
+			alwaysOnTop: setting.alwaysOnTop,
+			enable: setting.enable,
+			transparentStatus: setting.transparentStatus,
+			bounds: window.store.get(widgetKey.NerkhYab).bounds,
+			currencies: setting.currencies,
+			borderRadius: setting.borderRadius,
+		})
 	}
 	if (!setting) return null
 
@@ -134,9 +133,12 @@ export function NerkhYabSetting() {
 						/>
 						<Checkbox
 							ripple={true}
-							defaultChecked={setting.disableBackground}
+							defaultChecked={setting.isBackgroundDisabled}
 							onClick={() =>
-								setSettingValue('disableBackground', !setting.disableBackground)
+								setSettingValue(
+									'isBackgroundDisabled',
+									!setting.isBackgroundDisabled,
+								)
 							}
 							label={
 								<div>

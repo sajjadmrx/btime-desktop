@@ -13,7 +13,7 @@ function App() {
 	)
 
 	const [isTransparent, setIsTransparent] = useState(false)
-	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(false)
+	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(true)
 
 	useEffect(() => {
 		const handleColorSchemeChange = (e: MediaQueryListEvent) => {
@@ -71,40 +71,40 @@ function App() {
 				'change',
 				handleColorSchemeChange,
 			)
+			observer.disconnect()
+			observerBackground.disconnect()
 		}
 	}, [])
 
-	const {
-		data: weather,
-		error,
-		isLoading,
-		isSuccess,
-	} = useGetWeatherByLatLon(weatherStore.city.lat, weatherStore.city.lon, {
-		refetchInterval: ms('2h'),
-	})
+	const { data: weather, isSuccess } = useGetWeatherByLatLon(
+		weatherStore.city?.lat,
+		weatherStore.city?.lon,
+		{
+			refetchInterval: ms('2h'),
+		},
+	)
 
-	if (isLoading) {
-		return (
-			<div className="flex h-full flex-col items-center justify-center w-full  text-gray-600 dark:text-[#eee] font-light text-center  rounded-md p-2">
-				لطفا صبر کنید ...
-			</div>
-		)
-	}
+	const WeatherSkeleton = () => (
+		<div className="flex flex-col items-center justify-center w-full h-64 animate-pulse">
+			<div className="w-32 h-6 mb-4 rounded-md bg-gray-200/60 dark:bg-gray-700/40"></div>
 
-	if (error) {
-		return (
-			<div className="flex flex-col overflow-hidden items-center justify-center h-full w-full text-gray-600 dark:text-[#eee] font-light text-center  rounded-md p-2">
-				خطا در دریافت اطلاعات آب و هوا
+			<div className="w-20 h-12 mb-2 rounded-md bg-gray-200/60 dark:bg-gray-700/40"></div>
+
+			<div className="w-24 h-6 mb-4 rounded-md bg-gray-200/60 dark:bg-gray-700/40"></div>
+
+			<div className="flex space-x-4 rtl:space-x-reverse">
+				<div className="w-16 h-5 rounded-md bg-gray-200/60 dark:bg-gray-700/40"></div>
+				<div className="w-16 h-5 rounded-md bg-gray-200/60 dark:bg-gray-700/40"></div>
 			</div>
-		)
-	}
+		</div>
+	)
 
 	return (
 		<div className="w-screen h-screen overflow-hidden">
 			<div className="h-full px-0 moveable">
 				<div className="flex flex-col items-center justify-around h-full">
 					<div
-						className="flex flex-col items-center justify-between w-full h-64 px-2 py-8 "
+						className="flex flex-col items-center justify-between w-full h-64 px-2 py-8"
 						dir="rtl"
 					>
 						{weather && isSuccess ? (
@@ -116,9 +116,7 @@ function App() {
 								isBackgroundActive={isBackgroundActive}
 							/>
 						) : weatherStore.city ? (
-							<div className="flex flex-col items-center justify-center w-full h-64 text-gray-600 dark:text-[#eee] font-light text-center  rounded-md p-2">
-								لطفا صبر کنید ...
-							</div>
+							<WeatherSkeleton />
 						) : (
 							<div className="flex flex-col items-center justify-center w-full h-64 not-moveable">
 								<div className="text-gray-600 dark:text-[#eee] font-light text-center dark:bg-gray-800/10 bg-gray-200/10 rounded-md p-2">

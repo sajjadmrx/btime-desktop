@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import electronStore from 'electron-store'
 import { widgetKey } from '../shared/widgetKey'
+import type { FetchedCurrency } from '../src/api/api'
 
 export interface windowSettings {
 	bounds: {
@@ -16,7 +17,7 @@ export interface windowSettings {
 	borderRadius: number
 	alwaysOnTop: boolean
 	transparentStatus: boolean
-	disableBackground: boolean
+	isBackgroundDisabled: boolean
 	enable: boolean
 	html: string
 }
@@ -43,6 +44,8 @@ export interface WeatherSettingStore extends windowSettings {
 	}
 	stateColor: boolean
 }
+
+export interface DamDastiSettingStore extends windowSettings {}
 
 export interface AnalogClockASettingStore {
 	timzones: {
@@ -77,12 +80,14 @@ export interface MainSettingStore {
 }
 export type Theme = 'system' | 'light' | 'dark'
 
-export type StoreKey = {
+export interface StoreKey {
 	[widgetKey.BTime]: BtimeSettingStore
 	[widgetKey.NerkhYab]: NerkhYabSettingStore
 	[widgetKey.ArzChand]: ArzChandSettingStore
 	[widgetKey.Weather]: WeatherSettingStore
 	[widgetKey.Clock]: ClockSettingStore
+	[widgetKey.DamDasti]: DamDastiSettingStore
+	[key: `currency:${string}`]: FetchedCurrency
 	main: MainSettingStore
 }
 
@@ -105,7 +110,7 @@ const storeDefaults: StoreKey = {
 		borderRadius: 28,
 		alwaysOnTop: false,
 		transparentStatus: false,
-		disableBackground: false,
+		isBackgroundDisabled: false,
 		html: 'time.html',
 	},
 	NerkhYab: {
@@ -121,7 +126,7 @@ const storeDefaults: StoreKey = {
 		borderRadius: 28,
 		alwaysOnTop: false,
 		transparentStatus: false,
-		disableBackground: false,
+		isBackgroundDisabled: false,
 		html: 'rate.html',
 		currencies: ['usd'],
 	},
@@ -140,7 +145,7 @@ const storeDefaults: StoreKey = {
 		borderRadius: 28,
 		alwaysOnTop: false,
 		transparentStatus: false,
-		disableBackground: false,
+		isBackgroundDisabled: false,
 		html: 'arzchand.html',
 		currencies: ['usd', 'eur'],
 		template: 'classic',
@@ -158,7 +163,7 @@ const storeDefaults: StoreKey = {
 		borderRadius: 28,
 		alwaysOnTop: false,
 		transparentStatus: false,
-		disableBackground: false,
+		isBackgroundDisabled: false,
 		city: null,
 		stateColor: true,
 		html: 'weather.html',
@@ -196,8 +201,24 @@ const storeDefaults: StoreKey = {
 			},
 		},
 		transparentStatus: false,
-		disableBackground: false,
+		isBackgroundDisabled: false,
 		html: 'clock.html',
+	},
+	DamDasti: {
+		alwaysOnTop: false,
+		borderRadius: 12,
+		bounds: {
+			width: 217,
+			height: 180,
+			x: 0,
+			y: 0,
+			minWidth: 150,
+			minHeight: 76,
+		},
+		enable: false,
+		html: 'dam-dasti.html',
+		isBackgroundDisabled: false,
+		transparentStatus: false,
 	},
 	main: {
 		userId: randomUUID(),
@@ -214,7 +235,6 @@ export const store = new electronStore<StoreKey>({
 	accessPropertiesByDotNotation: true,
 	name: 'widgetify-app',
 })
-
 const clockWidgetStoreData = store.get(widgetKey.Clock)
 
 if (typeof clockWidgetStoreData.analogA === 'undefined') {

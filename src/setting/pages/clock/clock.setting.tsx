@@ -68,21 +68,23 @@ export function ClockSetting() {
 			window.ipcRenderer.send('toggle-transparent', widgetKey.Clock)
 		}
 
-		if (key === 'disableBackground') {
-			window.ipcRenderer.send('toggle-disableBackground', widgetKey.Clock)
+		if (key === 'isBackgroundDisabled') {
+			window.ipcRenderer.send('toggle-isBackgroundDisabled', widgetKey.Clock)
 		}
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.Clock)
 		} else if (
-			!['transparentStatus', 'borderRadius', 'disableBackground'].includes(key)
+			!['transparentStatus', 'borderRadius', 'isBackgroundDisabled'].includes(
+				key,
+			)
 		) {
 			window.ipcRenderer.send('updated-setting', widgetKey.Clock)
 		}
 	}
 
 	function applyChanges() {
-		window.store.set<widgetKey.Clock, ClockSettingStore>(widgetKey.Clock, {
+		window.store.set(widgetKey.Clock, {
 			...setting,
 			alwaysOnTop: setting.alwaysOnTop,
 			enable: setting.enable,
@@ -162,9 +164,12 @@ export function ClockSetting() {
 						/>
 						<Checkbox
 							ripple={true}
-							defaultChecked={setting.disableBackground}
+							defaultChecked={setting.isBackgroundDisabled}
 							onClick={() =>
-								setSettingValue('disableBackground', !setting.disableBackground)
+								setSettingValue(
+									'isBackgroundDisabled',
+									!setting.isBackgroundDisabled,
+								)
 							}
 							label={
 								<div>

@@ -61,6 +61,7 @@ async function onAppReady() {
 	const arzChandStore = store.get(widgetKey.ArzChand)
 	const weatherStore = store.get(widgetKey.Weather)
 	const clockStore = store.get(widgetKey.Clock)
+	const damDasti = store.get(widgetKey.DamDasti)
 	const moveable = store.get('main').moveable
 	// Btime widget
 	if (btimeStore.enable) {
@@ -184,6 +185,29 @@ async function onAppReady() {
 		}
 	}
 
+	if (damDasti.enable) {
+		const damdasti = await createWindow({
+			height: damDasti.bounds.height,
+			width: damDasti.bounds.width,
+			minHeight: damDasti.bounds.minHeight,
+			minWidth: damDasti.bounds.minWidth,
+			maxHeight: 1000,
+			maxWidth: 1000,
+			x: damDasti.bounds.x,
+			y: damDasti.bounds.y,
+			title: widgetKey.DamDasti,
+			html: damDasti.html,
+			devTools: true,
+			alwaysOnTop: damDasti.alwaysOnTop,
+			reziable: true,
+			saveBounds: true,
+			moveable,
+		})
+
+		if (!mainWin) {
+			mainWin = damdasti
+		}
+	}
 	if (!mainWin) {
 		mainWin = await createSettingWindow()
 	}
@@ -254,7 +278,7 @@ function createTray() {
 function getContextMenu() {
 	const contextMenu = Menu.buildFromTemplate([
 		{
-			label: `Widgetify(B Time) | ${app.getVersion()}`,
+			label: `Widgetify | ${app.getVersion()}`,
 			enabled: false,
 			icon: icon.resize({ height: 19, width: 19 }),
 		},

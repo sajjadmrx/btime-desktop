@@ -1,8 +1,16 @@
 import { Tooltip } from '@material-tailwind/react'
 import type moment from 'jalali-moment'
+import { BsCalendarEvent, BsInfoCircle } from 'react-icons/bs'
+import { FaCalendarAlt, FaExclamationCircle } from 'react-icons/fa'
+import { IoCalendarOutline } from 'react-icons/io5'
 import type { FetchedAllEvents } from 'src/api/api.interface'
 
-import { getGregorianEvents, getHijriEvents, getShamsiEvents } from './utils'
+import {
+	convertShamsiToHijri,
+	getGregorianEvents,
+	getHijriEvents,
+	getShamsiEvents,
+} from './utils'
 
 interface JalaliCalendarProp {
 	isTransparent: boolean
@@ -86,7 +94,7 @@ function DayComponent({
 	const getTextColorClass = () => {
 		if (isTransparent) {
 			return isHolidayDay
-				? 'dark:text-red-400 text-red-300 drop-shadow-md'
+				? 'dark:text-red-400 text-red-900 drop-shadow-md'
 				: 'dark:text-gray-200 text-gray-200 drop-shadow-md'
 		}
 
@@ -106,9 +114,7 @@ function DayComponent({
 	const getBackgroundClass = () => {
 		if (!isCurrentDay) {
 			if (isTransparent) {
-				return isHolidayDay
-					? 'dark:bg-red-800/10 bg-red-900/40 backdrop-blur-sm'
-					: ''
+				return isHolidayDay ? 'dark:bg-red-800/10 bg-red-400/40 ' : ''
 			}
 
 			if (!isBackgroundActive) {
@@ -145,23 +151,22 @@ function DayComponent({
 		return 'hover:bg-gray-200 dark:hover:bg-gray-700'
 	}
 
-	const dayEvents = [
-		...getShamsiEvents(events, cellDate),
-		...getHijriEvents(events, cellDate),
-		...getGregorianEvents(events, cellDate),
-	]
+	const dayEvents = [...getShamsiEvents(events, cellDate)]
 	const dayEventsList = dayEvents.length ? dayEvents : []
 
 	const getTooltipClass = () => {
-		if (isTransparent) {
-			return 'backdrop-blur-md bg-black/40 dark:bg-black/60 text-gray-100'
-		}
-		return 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-lg'
+		return 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-xl border-gray-200/30 dark:border-gray-700/70'
 	}
 
 	function DayEvents() {
 		return dayEventsList.map((eventInfo, index) => (
-			<li key={index} className="max-w-full truncate">
+			<li
+				key={index}
+				className="flex font-[Vazir] items-center max-w-full space-x-1 space-x-reverse truncate"
+			>
+				<div
+					className={`h-2 w-2 rounded-full flex-shrink-0 ${eventInfo.isHoliday ? 'bg-red-500' : 'bg-blue-400'}`}
+				></div>
 				<span
 					className={`whitespace-break-spaces font-[Vazir] text-xs ${
 						eventInfo.isHoliday
@@ -178,24 +183,61 @@ function DayComponent({
 	return (
 		<>
 			<Tooltip
-				className={`rounded-lg ${getTooltipClass()} w-52 min-h-2 truncate`}
+				className={`rounded-lg ${getTooltipClass()} w-64 min-h-2 p-0 overflow-hidden border shadow-lg`}
 				content={
-					<div className="flex flex-col items-center justify-between w-full py-1">
-						<ul className="w-full px-3 text-xs" dir="rtl">
-							{dayEventsList.length ? (
-								<DayEvents />
-							) : (
-								<li className="text-center font-[Vazir] font-light text-xs dark:text-gray-300 text-gray-700">
-									مناسبتی ثبت نشده.
-								</li>
-							)}
-						</ul>
+					<div className="flex flex-col w-full" dir="rtl">
+						{/* Date Information Header */}
+						<div className="w-full p-2 border-b bg-black/10 dark:bg-white/5 border-gray-200/10 dark:border-gray-700/50 font-[Vazir]">
+							<div
+								className="flex flex-row items-center justify-between"
+								dir="rtl"
+							>
+								<div className="flex items-center gap-2">
+									<IoCalendarOutline className="w-4 h-4 text-blue-400" />
+									<span className="text-xs font-semibold">
+										{cellDate.format('jDD jMMMM jYYYY')}
+									</span>
+								</div>
+								<div
+									className={`text-sm font-bold rounded-full h-7 w-7 flex items-center justify-center
+									${
+										isHolidayDay
+											? 'bg-red-500/20 text-red-500 ring-1 ring-red-500/30'
+											: 'bg-blue-500/10 text-blue-500 ring-1 ring-blue-500/20'
+									}`}
+								>
+									{day}
+								</div>
+							</div>
+						</div>
+
+						{/* Events List */}
+						<div className="px-3 py-2">
+							<h3 className="text-xs font-medium mb-2 flex items-center font-[Vazir] gap-1.5">
+								<BsCalendarEvent className="w-3.5 h-3.5" />
+								مناسبت‌های روز
+							</h3>
+							<ul
+								className="w-full space-y-1.5 max-h-48 overflow-y-auto"
+								dir="rtl"
+							>
+								{dayEventsList.length ? (
+									<DayEvents />
+								) : (
+									<li className="text-center font-[Vazir] font-light text-xs dark:text-gray-300 text-gray-700 py-1 flex items-center justify-center gap-1">
+										<BsInfoCircle className="w-3 h-3 text-gray-400" />
+										مناسبتی ثبت نشده.
+									</li>
+								)}
+							</ul>
+						</div>
 					</div>
 				}
 				animate={{
 					mount: { scale: 1, y: 0 },
 					unmount: { scale: 0, y: 15 },
 				}}
+				placement="bottom"
 			>
 				<div
 					className={`text-center h-6 w-6 flex items-center justify-center
@@ -229,7 +271,7 @@ function WeekDayComponent({
 	const getWeekdayClass = () => {
 		if (isTransparent) {
 			return isFriday
-				? 'dark:text-red-400 text-red-300 drop-shadow-sm'
+				? 'dark:text-red-400 text-red-400'
 				: 'dark:text-white text-gray-200 drop-shadow-sm'
 		}
 
