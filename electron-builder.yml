@@ -50,7 +50,7 @@ mac:
 nsis:
   perMachine: true
   oneClick: false
-  installerIcon: "public/icons/icon.ico"
+  installerIcon: "public/icons/app/win/icon.ico"
   deleteAppDataOnUninstall: true
   runAfterFinish: true
   createDesktopShortcut: true
