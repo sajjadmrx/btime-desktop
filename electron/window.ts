@@ -3,6 +3,7 @@ import path from 'node:path'
 import { BrowserWindow, screen } from 'electron'
 import ms from 'ms'
 import { getIconPath } from '../shared/getIconPath'
+import { userLogger } from '../shared/logger'
 import { widgetKey } from '../shared/widgetKey'
 import { store, type windowSettings } from './store'
 
@@ -27,6 +28,12 @@ export interface Window {
 export async function createWindow(payload: Window) {
 	const isValidate = isPointWithinDisplay(payload.x, payload.y)
 	if (!isValidate) {
+		userLogger.error(
+			'Invalid point for window',
+			payload.title,
+			payload.x,
+			payload.y,
+		)
 		const displays = screen.getAllDisplays()
 		const { x, y } = displays[0].workArea
 		payload.x = x
@@ -93,9 +100,8 @@ export async function createWindow(payload: Window) {
 	}
 
 	if (payload.saveBounds) {
-		onMoved(win)
-		onResized(win)
 		onClose(win)
+		onMoved(win)
 	}
 
 	return win
@@ -103,17 +109,17 @@ export async function createWindow(payload: Window) {
 
 export function isPointWithinDisplay(x: number, y: number) {
 	const allDisplays = screen.getAllDisplays()
-	let isValdiate = false
+	let isValidate = false
 
 	for (const display of allDisplays) {
 		const { x: dx, y: dy, width, height } = display.workArea
 		if (x >= dx && x < dx + width && y >= dy && y < dy + height) {
-			isValdiate = true
+			isValidate = true
 			break
 		}
 	}
 
-	return isValdiate
+	return isValidate
 }
 
 export function onMoved(win: BrowserWindow) {
@@ -157,18 +163,11 @@ export function onMoved(win: BrowserWindow) {
 		}
 	})
 }
-export function onResized(win: BrowserWindow) {
-	win.on('resize', () => {
-		if (win) {
-		}
-	})
-}
 
 function onClose(win: BrowserWindow) {
 	const saveWindowBounds = () => {
 		if (!win.isDestroyed()) {
 			const key = win.getTitle()
-			console.log('Saving window bounds on close for:', key)
 
 			try {
 				const currentSettings = store.get(
@@ -177,6 +176,14 @@ function onClose(win: BrowserWindow) {
 
 				const { x, y, width, height } = win.getBounds()
 
+				console.log(
+					'Saving window bounds on close for:',
+					widgetKey[key],
+					x,
+					y,
+					width,
+					height,
+				)
 				store.set(widgetKey[key], {
 					...currentSettings,
 					bounds: {
@@ -190,11 +197,11 @@ function onClose(win: BrowserWindow) {
 			} catch (error) {
 				console.error(`Error saving window bounds for ${key}:`, error)
 			}
+		} else {
+			console.error('Window is destroyed')
 		}
 	}
-
 	win.on('close', saveWindowBounds)
-
 	win.on('blur', saveWindowBounds)
 }
 

@@ -186,15 +186,15 @@ async function onAppReady() {
 	}
 
 	if (damDasti.enable) {
-		await createWindow({
-			height: clockStore.bounds.height,
-			width: clockStore.bounds.width,
-			minHeight: clockStore.bounds.minHeight,
-			minWidth: clockStore.bounds.minWidth,
+		const damdasti = await createWindow({
+			height: damDasti.bounds.height,
+			width: damDasti.bounds.width,
+			minHeight: damDasti.bounds.minHeight,
+			minWidth: damDasti.bounds.minWidth,
 			maxHeight: 1000,
 			maxWidth: 1000,
-			x: clockStore.bounds.x,
-			y: clockStore.bounds.y,
+			x: damDasti.bounds.x,
+			y: damDasti.bounds.y,
 			title: widgetKey.DamDasti,
 			html: damDasti.html,
 			devTools: true,
@@ -203,6 +203,10 @@ async function onAppReady() {
 			saveBounds: true,
 			moveable,
 		})
+
+		if (!mainWin) {
+			mainWin = damdasti
+		}
 	}
 	if (!mainWin) {
 		mainWin = await createSettingWindow()
@@ -274,7 +278,7 @@ function createTray() {
 function getContextMenu() {
 	const contextMenu = Menu.buildFromTemplate([
 		{
-			label: `Widgetify(B Time) | ${app.getVersion()}`,
+			label: `Widgetify | ${app.getVersion()}`,
 			enabled: false,
 			icon: icon.resize({ height: 19, width: 19 }),
 		},
