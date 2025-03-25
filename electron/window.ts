@@ -25,7 +25,6 @@ export interface Window {
 	closable?: boolean
 }
 export async function createWindow(payload: Window) {
-	//validate x and y
 	const isValidate = isPointWithinDisplay(payload.x, payload.y)
 	if (!isValidate) {
 		const displays = screen.getAllDisplays()
@@ -96,6 +95,7 @@ export async function createWindow(payload: Window) {
 	if (payload.saveBounds) {
 		onMoved(win)
 		onResized(win)
+		onClose(win)
 	}
 
 	return win
@@ -122,7 +122,6 @@ export function onMoved(win: BrowserWindow) {
 			let { x, y } = win.getBounds()
 			const displays = screen.getAllDisplays()
 
-			// Find the display the window is currently on
 			const currentDisplay =
 				displays.find((display) => {
 					const { x: dx, y: dy, width, height } = display.workArea
@@ -131,7 +130,6 @@ export function onMoved(win: BrowserWindow) {
 
 			const { width, height } = currentDisplay.workArea
 
-			// Check if the window is out of bounds and adjust the position
 			if (x < currentDisplay.workArea.x) {
 				x = currentDisplay.workArea.x
 			} else if (
@@ -150,26 +148,11 @@ export function onMoved(win: BrowserWindow) {
 				y = currentDisplay.workArea.y + height - win.getBounds().height
 			}
 
-			// Set the new bounds if adjustments were made
 			win.setBounds({
 				x,
 				y,
 				width: win.getBounds().width,
 				height: win.getBounds().height,
-			})
-
-			// Save the new position
-			const key = win.getTitle()
-
-			store.set(widgetKey[key], {
-				...store.get(widgetKey[key]),
-				bounds: {
-					...store.get(widgetKey[key]).bounds,
-					x: win.getBounds().x,
-					y: win.getBounds().y,
-					width: win.getBounds().width,
-					height: win.getBounds().height,
-				},
 			})
 		}
 	})
@@ -177,22 +160,42 @@ export function onMoved(win: BrowserWindow) {
 export function onResized(win: BrowserWindow) {
 	win.on('resize', () => {
 		if (win) {
-			const { width, height } = win.getBounds()
-			const key = win.getTitle()
-			console.log(store.get(widgetKey[key]))
-			console.log(`Saving ${key} bounds: ${width}x${height}`)
-			store.set(widgetKey[key], {
-				...store.get(widgetKey[key]),
-				bounds: {
-					...store.get(widgetKey[key]).bounds,
-					x: win.getBounds().x,
-					y: win.getBounds().y,
-					width: win.getBounds().width,
-					height: win.getBounds().height,
-				},
-			})
 		}
 	})
+}
+
+function onClose(win: BrowserWindow) {
+	const saveWindowBounds = () => {
+		if (!win.isDestroyed()) {
+			const key = win.getTitle()
+			console.log('Saving window bounds on close for:', key)
+
+			try {
+				const currentSettings = store.get(
+					widgetKey[key],
+				) as unknown as windowSettings
+
+				const { x, y, width, height } = win.getBounds()
+
+				store.set(widgetKey[key], {
+					...currentSettings,
+					bounds: {
+						...currentSettings.bounds,
+						x,
+						y,
+						width,
+						height,
+					},
+				})
+			} catch (error) {
+				console.error(`Error saving window bounds for ${key}:`, error)
+			}
+		}
+	}
+
+	win.on('close', saveWindowBounds)
+
+	win.on('blur', saveWindowBounds)
 }
 
 export async function createSettingWindow() {
