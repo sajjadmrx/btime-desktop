@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Widgetify Parent</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-app-region: no-drag;
+            display: flex;
+            flex-direction: column;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .drag-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: move;
+            -webkit-app-region: drag;
+            /* Only this element is draggable */
+            opacity: 0.6;
+            transition: opacity 0.2s, transform 0.2s;
+            z-index: 1000;
+        }
+
+        .drag-icon:hover {
+            opacity: 0.9;
+            transform: scale(1.1);
+        }
+
+        .drag-icon::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            background-color: rgba(116, 177, 190, 0.8);
+            /* Using the previous title color */
+            border-radius: 50%;
+        }
+
+        /* Dark theme adjustments */
+        body.dark {
+            background-color: rgba(20, 20, 30, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark .container {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark .drag-icon {
+            background-color: rgba(40, 42, 54, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="widgets-container">
+        <div class="drag-icon" title="Drag to move"></div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const theme = window.api?.getTheme?.() || 'light';
+            document.body.classList.add(theme);
+        });
+    </script>
+</body>
+
+</html>

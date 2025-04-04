@@ -74,6 +74,7 @@ export interface MainSettingStore {
 	startup: boolean
 	theme: Theme
 	moveable: boolean
+	useParentWindowMode: boolean
 	currentVersion: string
 	enableAnalytics: boolean
 	userId: string
@@ -226,6 +227,7 @@ const storeDefaults: StoreKey = {
 		startup: true,
 		theme: 'light',
 		moveable: true,
+		useParentWindowMode: true,
 		currentVersion: null,
 	},
 }
