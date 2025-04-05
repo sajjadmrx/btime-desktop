@@ -5,85 +5,63 @@ import { useGetYoutubeProfile } from '../api/hooks/channel/youtube-profile.hook'
 import { CountUpAnimation } from '../hooks/useCountAnimation'
 import { formatSubscribeCount } from '../utils/format'
 
-function App() {
+const useUIStateObserver = () => {
 	const [isTransparent, setIsTransparent] = useState<boolean>(false)
-	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(false)
-	const [channelName, setChannelName] = useState<string>('')
-	const [subscriberFormat, setSubscriberFormat] = useState<'short' | 'full'>(
-		'short',
-	)
-
-	const handleSettingsUpdate = useCallback(() => {
-		const settings = window.store.get(widgetKey.SubShomaar)
-		if (settings?.channelName) {
-			if (settings?.channelName !== channelName) {
-				setChannelName(settings.channelName)
-			}
-			setSubscriberFormat(settings?.subscriberFormat || 'short')
-		}
-	}, [channelName])
+	const [isBackgroundActive, setIsBackgroundActive] = useState<boolean>(false)
 
 	useEffect(() => {
-		const subShomaarSettings = window.store.get(widgetKey.SubShomaar)
-		if (subShomaarSettings?.channelName) {
-			setChannelName(subShomaarSettings.channelName)
-		}
-		setSubscriberFormat(subShomaarSettings?.subscriberFormat || 'short')
+		const targetElement = document.querySelector('.h-screen')
+		if (!targetElement) return
 
-		window.ipcRenderer.on('updated-setting', handleSettingsUpdate)
+		const observer = new MutationObserver(() => {
+			setIsTransparent(targetElement.classList.contains('transparent-active'))
+			setIsBackgroundActive(targetElement.classList.contains('background'))
+		})
 
-		return () => {
-			window.ipcRenderer.removeAllListeners('updated-setting')
-		}
-	}, [handleSettingsUpdate])
+		observer.observe(targetElement, {
+			attributes: true,
+			attributeFilter: ['class'],
+		})
 
-	const { data: channelInfo, isLoading } = useGetYoutubeProfile(
-		channelName,
-		!!channelName,
-		ms('3m'),
-	)
-
-	const handleColorSchemeChange = useCallback((e) => {
-		document.documentElement.classList.remove('dark')
-		if (e.matches) {
-			document.documentElement.classList.add('dark')
-		}
+		return () => observer.disconnect()
 	}, [])
+
+	const getSubscribeCountStyle = useCallback(() => {
+		if (isTransparent) return 'text-gray-200/80 dark:text-gray-200'
+		if (!isBackgroundActive) return 'text-gray-300/90'
+		return 'text-gray-800 dark:text-gray-200/80'
+	}, [isTransparent, isBackgroundActive])
+
+	const getTextColor = useCallback(() => {
+		if (isTransparent) return 'text-gray-300/90 dark:text-gray-200'
+		if (!isBackgroundActive) return 'text-gray-300'
+		return 'text-gray-800 dark:text-gray-100/80'
+	}, [isTransparent, isBackgroundActive])
+
+	return {
+		isTransparent,
+		isBackgroundActive,
+		getSubscribeCountStyle,
+		getTextColor,
+	}
+}
+
+const useDarkMode = () => {
+	const handleColorSchemeChange = useCallback(
+		(e: MediaQueryListEvent | MediaQueryList) => {
+			document.documentElement.classList.remove('dark')
+			if (e.matches) {
+				document.documentElement.classList.add('dark')
+			}
+		},
+		[],
+	)
 
 	useEffect(() => {
 		const colorSchemeMediaQuery = window.matchMedia(
 			'(prefers-color-scheme: dark)',
 		)
-
 		handleColorSchemeChange(colorSchemeMediaQuery)
-
-		const observer = new MutationObserver(() => {
-			setIsTransparent(
-				document
-					.querySelector('.h-screen')
-					?.classList?.contains('transparent-active'),
-			)
-		})
-
-		const observerBackground = new MutationObserver(() => {
-			setBackgroundActive(
-				document.querySelector('.h-screen')?.classList?.contains('background'),
-			)
-		})
-
-		const targetElement = document.querySelector('.h-screen')
-		if (targetElement) {
-			observer.observe(targetElement, {
-				attributes: true,
-				attributeFilter: ['class'],
-			})
-
-			observerBackground.observe(targetElement, {
-				attributes: true,
-				attributeFilter: ['class'],
-			})
-		}
-
 		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
 
 		return () => {
@@ -91,10 +69,40 @@ function App() {
 				'change',
 				handleColorSchemeChange,
 			)
-			observer.disconnect()
-			observerBackground.disconnect()
 		}
-	}, [handleColorSchemeChange, channelInfo])
+	}, [handleColorSchemeChange])
+}
+
+function App() {
+	const [channelName, setChannelName] = useState<string>('')
+	const [subscriberFormat, setSubscriberFormat] = useState<'short' | 'full'>(
+		'short',
+	)
+	const { getSubscribeCountStyle, getTextColor } = useUIStateObserver()
+	useDarkMode()
+
+	useEffect(() => {
+		function handleSettingsUpdate() {
+			const subShomaarSettings = window.store.get(widgetKey.SubShomaar)
+			console.log('subShomaarSettings', subShomaarSettings)
+			if (subShomaarSettings?.channelName) {
+				setChannelName(subShomaarSettings.channelName)
+			}
+			setSubscriberFormat(subShomaarSettings?.subscriberFormat || 'short')
+		}
+
+		window.ipcRenderer.on('updated-setting', handleSettingsUpdate)
+		handleSettingsUpdate()
+		return () => {
+			window.ipcRenderer.removeAllListeners('updated-setting')
+		}
+	}, [])
+
+	const { data: channelInfo, isLoading } = useGetYoutubeProfile(
+		channelName,
+		!!channelName,
+		ms('3m'),
+	)
 
 	const formattedSubscriberCount = useMemo(() => {
 		if (!channelInfo?.isValid) return ''
@@ -104,30 +112,6 @@ function App() {
 			<CountUpAnimation end={channelInfo.subscribers} duration={1500} />
 		)
 	}, [subscriberFormat, channelInfo?.subscribers, channelInfo?.isValid])
-
-	const getSubscribeCountStyle = () => {
-		if (isTransparent) {
-			return 'text-gray-200/80 dark:text-gray-200'
-		}
-
-		if (!isBackgroundActive) {
-			return 'text-gray-300/90'
-		}
-
-		return 'text-gray-800 dark:text-gray-200/80'
-	}
-
-	const getTextColor = () => {
-		if (isTransparent) {
-			return 'text-gray-300/90 dark:text-gray-200'
-		}
-
-		if (!isBackgroundActive) {
-			return 'text-gray-300'
-		}
-
-		return 'text-gray-800 dark:text-gray-100/80'
-	}
 
 	return (
 		<div className="flex flex-col w-screen h-screen p-4 overflow-hidden transition-colors duration-300 moveable">

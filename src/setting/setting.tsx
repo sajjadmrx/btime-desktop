@@ -235,7 +235,11 @@ function App() {
 							</TabsHeader>
 							<TabsBody className="w-screen">
 								{TAB_DATA.map(({ value, element }) => (
-									<TabPanel key={value} value={value} className="h-screen">
+									<TabPanel
+										key={value}
+										value={value}
+										className="h-screen pb-10"
+									>
 										{element}
 									</TabPanel>
 								))}
