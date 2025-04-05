@@ -21,7 +21,7 @@ import {
 	HiSun,
 	HiUserGroup,
 } from 'react-icons/hi2'
-import { TbAppsFilled } from 'react-icons/tb'
+import { TbAppsFilled, TbMessageCircle } from 'react-icons/tb'
 import UpdateModal from './components/updateModal'
 import { AboutUs } from './pages/about-us/aboutUs'
 import { ArzChandSetting } from './pages/arzChand/arzChand.setting'
@@ -30,6 +30,7 @@ import { ClockSetting } from './pages/clock/clock.setting'
 import { DamDastiSetting } from './pages/dam_dasti/dam_dasti.setting'
 import { NerkhYabSetting } from './pages/nerkhyab/nerkhYab.setting'
 import { AppSetting } from './pages/setting/app.setting'
+import { SubShomaarSetting } from './pages/sub-shomaar/sub-shomaar.setting'
 import { WeatherSetting } from './pages/weather/weather.setting'
 
 const queryClient = new QueryClient()
@@ -71,6 +72,12 @@ const TAB_DATA = [
 		value: 'damDasti',
 		icon: <TbAppsFilled className="size-5" />,
 		element: <DamDastiSetting />,
+	},
+	{
+		label: 'ساب‌شمار',
+		value: 'subShomaar',
+		icon: <TbMessageCircle className="size-5" />,
+		element: <SubShomaarSetting />,
 	},
 	{
 		label: 'تنظیمات کلی',

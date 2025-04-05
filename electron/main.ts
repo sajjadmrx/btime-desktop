@@ -73,6 +73,7 @@ async function onAppReady() {
 	const weatherStore = store.get(widgetKey.Weather)
 	const clockStore = store.get(widgetKey.Clock)
 	const damDasti = store.get(widgetKey.DamDasti)
+	const subShomaar = store.get(widgetKey.SubShomaar)
 
 	// Btime widget
 	if (btimeStore.enable) {
@@ -240,6 +241,34 @@ async function onAppReady() {
 
 		if (!mainWin) {
 			mainWin = damdasti
+		}
+	}
+
+	if (subShomaar.enable) {
+		const subShomaarWindow = await createWindow({
+			height: subShomaar.bounds.height,
+			width: subShomaar.bounds.width,
+			minHeight: subShomaar.bounds.minHeight,
+			minWidth: subShomaar.bounds.minWidth,
+			maxHeight: 1000,
+			maxWidth: 1000,
+			x: subShomaar.bounds.x,
+			y: subShomaar.bounds.y,
+			title: widgetKey.SubShomaar,
+			html: subShomaar.html,
+			devTools: true,
+			alwaysOnTop: subShomaar.alwaysOnTop,
+			reziable: true,
+			saveBounds: true,
+			moveable,
+		})
+
+		if (useParentWindowMode && parentWin) {
+			addChildWindow(subShomaarWindow)
+		}
+
+		if (!mainWin) {
+			mainWin = subShomaarWindow
 		}
 	}
 

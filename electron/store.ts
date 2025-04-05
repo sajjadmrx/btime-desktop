@@ -46,7 +46,10 @@ export interface WeatherSettingStore extends windowSettings {
 }
 
 export interface DamDastiSettingStore extends windowSettings {}
-
+export interface SubShomaarSettingStore extends windowSettings {
+	channelName: string
+	subscriberFormat: 'short' | 'full'
+}
 export interface AnalogClockASettingStore {
 	timzones: {
 		label: string
@@ -88,6 +91,7 @@ export interface StoreKey {
 	[widgetKey.Weather]: WeatherSettingStore
 	[widgetKey.Clock]: ClockSettingStore
 	[widgetKey.DamDasti]: DamDastiSettingStore
+	[widgetKey.SubShomaar]: SubShomaarSettingStore
 	[key: `currency:${string}`]: FetchedCurrency
 	main: MainSettingStore
 }
@@ -229,6 +233,24 @@ const storeDefaults: StoreKey = {
 		moveable: true,
 		useParentWindowMode: true,
 		currentVersion: null,
+	},
+	SubShomaar: {
+		alwaysOnTop: false,
+		borderRadius: 12,
+		bounds: {
+			width: 217,
+			height: 180,
+			x: 0,
+			y: 0,
+			minWidth: 150,
+			minHeight: 76,
+		},
+		enable: false,
+		html: 'sub-shomaar.html',
+		isBackgroundDisabled: false,
+		channelName: null,
+		transparentStatus: false,
+		subscriberFormat: 'short',
 	},
 }
 

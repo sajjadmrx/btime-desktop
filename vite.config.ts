@@ -20,6 +20,7 @@ export default defineConfig(() => {
 					weather: path.join(__dirname, './html/weather.html'),
 					clock: path.join(__dirname, './html/clock.html'),
 					'dam-dasti': path.join(__dirname, './html/dam-dasti.html'),
+					'sub-shomaar': path.join(__dirname, './html/sub-shomaar.html'),
 					parent: path.join(__dirname, './html/parent.html'),
 				},
 			},
