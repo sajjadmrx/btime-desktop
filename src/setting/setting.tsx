@@ -1,6 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-
 import {
 	Tab,
 	TabPanel,
@@ -9,9 +6,9 @@ import {
 	TabsHeader,
 	Typography,
 } from '@material-tailwind/react'
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
+import { CgProfile } from 'react-icons/cg'
 import {
 	HiBanknotes,
 	HiCalendar,
@@ -21,7 +18,7 @@ import {
 	HiSun,
 	HiUserGroup,
 } from 'react-icons/hi2'
-import { TbAppsFilled, TbMessageCircle } from 'react-icons/tb'
+import { TbAppsFilled } from 'react-icons/tb'
 import UpdateModal from './components/updateModal'
 import { AboutUs } from './pages/about-us/aboutUs'
 import { ArzChandSetting } from './pages/arzChand/arzChand.setting'
@@ -35,71 +32,76 @@ import { WeatherSetting } from './pages/weather/weather.setting'
 
 const queryClient = new QueryClient()
 
-// Extract tab data to a separate constant
 const TAB_DATA = [
 	{
-		label: 'ویجت تاریخ',
+		label: 'تاریخ',
 		value: 'btime',
 		icon: <HiCalendar className="size-5" />,
 		element: <BtimeSetting />,
+		category: 'widgets',
 	},
 	{
-		label: 'ویجت نرخ یاب',
+		label: 'نرخ یاب',
 		value: 'currency',
 		icon: <HiCurrencyDollar className="size-5" />,
 		element: <NerkhYabSetting />,
+		category: 'widgets',
 	},
 	{
-		label: 'ویجت ارز چند؟',
+		label: 'ارز چند؟',
 		value: 'arzChand',
 		icon: <HiBanknotes className="size-5" />,
 		element: <ArzChandSetting />,
+		category: 'widgets',
 	},
 	{
-		label: 'ویجت آب و هوا',
+		label: 'آب و هوا',
 		value: 'weather',
 		icon: <HiSun className="size-5" />,
 		element: <WeatherSetting />,
+		category: 'widgets',
 	},
 	{
-		label: 'ویجت ساعت',
+		label: 'ساعت',
 		value: 'clock',
 		icon: <HiClock className="size-5" />,
 		element: <ClockSetting />,
+		category: 'widgets',
 	},
 	{
-		label: 'ویجت دم‌دستی',
+		label: 'دم‌دستی',
 		value: 'damDasti',
 		icon: <TbAppsFilled className="size-5" />,
 		element: <DamDastiSetting />,
+		category: 'widgets',
 	},
 	{
 		label: 'ساب‌شمار',
 		value: 'subShomaar',
-		icon: <TbMessageCircle className="size-5" />,
+		icon: <CgProfile className="size-5" />,
 		element: <SubShomaarSetting />,
+		category: 'widgets',
 	},
 	{
-		label: 'تنظیمات کلی',
+		label: 'تنظیمات',
 		value: 'setting',
 		icon: <HiCog6Tooth className="size-5" />,
 		element: <AppSetting />,
+		category: 'app',
 	},
 	{
 		label: 'درباره ما',
 		value: 'about',
 		icon: <HiUserGroup className="size-5" />,
 		element: <AboutUs />,
+		category: 'app',
 	},
 ]
 
-// Custom Tab Item component for better icon alignment
 const TabItem = ({ icon, label }) => (
-	<div className="flex flex-col items-center justify-center">
-		<div className="mb-1.5 text-center dark:text-gray-400  text-gray-600">
-			{icon}
-		</div>
-		<Typography className="font-[Vazir] font-normal text-xs dark:text-gray-400 text-gray-600 text-center">
+	<div className="flex items-center justify-start w-full gap-2">
+		<div className="text-gray-600 dark:text-gray-400">{icon}</div>
+		<Typography className="font-[Vazir] font-normal text-sm dark:text-gray-400 text-gray-600 text-right">
 			{label}
 		</Typography>
 	</div>
@@ -166,20 +168,48 @@ function App() {
 					<div className="flex flex-row h-screen pb-5" dir="rtl">
 						<Tabs value="btime" orientation="vertical">
 							<TabsHeader
-								className="w-36 not-moveable dark:bg-[#1d1d1d5b] rounded-none bg-white py-5 overflow-y-auto max-h-[calc(100vh-7px)] scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500"
+								className="w-36 not-moveable dark:bg-[#1d1d1d5b] rounded-none bg-white pb-2 overflow-y-auto max-h-[calc(100vh-7px)] scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500"
 								indicatorProps={{
 									className: 'bg-white dark:bg-[#1d1d1d]',
 								}}
 							>
-								{TAB_DATA.map(({ label, value, icon }) => (
-									<Tab
-										key={value}
-										value={value}
-										className="hover:bg-gray-100 transition-colors duration-200 rounded dark:hover:bg-[#1d1d1d] py-3"
-									>
-										<TabItem icon={icon} label={label} />
-									</Tab>
-								))}
+								<div className="px-3 mb-2">
+									<Typography className="mb-1  font-[Vazir] text-xs font-semibold text-gray-500 dark:text-gray-400">
+										ویجت ها
+									</Typography>
+									<div className="h-0.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+								</div>
+
+								{TAB_DATA.filter((tab) => tab.category === 'widgets').map(
+									({ label, value, icon }) => (
+										<Tab
+											key={value}
+											value={value}
+											className="hover:bg-gray-100 transition-colors duration-200 rounded dark:hover:bg-[#1d1d1d] py-2 px-3 flex justify-start"
+										>
+											<TabItem icon={icon} label={label} />
+										</Tab>
+									),
+								)}
+
+								<div className="px-3 mt-4 mb-2">
+									<Typography className="mb-1 font-[Vazir] text-xs font-semibold text-gray-500 dark:text-gray-400">
+										برنامه
+									</Typography>
+									<div className="h-0.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+								</div>
+
+								{TAB_DATA.filter((tab) => tab.category === 'app').map(
+									({ label, value, icon }) => (
+										<Tab
+											key={value}
+											value={value}
+											className="hover:bg-gray-100 transition-colors duration-200 rounded dark:hover:bg-[#1d1d1d] py-2 px-3 flex justify-start"
+										>
+											<TabItem icon={icon} label={label} />
+										</Tab>
+									),
+								)}
 							</TabsHeader>
 							<TabsBody className="w-screen">
 								{TAB_DATA.map(({ value, element }) => (
