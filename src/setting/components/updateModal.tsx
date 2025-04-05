@@ -222,7 +222,7 @@ const UpdateModal = ({ onClick }) => {
 					<h2 className="text-xl font-bold">بروز رسانی جدید نصب شد</h2>
 				</div>
 
-				<div className="dark:bg-gray-900/50 bg-gray-100/80 rounded-xl p-5 mt-4 max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-500 scrollbar-track-transparent hover:scrollbar-thumb-gray-500 dark:hover:scrollbar-thumb-gray-400">
+				<div className="dark:bg-gray-900/50 bg-gray-100/80 rounded-xl p-5 mt-4 max-h-[60vh] overflow-y-auto custom-scrollbar">
 					{updateDetails.map((update, index) => (
 						<UpdateList
 							key={index}

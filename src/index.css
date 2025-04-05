@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom scrollbar class for consistent styling */
+@layer components {
+  .custom-scrollbar {
+    @apply scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-800 scrollbar-track-transparent hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-700;
+  }
+}
+
 /* Thin */
 @font-face {
   font-family: 'Vazir';

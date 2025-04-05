@@ -190,7 +190,7 @@ function App() {
 					<div className="flex flex-row h-screen" dir="rtl">
 						<Tabs value="btime" orientation="vertical">
 							<TabsHeader
-								className="w-44 not-moveable dark:bg-[#1d1d1d5b] rounded-none bg-white pb-10 overflow-y-auto max-h-[calc(100vh-7px)] scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-800 scrollbar-track-transparent hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-700"
+								className="w-44 not-moveable dark:bg-[#1d1d1d5b] rounded-none bg-white pb-10 overflow-y-auto max-h-[calc(100vh-7px)] custom-scrollbar"
 								indicatorProps={{
 									className: 'bg-white dark:bg-[#1d1d1d]',
 								}}
