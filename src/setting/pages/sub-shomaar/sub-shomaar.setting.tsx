@@ -1,12 +1,21 @@
-import { Checkbox, Slider, Switch, Typography } from '@material-tailwind/react'
+import {
+	Button,
+	Checkbox,
+	Slider,
+	Switch,
+	Typography,
+} from '@material-tailwind/react'
 import type { SubShomaarSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
-import { useGetYoutubeProfile } from '../../../api/hooks/channel/youtube-profile.hook'
+import { getYoutubeProfile } from '../../../api/hooks/channel/youtube-profile.hook'
 import { formatSubscribeCount } from '../../../utils/format'
 
 export function SubShomaarSetting() {
 	const [setting, setSetting] = useState<SubShomaarSettingStore>(null)
+	const [inputChannelName, setInputChannelName] = useState<string>('')
+	const [isLoadingChannel, setIsLoadingChannel] = useState<boolean>(false)
+	const [channelInfo, setChannelInfo] = useState<any>(null)
 
 	useEffect(() => {
 		const SubShomaar: SubShomaarSettingStore = window.store.get(
@@ -14,14 +23,8 @@ export function SubShomaarSetting() {
 		)
 		SubShomaar.borderRadius = SubShomaar.borderRadius || 12
 		setSetting(SubShomaar)
+		setInputChannelName(SubShomaar.channelName || '')
 	}, [])
-
-	const { data: channelInfo, isLoading: isLoadingChannel } =
-		useGetYoutubeProfile(
-			setting?.channelName || '',
-			!!setting?.channelName,
-			null,
-		)
 
 	function setSettingValue<T extends keyof SubShomaarSettingStore>(
 		key: T,
@@ -66,14 +69,24 @@ export function SubShomaarSetting() {
 		})
 	}
 
-	async function onChangeChannelInput(
-		event: React.ChangeEvent<HTMLInputElement>,
-	) {
-		if (!event.target.value) return
-		const channelName = event.target.value.replace(/ /g, '').replace(/@/g, '')
+	async function handleChannelSearch() {
+		if (!inputChannelName) return
+		const channelName = inputChannelName.replace(/ /g, '').replace(/@/g, '')
 
-		setSettingValue('channelName', channelName)
-		applyChanges()
+		setIsLoadingChannel(true)
+		const channel = await getYoutubeProfile(channelName)
+		if (channel.isValid) {
+			setSettingValue('channelName', channelName)
+			applyChanges()
+			setChannelInfo(channel)
+			setIsLoadingChannel(false)
+		} else {
+			setChannelInfo({
+				...channel,
+				isValid: false,
+			})
+			setIsLoadingChannel(false)
+		}
 	}
 
 	async function onSliderChange(value: number) {
@@ -87,12 +100,18 @@ export function SubShomaarSetting() {
 		setSettingValue('borderRadius', fixedValue)
 	}
 
+	async function onChannelInputChange(
+		event: React.ChangeEvent<HTMLInputElement>,
+	) {
+		setInputChannelName(event.target.value)
+	}
+
 	if (!setting) return null
 	return (
 		<>
 			<div className="p-2 mt-2 h-80 not-moveable font-[Vazir] overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-500 dark:scrollbar-track-gray-800">
 				<div className="flex flex-col gap-3">
-					<div className="flex flex-row items-center justify-between w-full gap-2">
+					<div className="flex flex-row items-center justify بین w-full gap-2">
 						<Switch
 							id={'sub-shomaar-enable'}
 							color={'blue'}
@@ -221,7 +240,7 @@ export function SubShomaarSetting() {
 						/>
 					</div>
 
-					<div className="flex flex-col justify-between w-full ">
+					<div className="flex flex-col justify بین w-full ">
 						<label
 							htmlFor="border-radius-slider"
 							className="text-gray-600 dark:text-[#eee] font-semibold text-sm"
@@ -237,18 +256,24 @@ export function SubShomaarSetting() {
 									onSliderChange(Number(change.target.value))
 								}
 							/>
-							<div className="flex flex-row justify-between w-full text-gray-600 dark:text-[#eee]">
+							<div className="flex flex-row justify بین w-full text-gray-600 dark:text-[#eee]">
 								{setting.borderRadius}px
 							</div>
 						</div>
 					</div>
 
 					<div
-						className="flex flex-col items-center justify-between w-full gap-2"
+						className="flex flex-col items-center justify بین w-full gap-2"
 						dir="rtl"
 					>
+						<div className="text-gray-600 mb-2 dark:text-gray-300 text-sm p-2 bg-[#e8e6e6] dark:bg-[#24242459] rounded-lg mt-2 w-full">
+							<p className="text-sm font-light text-wrap">
+								این ویجت اطلاعات کانال یوتیوب (تعداد دنبال‌کنندگان و تصویر
+								پروفایل) را نمایش داده و هر ۳ دقیقه بروزرسانی می‌شود.
+							</p>
+						</div>
 						<div
-							className="flex flex-col justify-between w-full gap-2 not-moveable"
+							className="flex flex-col justify بین w-full gap-2 not-moveable"
 							dir="rtl"
 						>
 							<label
@@ -257,23 +282,47 @@ export function SubShomaarSetting() {
 							>
 								نام کانال
 							</label>
-							<input
-								type="text"
-								id="channel-input"
-								className="w-full bg-gray-100 dark:bg-[#3e3e3e] dark:text-[#eee] text-gray-600 text-[13px]
-                 font-[Vazir] rounded-md p-2
-                 outline-none border-2 border-gray-200 dark:border-[#444] transition-all duration-300
-                  focus:ring-0 focus:ring-blue-500 focus:border-blue-500
-                  placeholder-gray-600 focus:placeholder-gray-500
-                 "
-								defaultValue={setting.channelName}
-								onChange={onChangeChannelInput}
-								dir="ltr"
-								placeholder="نام کانال را وارد کنید..."
-							/>
+							<div className="flex flex-row items-center gap-2">
+								<input
+									type="text"
+									id="channel-input"
+									className="flex-1 bg-gray-100 dark:bg-[#3e3e3e] dark:text-[#eee] text-gray-600 text-[13px]
+									font-[Vazir] rounded-md p-2
+									outline-none border-2 border-gray-200 dark:border-[#444] transition-all duration-300
+									focus:ring-0 focus:ring-blue-500 focus:border-blue-500
+									placeholder-gray-600 focus:placeholder-gray-500
+									"
+									value={inputChannelName}
+									onChange={onChannelInputChange}
+									dir="ltr"
+									placeholder="نام کانال را وارد کنید..."
+								/>
+								<Button
+									size="md"
+									color="blue"
+									className="min-w-[90px] flex items-center justify-center gap-1 font-[Vazir]"
+									onClick={handleChannelSearch}
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										strokeWidth={1.5}
+										stroke="currentColor"
+										className="w-4 h-4"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+										/>
+									</svg>
+									جستجو
+								</Button>
+							</div>
 						</div>
 						<div
-							className="flex flex-col items-center justify-between w-full mt-2"
+							className="flex flex-col items-center justify بین w-full mt-2"
 							dir="ltr"
 						>
 							{setting.channelName ? (
@@ -312,22 +361,11 @@ export function SubShomaarSetting() {
 										</div>
 									</div>
 								) : (
-									<div className="flex flex-row items-center justify-between w-full p-2 rounded-md bg-red-50 dark:bg-red-900/20">
+									<div
+										className="flex flex-row items-center w-full p-2 rounded-md bg-red-50 dark:bg-red-900/20"
+										dir="rtl"
+									>
 										<div className="flex items-center gap-1">
-											<svg
-												xmlns="http://www.w3.org/2000/svg"
-												fill="none"
-												viewBox="0 0 24 24"
-												strokeWidth={1.5}
-												stroke="currentColor"
-												className="w-4 h-4 text-red-500"
-											>
-												<path
-													strokeLinecap="round"
-													strokeLinejoin="round"
-													d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-												/>
-											</svg>
 											<span className="text-red-600 dark:text-red-400 text-[13px] font-[Vazir]">
 												کانال یافت نشد!
 											</span>
@@ -335,22 +373,8 @@ export function SubShomaarSetting() {
 									</div>
 								)
 							) : (
-								<div className="flex flex-row items-center justify-between w-full text-gray-500">
+								<div className="flex flex-row items-center justify بین w-full text-gray-500">
 									<div className="flex items-center gap-1">
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											fill="none"
-											viewBox="0 0 24 24"
-											strokeWidth={1.5}
-											stroke="currentColor"
-											className="w-4 h-4"
-										>
-											<path
-												strokeLinecap="round"
-												strokeLinejoin="round"
-												d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"
-											/>
-										</svg>
 										<span className="text-gray-600 dark:text-[#aaa] text-[12px] font-[Vazir]">
 											لطفا نام کانال یوتیوب را وارد کنید
 										</span>

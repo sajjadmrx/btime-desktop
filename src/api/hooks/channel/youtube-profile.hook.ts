@@ -34,7 +34,9 @@ export const useGetYoutubeProfile = (
 	})
 }
 
-async function getYoutubeProfile(channelName: string): Promise<ChannelInfo> {
+export async function getYoutubeProfile(
+	channelName: string,
+): Promise<ChannelInfo> {
 	try {
 		const client = await getMainClient()
 		const { data } = await client.get<ChannelInfo>(
@@ -46,7 +48,6 @@ async function getYoutubeProfile(channelName: string): Promise<ChannelInfo> {
 			isValid: true,
 		}
 	} catch (error) {
-		// If the API returns an error, the channel is not valid
 		return {
 			name: channelName,
 			subscribers: 0,
