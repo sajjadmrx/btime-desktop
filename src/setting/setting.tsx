@@ -6,7 +6,11 @@ import {
 	TabsHeader,
 	Typography,
 } from '@material-tailwind/react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import {
+	AnyUseBaseQueryOptions,
+	QueryClient,
+	QueryClientProvider,
+} from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { CgProfile } from 'react-icons/cg'
 import {
@@ -20,7 +24,6 @@ import {
 	HiUserGroup,
 } from 'react-icons/hi2'
 import { TbAppsFilled } from 'react-icons/tb'
-import { AuthProvider } from '../context/auth.context'
 import UpdateModal from './components/updateModal'
 import { AboutUs } from './pages/about-us/aboutUs'
 import { AccountSetting } from './pages/account/account.setting'
@@ -79,7 +82,7 @@ const TAB_DATA = [
 		category: 'widgets',
 	},
 	{
-		label: 'ساب‌شمار',
+		label: 'ساب‌شمارش',
 		value: 'subShomaar',
 		icon: <CgProfile className="size-5" />,
 		element: <SubShomaarSetting />,
@@ -139,6 +142,15 @@ function App() {
 
 		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
 
+		window.addEventListener('open-setting', (event: any) => {
+			const page = event.detail.page
+			const tab = TAB_DATA.find((tab) => tab.value === page)
+			if (tab) {
+				//@ts-ignore
+				document.querySelector(`[data-value="${tab.value}"]`).click()
+			}
+		})
+
 		return () => {
 			colorSchemeMediaQuery.removeEventListener(
 				'change',
@@ -178,7 +190,7 @@ function App() {
 					<div className="flex flex-row h-screen" dir="rtl">
 						<Tabs value="btime" orientation="vertical">
 							<TabsHeader
-								className="w-36 not-moveable dark:bg-[#1d1d1d5b] rounded-none bg-white pb-10 overflow-y-auto max-h-[calc(100vh-7px)] scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500"
+								className="w-44 not-moveable dark:bg-[#1d1d1d5b] rounded-none bg-white pb-10 overflow-y-auto max-h-[calc(100vh-7px)] scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-800 scrollbar-track-transparent hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-700"
 								indicatorProps={{
 									className: 'bg-white dark:bg-[#1d1d1d]',
 								}}

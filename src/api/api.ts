@@ -155,14 +155,21 @@ export async function getMainApi(): Promise<string> {
 }
 
 export async function getMainClient(): Promise<AxiosInstance> {
+	const auth = await window.store.get('auth')
 	if (import.meta.env.VITE_API) {
 		return axios.create({
 			baseURL: import.meta.env.VITE_API,
+			headers: {
+				authorization: auth?.token ? `Bearer ${auth.token}` : undefined,
+			},
 		})
 	}
 
 	const urlResponse = await rawGithubApi.get('/.github/api.txt')
 	return axios.create({
 		baseURL: urlResponse.data,
+		headers: {
+			authorization: auth?.token ? `Bearer ${auth.token}` : undefined,
+		},
 	})
 }

@@ -9,9 +9,12 @@ import type { SubShomaarSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
 import { getYoutubeProfile } from '../../../api/hooks/channel/youtube-profile.hook'
+import { NeedAuthMessage } from '../../../components/need-auth-message'
+import { useAuth } from '../../../context/auth.context'
 import { formatSubscribeCount } from '../../../utils/format'
 
 export function SubShomaarSetting() {
+	const { isAuthenticated } = useAuth()
 	const [setting, setSetting] = useState<SubShomaarSettingStore>(null)
 	const [inputChannelName, setInputChannelName] = useState<string>('')
 	const [isLoadingChannel, setIsLoadingChannel] = useState<boolean>(false)
@@ -76,8 +79,8 @@ export function SubShomaarSetting() {
 		setIsLoadingChannel(true)
 		const channel = await getYoutubeProfile(channelName)
 		if (channel.isValid) {
-			setSettingValue('channelName', channelName)
 			applyChanges()
+			setSettingValue('channelName', channelName)
 			setChannelInfo(channel)
 			setIsLoadingChannel(false)
 		} else {
@@ -107,6 +110,16 @@ export function SubShomaarSetting() {
 	}
 
 	if (!setting) return null
+
+	if (!isAuthenticated) {
+		return (
+			<NeedAuthMessage
+				widgetName="ساب‌شمارش"
+				widgetDescription="برای استفاده از ویجت ساب‌شمارش و نمایش تعداد دنبال‌کنندگان کانال یوتیوب، لطفا وارد حساب کاربری خود شوید."
+			/>
+		)
+	}
+
 	return (
 		<>
 			<div className="p-2 mt-2 h-80 not-moveable font-[Vazir] overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-500 dark:scrollbar-track-gray-800">
@@ -131,7 +144,7 @@ export function SubShomaarSetting() {
 										color="gray"
 										className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir] mr-3"
 									>
-										فعالسازی ویجت زیرشمار
+										فعالسازی ویجت ساب‌شمارش
 									</Typography>
 								</div>
 							}
