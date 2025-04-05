@@ -16,11 +16,14 @@ import {
 	HiCog6Tooth,
 	HiCurrencyDollar,
 	HiSun,
+	HiUser,
 	HiUserGroup,
 } from 'react-icons/hi2'
 import { TbAppsFilled } from 'react-icons/tb'
+import { AuthProvider } from '../context/auth.context'
 import UpdateModal from './components/updateModal'
 import { AboutUs } from './pages/about-us/aboutUs'
+import { AccountSetting } from './pages/account/account.setting'
 import { ArzChandSetting } from './pages/arzChand/arzChand.setting'
 import { BtimeSetting } from './pages/btime/btime.setting'
 import { ClockSetting } from './pages/clock/clock.setting'
@@ -81,6 +84,13 @@ const TAB_DATA = [
 		icon: <CgProfile className="size-5" />,
 		element: <SubShomaarSetting />,
 		category: 'widgets',
+	},
+	{
+		label: 'حساب کاربری',
+		value: 'account',
+		icon: <HiUser className="size-5" />,
+		element: <AccountSetting />,
+		category: 'app',
 	},
 	{
 		label: 'تنظیمات',
@@ -165,10 +175,10 @@ function App() {
 							</svg>
 						</button>
 					</div>
-					<div className="flex flex-row h-screen pb-5" dir="rtl">
+					<div className="flex flex-row h-screen" dir="rtl">
 						<Tabs value="btime" orientation="vertical">
 							<TabsHeader
-								className="w-36 not-moveable dark:bg-[#1d1d1d5b] rounded-none bg-white pb-2 overflow-y-auto max-h-[calc(100vh-7px)] scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500"
+								className="w-36 not-moveable dark:bg-[#1d1d1d5b] rounded-none bg-white pb-10 overflow-y-auto max-h-[calc(100vh-7px)] scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500"
 								indicatorProps={{
 									className: 'bg-white dark:bg-[#1d1d1d]',
 								}}

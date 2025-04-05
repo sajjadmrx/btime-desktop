@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import electronStore from 'electron-store'
+import type { AuthData } from '../shared/user.interface'
 import { widgetKey } from '../shared/widgetKey'
 import type { FetchedCurrency } from '../src/api/api'
 
@@ -94,6 +95,7 @@ export interface StoreKey {
 	[widgetKey.SubShomaar]: SubShomaarSettingStore
 	[key: `currency:${string}`]: FetchedCurrency
 	main: MainSettingStore
+	auth: AuthData | null
 }
 
 const storeDefaults: StoreKey = {
@@ -252,6 +254,7 @@ const storeDefaults: StoreKey = {
 		transparentStatus: false,
 		subscriberFormat: 'short',
 	},
+	auth: null,
 }
 
 export const store = new electronStore<StoreKey>({

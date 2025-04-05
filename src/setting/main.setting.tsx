@@ -5,17 +5,20 @@ import ReactDOM from 'react-dom/client'
 import '../index.css'
 import './app.css'
 import { ThemeProvider } from '@material-tailwind/react'
+import { AuthProvider } from '../context/auth.context'
 import App from './setting'
 if (document.getElementById('root')) {
 	ReactDOM.createRoot(document.getElementById('root')).render(
 		<React.StrictMode>
 			<ThemeProvider>
-				<App />
+				<AuthProvider>
+					<App />
+				</AuthProvider>
 			</ThemeProvider>
 		</React.StrictMode>,
 	)
 }
-// Remove Preload scripts loading
+
 postMessage({ payload: 'removeLoading' }, '*')
 
 // Use contextBridge
