@@ -8,11 +8,9 @@ import { ThemeProvider } from '@material-tailwind/react'
 import App from './dam-dasti'
 if (document.getElementById('root')) {
 	ReactDOM.createRoot(document.getElementById('root')).render(
-		<React.StrictMode>
-			<ThemeProvider>
-				<App />
-			</ThemeProvider>
-		</React.StrictMode>,
+		<ThemeProvider>
+			<App />
+		</ThemeProvider>,
 	)
 }
 

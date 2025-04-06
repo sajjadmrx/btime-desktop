@@ -9,13 +9,11 @@ import { AuthProvider } from '../context/auth.context'
 import App from './setting'
 if (document.getElementById('root')) {
 	ReactDOM.createRoot(document.getElementById('root')).render(
-		<React.StrictMode>
-			<ThemeProvider>
-				<AuthProvider>
-					<App />
-				</AuthProvider>
-			</ThemeProvider>
-		</React.StrictMode>,
+		<ThemeProvider>
+			<AuthProvider>
+				<App />
+			</AuthProvider>
+		</ThemeProvider>,
 	)
 }
 

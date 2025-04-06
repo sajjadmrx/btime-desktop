@@ -9,11 +9,9 @@ import App from './app.nerkh'
 
 if (document.getElementById('root')) {
 	ReactDOM.createRoot(document.getElementById('root')).render(
-		<React.StrictMode>
-			<ThemeProvider>
-				<App />
-			</ThemeProvider>
-		</React.StrictMode>,
+		<ThemeProvider>
+			<App />
+		</ThemeProvider>,
 	)
 }
 
