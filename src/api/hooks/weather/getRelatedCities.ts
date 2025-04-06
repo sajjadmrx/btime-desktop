@@ -9,9 +9,10 @@ async function fetchRelatedCities(city: string): Promise<any[]> {
 	return response.data
 }
 
-export function useGetRelatedCities(city: string) {
+export function useGetRelatedCities(city: string, enabled: boolean) {
 	return useQuery({
 		queryKey: ['getRelatedCities', city],
 		queryFn: () => fetchRelatedCities(city),
+		enabled: enabled,
 	})
 }

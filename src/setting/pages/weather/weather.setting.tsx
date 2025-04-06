@@ -85,7 +85,10 @@ export function WeatherSetting() {
 		setCityInput(value)
 	}
 
-	const { data: cities, isLoading } = useGetRelatedCities(cityInput)
+	const { data: cities, isLoading } = useGetRelatedCities(
+		cityInput,
+		!!cityInput,
+	)
 
 	useEffect(() => {
 		if (cities) {
