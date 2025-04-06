@@ -1,9 +1,5 @@
 import axios, { type AxiosInstance } from 'axios'
 import type { FetchedAllEvents, News, Timezone } from './api.interface'
-import type {
-	FetchedWeather,
-	ForecastResponse,
-} from './hooks/weather/weather.interface'
 
 const api = axios.create()
 const rawGithubApi = axios.create({
@@ -154,22 +150,38 @@ export async function getMainApi(): Promise<string> {
 	return urlResponse.data
 }
 
+let mainClient: AxiosInstance | null = null
+
 export async function getMainClient(): Promise<AxiosInstance> {
-	const auth = await window.store.get('auth')
-	if (import.meta.env.VITE_API) {
-		return axios.create({
-			baseURL: import.meta.env.VITE_API,
-			headers: {
-				authorization: auth?.token ? `Bearer ${auth.token}` : undefined,
-			},
-		})
+	if (mainClient) {
+		return mainClient
 	}
 
-	const urlResponse = await rawGithubApi.get('/.github/api.txt')
-	return axios.create({
-		baseURL: urlResponse.data,
-		headers: {
-			authorization: auth?.token ? `Bearer ${auth.token}` : undefined,
-		},
+	const baseURL =
+		import.meta.env.VITE_API ||
+		(await rawGithubApi.get('/.github/api.txt')).data
+
+	mainClient = axios.create({ baseURL })
+
+	mainClient.interceptors.request.use(async (config) => {
+		const auth = await window.store.get('auth')
+
+		if (auth?.token) {
+			config.headers.Authorization = `Bearer ${auth.token}`
+		}
+
+		return config
 	})
+
+	mainClient.interceptors.response.use(
+		(response) => response,
+		async (error) => {
+			if (error.response && error.response.status === 401) {
+				await window.store.set('auth', null)
+			}
+			return Promise.reject(error)
+		},
+	)
+
+	return mainClient
 }
