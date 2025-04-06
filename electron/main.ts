@@ -6,6 +6,7 @@ import {
 	Menu,
 	Tray,
 	app,
+	globalShortcut,
 	nativeImage,
 	nativeTheme,
 	shell,
@@ -33,6 +34,9 @@ let mainWin: BrowserWindow | null
 let parentWin: BrowserWindow | null
 const icon = nativeImage.createFromPath(getIconPath())
 global.VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL
+
+const openSettingShortcut =
+	process.platform === 'darwin' ? 'Command+Shift+W' : 'Control+Shift+W'
 
 initIpcMain()
 if (release().startsWith('6.1')) app.disableHardwareAcceleration()
@@ -275,14 +279,12 @@ async function onAppReady() {
 	if (!mainWin) {
 		const settingWindow = await createSettingWindow()
 		mainWin = settingWindow
-		addChildWindow(settingWindow)
 	}
 
 	const appVersion = app.getVersion()
 	if (store.get('currentVersion') !== appVersion) {
 		store.set('currentVersion', appVersion)
 		const settingPage = await createSettingWindow()
-		addChildWindow(settingPage)
 
 		settingPage.once('ready-to-show', async () => {
 			await new Promise((resolve) => setTimeout(resolve, 2000))
@@ -293,6 +295,19 @@ async function onAppReady() {
 	nativeTheme.themeSource = store.get('main').theme
 	createTray()
 	update(mainWin, app)
+
+	globalShortcut.register(openSettingShortcut, async () => {
+		if (mainWin) {
+			let settingWin = BrowserWindow.getAllWindows().find(
+				(win) => win.getTitle() === 'Setting',
+			)
+			if (settingWin) {
+				settingWin.show()
+			} else {
+				settingWin = await createSettingWindow()
+			}
+		}
+	})
 }
 
 app.on('window-all-closed', () => {
@@ -363,6 +378,7 @@ function getContextMenu() {
 					settingWin = await createSettingWindow()
 				}
 			},
+			accelerator: openSettingShortcut,
 		},
 
 		{
