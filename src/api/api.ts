@@ -177,7 +177,10 @@ export async function getMainClient(): Promise<AxiosInstance> {
 		(response) => response,
 		async (error) => {
 			if (error.response && error.response.status === 401) {
-				await window.store.set('auth', null)
+				const url = error.config?.url
+				if (!url || !url.includes('/auth/signin')) {
+					await window.store.set('auth', null)
+				}
 			}
 			return Promise.reject(error)
 		},
