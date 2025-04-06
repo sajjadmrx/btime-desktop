@@ -123,7 +123,7 @@ function App() {
 				) : channelInfo?.isValid ? (
 					<div className="flex flex-col items-center justify-center h-full gap-3 px-4">
 						{channelInfo.profile && (
-							<div className="overflow-hidden border-gray-200 rounded-full shadow-md xxs:w-14 xxs:h-14 xs:w-14 xs:h-14 sm:w-20 sm:h-20 w-28 h-28">
+							<div className="overflow-hidden border-gray-200 rounded-full shadow-md xxs:w-5 xxs:h-5 xs:w-14 xs:h-14 sm:w-20 sm:h-20 w-28 h-28">
 								<img
 									src={channelInfo.profile}
 									alt={channelInfo.name}
