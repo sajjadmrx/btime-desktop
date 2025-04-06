@@ -84,7 +84,7 @@ function App() {
 	useEffect(() => {
 		function handleSettingsUpdate() {
 			const subShomaarSettings = window.store.get(widgetKey.SubShomaar)
-			console.log('subShomaarSettings', subShomaarSettings)
+
 			if (subShomaarSettings?.channelName) {
 				setChannelName(subShomaarSettings.channelName)
 			}

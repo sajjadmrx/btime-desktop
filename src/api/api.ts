@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance } from 'axios'
+import { userLogger } from '../../shared/logger'
 import type { FetchedAllEvents, News, Timezone } from './api.interface'
 
 const api = axios.create()
@@ -43,7 +44,7 @@ export async function getRateByCurrency(
 		const response = await api.get(`/v2/arz/${currency}`)
 		return response.data
 	} catch (err) {
-		console.log(err)
+		userLogger.log(err)
 		return null
 	}
 }
@@ -71,7 +72,7 @@ export async function getSupportedCurrencies(): Promise<SupportedCurrencies> {
 
 		return response.data
 	} catch (err) {
-		console.log(err.response)
+		userLogger.log(err.response)
 		return []
 	}
 }

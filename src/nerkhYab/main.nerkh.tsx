@@ -18,11 +18,6 @@ if (document.getElementById('root')) {
 // Remove Preload scripts loading
 postMessage({ payload: 'removeLoading' }, '*')
 
-// Use contextBridge
-window.ipcRenderer.on('main-process-message', (_event, message) => {
-	console.log(message)
-})
-
 window.ipcRenderer.on('transparent_status', (evt, message) => {
 	const bodyElement = document.querySelector('.h-screen')
 	if (message.enableTransparent) {

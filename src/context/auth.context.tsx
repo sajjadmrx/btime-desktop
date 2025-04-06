@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { userLogger } from '../../shared/logger'
 import type { AuthData, UserProfile } from '../../shared/user.interface'
 import { getMainClient } from '../api/api'
 
@@ -37,7 +38,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 					setIsLoadingUser(false)
 				}
 			} catch (error) {
-				console.error('Failed to load auth data from Electron store:', error)
+				userLogger.error('Failed to load auth data from Electron store:', error)
 				setIsLoadingUser(false)
 			}
 		}
@@ -69,7 +70,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 				setToken(null)
 			}
 
-			console.error('Failed to fetch user profile:', error)
+			userLogger.error('Failed to fetch user profile:', error)
 			setUser(null)
 			setIsLoadingUser(false)
 			return null

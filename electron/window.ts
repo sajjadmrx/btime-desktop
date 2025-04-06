@@ -195,10 +195,8 @@ function onClose(win: BrowserWindow) {
 					},
 				})
 			} catch (error) {
-				console.error(`Error saving window bounds for ${key}:`, error)
+				userLogger.error(`Error saving window bounds for ${key}:`, error)
 			}
-		} else {
-			console.error('Window is destroyed')
 		}
 	}
 	win.on('close', saveWindowBounds)

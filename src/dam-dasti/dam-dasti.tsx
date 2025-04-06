@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { IoMdAdd } from 'react-icons/io'
 import { MdOutlineDragIndicator } from 'react-icons/md'
 import { RiDeleteBinLine } from 'react-icons/ri'
+import { userLogger } from '../../shared/logger'
 
 interface AppItem {
 	id: string
@@ -107,7 +108,7 @@ function App() {
 				}
 			}
 		} catch (error) {
-			console.error('Error adding app:', error)
+			userLogger.error('Error adding app:', error)
 		}
 	}, [])
 

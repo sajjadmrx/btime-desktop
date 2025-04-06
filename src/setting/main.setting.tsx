@@ -19,11 +19,6 @@ if (document.getElementById('root')) {
 
 postMessage({ payload: 'removeLoading' }, '*')
 
-// Use contextBridge
-window.ipcRenderer.on('main-process-message', (_event, message) => {
-	console.log(message)
-})
-
 window.ipcRenderer.on('transparent_status', (evt, message) => {
 	const bodyElement = document.body
 	if (message.enableTransparent) {

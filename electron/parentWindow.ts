@@ -1,6 +1,7 @@
 import os from 'node:os'
 import path from 'node:path'
 import { BrowserWindow, screen } from 'electron'
+import { userLogger } from '../shared/logger'
 import { store } from './store'
 
 let parentWindow: BrowserWindow | null = null
@@ -46,7 +47,7 @@ export function createParentWindow(): BrowserWindow {
 			}
 		}
 	} catch (err) {
-		console.error('Failed to load saved parent window bounds:', err)
+		userLogger.error('Failed to load saved parent window bounds:', err)
 	}
 
 	const win = new BrowserWindow({
@@ -110,14 +111,13 @@ function saveParentWindowBounds() {
 
 	try {
 		const bounds = parentWindow.getBounds()
-		console.log('Saving parent window bounds:', bounds)
 
 		// Save to store using the parent window key
 		store.set(PARENT_WINDOW_KEY, {
 			bounds,
 		})
 	} catch (err) {
-		console.error('Failed to save parent window bounds:', err)
+		userLogger.error('Failed to save parent window bounds:', err)
 	}
 }
 
@@ -145,8 +145,6 @@ function repositionChildWindows() {
 	const deltaY = currentBounds.y - lastParentBounds.y
 
 	if (deltaX !== 0 || deltaY !== 0) {
-		console.log(`Parent moved by delta: (${deltaX}, ${deltaY})`)
-
 		for (const child of childWindows) {
 			if (!child.isDestroyed()) {
 				const childBounds = child.getBounds()

@@ -85,10 +85,7 @@ export function initIpcMain() {
 				(win) => win.title === window,
 			)[0]
 			if (!win) {
-				console.log(
-					`can't find ${window}`,
-					BrowserWindow.getAllWindows().map((f) => f.title),
-				)
+				userLogger.log(`can't find ${window}`)
 				return
 			}
 			await win.webContents.executeJavaScript(
@@ -251,7 +248,6 @@ export function initIpcMain() {
 
 			return appInfo
 		} catch (error) {
-			console.error('خطا در استخراج آیکون:', error)
 			return {
 				name: path.basename(filePath, path.extname(filePath)),
 				path: filePath,

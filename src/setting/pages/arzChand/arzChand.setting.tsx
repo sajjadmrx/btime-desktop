@@ -302,7 +302,6 @@ function getSelectedCurrencies(
 	selected: string[],
 	list: SupportedCurrencies,
 ): { value: string; label: string }[] {
-	console.log(selected, list)
 	return selected.map((key) => ({
 		value: key,
 		// biome-ignore lint/suspicious/noDoubleEquals: <explanation>
