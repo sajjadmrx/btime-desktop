@@ -30,9 +30,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 					if (authData.user) {
 						setUser(authData.user)
 						setIsLoadingUser(false)
-					} else {
-						fetchUserProfile(authData.token)
 					}
+
+					fetchUserProfile(authData.token)
 				} else {
 					setIsLoadingUser(false)
 				}
@@ -41,7 +41,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 				setIsLoadingUser(false)
 			}
 		}
-
 		loadAuthData()
 	}, [])
 
@@ -65,6 +64,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 			setIsLoadingUser(false)
 			return userData
 		} catch (error) {
+			if (error.response && error.response.status === 401) {
+				logout()
+				setToken(null)
+			}
+
 			console.error('Failed to fetch user profile:', error)
 			setUser(null)
 			setIsLoadingUser(false)
