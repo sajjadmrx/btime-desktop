@@ -98,7 +98,7 @@ async function onAppReady() {
 			moveable,
 			saveBounds: true,
 		})
-		// Add to parent window only if parent window mode is enabled
+
 		if (useParentWindowMode && parentWin) {
 			addChildWindow(btime)
 		}
@@ -124,7 +124,7 @@ async function onAppReady() {
 			moveable,
 			saveBounds: true,
 		})
-		// Add to parent window only if parent window mode is enabled
+
 		if (useParentWindowMode && parentWin) {
 			addChildWindow(nerkhWindow)
 		}
@@ -154,7 +154,7 @@ async function onAppReady() {
 			reziable: true,
 			saveBounds: true,
 		})
-		// Add to parent window only if parent window mode is enabled
+
 		if (useParentWindowMode && parentWin) {
 			addChildWindow(arzChandWindow)
 		}

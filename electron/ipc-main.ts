@@ -12,6 +12,7 @@ import { userLogger } from '../shared/logger'
 import { widgetKey } from '../shared/widgetKey'
 import { type MainSettingStore, store, type windowSettings } from './store'
 import { createSettingWindow, createWindow } from './window'
+import { addChildWindow } from './parentWindow'
 
 const windowsShortcuts = require('windows-shortcuts')
 const resolveShortcut = promisify(windowsShortcuts.query)
@@ -107,6 +108,8 @@ export function initIpcMain() {
 	})
 
 	ipcMain.on('toggle-enable', async (event, windowKey: string) => {
+		const mainSetting = await store.get('main')
+
 		userLogger.info(`Toggle enable for ${windowKey}`)
 		const win = BrowserWindow.getAllWindows().filter(
 			(win) => win.title === windowKey,
@@ -139,7 +142,7 @@ export function initIpcMain() {
 				userLogger.error(`Window not found for ${windowKey}`)
 			}
 		} else {
-			await createWindow({
+			const win = await createWindow({
 				height: setting.bounds.height,
 				width: setting.bounds.width,
 				minHeight: setting.bounds.minHeight,
@@ -156,6 +159,11 @@ export function initIpcMain() {
 				saveBounds: true,
 				moveable,
 			})
+
+			if (mainSetting.useParentWindowMode) {
+				addChildWindow(win)
+			}
+
 			userLogger.info(`Widget ${windowKey} enabled`)
 		}
 	})
