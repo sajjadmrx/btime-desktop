@@ -213,8 +213,6 @@ export function initIpcMain() {
 
 	ipcMain.handle('launch-app', async (_event, appPath) => {
 		try {
-			userLogger.info(`Launching app: ${appPath}`)
-
 			return shell.openPath(appPath)
 		} catch (error) {
 			userLogger.error(`Error launching app: ${error}`)
