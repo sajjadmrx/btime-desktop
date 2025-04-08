@@ -71,6 +71,8 @@ export function JalaliComponent(prop: Prop) {
 		}
 	}, [])
 
+	const isHoliday = checkIfHoliday(today, today.day())
+
 	return (
 		<div className="flex flex-row-reverse items-center justify-center w-full h-full">
 			<div className="flex flex-col items-center lg:gap-4 gap-2 moveable w-[40%] relative">
@@ -80,15 +82,22 @@ export function JalaliComponent(prop: Prop) {
 					{today.locale('fa').format('dddd')}
 				</div>
 				<div
-					className={`text-6xl select-none ${getTextColor(isTransparent, isBackgroundActive)}`}
+					className={`text-6xl select-none ${getTextColor(isTransparent, isBackgroundActive)} ${isHoliday ? '!text-red-600' : ''}`}
 				>
 					{today.locale('fa').jDate()}
 				</div>
 				<div
-					className={`flex flex-row gap-1 ${getTextColor(isTransparent, isBackgroundActive)}`}
+					className={`flex flex-col gap-2 ${getTextColor(isTransparent, isBackgroundActive)}`}
 				>
-					<div>{today.locale('fa').jYear()}</div>
-					<div>{today.locale('fa').format('jMMMM')}</div>
+					<div className="flex flex-row items-center gap-2">
+						<div className="font-medium">{today.locale('fa').jYear()}</div>
+						<div className="font-medium">
+							{today.locale('fa').format('jMMMM')}
+						</div>
+					</div>
+					<div className="text-xs font-medium text-center opacity-95">
+						{today.doAsGregorian().format('YYYY/DD/MM')}
+					</div>
 				</div>
 			</div>
 			{setting.showCalendar && (
