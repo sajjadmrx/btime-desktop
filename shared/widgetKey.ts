@@ -5,4 +5,5 @@ export enum widgetKey {
 	Weather = 'Weather',
 	Clock = 'Clock',
 	DamDasti = 'DamDasti',
+	SubShomaar = 'SubShomaar',
 }

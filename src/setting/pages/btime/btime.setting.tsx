@@ -64,7 +64,7 @@ export function BtimeSetting() {
 
 	return (
 		<>
-			<div className="p-2 mt-2 h-80 not-moveable font-[Vazir] overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-500 dark:scrollbar-track-gray-800">
+			<div className="p-2 mt-2 h-full not-moveable font-[Vazir] overflow-y-scroll custom-scrollbar">
 				<div className="flex flex-col gap-4">
 					<Switch
 						id={'time-startUp'}

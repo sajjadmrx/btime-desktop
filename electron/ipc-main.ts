@@ -12,6 +12,7 @@ import { userLogger } from '../shared/logger'
 import { widgetKey } from '../shared/widgetKey'
 import { type MainSettingStore, store, type windowSettings } from './store'
 import { createSettingWindow, createWindow } from './window'
+import { addChildWindow } from './parentWindow'
 
 const windowsShortcuts = require('windows-shortcuts')
 const resolveShortcut = promisify(windowsShortcuts.query)
@@ -85,10 +86,7 @@ export function initIpcMain() {
 				(win) => win.title === window,
 			)[0]
 			if (!win) {
-				console.log(
-					`can't find ${window}`,
-					BrowserWindow.getAllWindows().map((f) => f.title),
-				)
+				userLogger.log(`can't find ${window}`)
 				return
 			}
 			await win.webContents.executeJavaScript(
@@ -110,6 +108,8 @@ export function initIpcMain() {
 	})
 
 	ipcMain.on('toggle-enable', async (event, windowKey: string) => {
+		const mainSetting = await store.get('main')
+
 		userLogger.info(`Toggle enable for ${windowKey}`)
 		const win = BrowserWindow.getAllWindows().filter(
 			(win) => win.title === windowKey,
@@ -142,7 +142,7 @@ export function initIpcMain() {
 				userLogger.error(`Window not found for ${windowKey}`)
 			}
 		} else {
-			await createWindow({
+			const win = await createWindow({
 				height: setting.bounds.height,
 				width: setting.bounds.width,
 				minHeight: setting.bounds.minHeight,
@@ -159,6 +159,11 @@ export function initIpcMain() {
 				saveBounds: true,
 				moveable,
 			})
+
+			if (mainSetting.useParentWindowMode) {
+				addChildWindow(win)
+			}
+
 			userLogger.info(`Widget ${windowKey} enabled`)
 		}
 	})
@@ -208,8 +213,6 @@ export function initIpcMain() {
 
 	ipcMain.handle('launch-app', async (_event, appPath) => {
 		try {
-			userLogger.info(`Launching app: ${appPath}`)
-
 			return shell.openPath(appPath)
 		} catch (error) {
 			userLogger.error(`Error launching app: ${error}`)
@@ -251,7 +254,6 @@ export function initIpcMain() {
 
 			return appInfo
 		} catch (error) {
-			console.error('خطا در استخراج آیکون:', error)
 			return {
 				name: path.basename(filePath, path.extname(filePath)),
 				path: filePath,

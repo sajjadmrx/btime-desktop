@@ -1,4 +1,4 @@
-import { Button, Checkbox, Typography } from '@material-tailwind/react'
+import { Checkbox, Typography } from '@material-tailwind/react'
 import type { MainSettingStore, Theme } from 'electron/store'
 import { useEffect, useState } from 'react'
 import { ThemeComponent } from './theme.component'
@@ -10,7 +10,6 @@ export function AppSetting() {
 		window.store.get('main'),
 	)
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		setMainSetting(window.store.get('main'))
 		setTheme(mainSetting.theme)
@@ -38,6 +37,10 @@ export function AppSetting() {
 
 	function resetSettings() {
 		window.ipcMain.send('reset-setting')
+	}
+
+	function reopenApp() {
+		window.ipcMain.send('reOpen')
 	}
 
 	const thmes = [
@@ -106,6 +109,34 @@ export function AppSetting() {
 						/>
 						<Checkbox
 							ripple={true}
+							defaultChecked={mainSetting.useParentWindowMode}
+							onClick={() =>
+								setSettingValue(
+									'useParentWindowMode',
+									!mainSetting.useParentWindowMode,
+								)
+							}
+							label={
+								<div>
+									<Typography
+										variant={'h5'}
+										color="blue-gray"
+										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] font-normal"
+									>
+										حالت ویجت دسته‌بندی شده{' '}
+										<span className="font-light">
+											(تجمیع و حرکت همزمان ویجت‌ها - نیاز به راه اندازی مجدد
+											برنامه)
+										</span>
+									</Typography>
+								</div>
+							}
+							containerProps={{
+								className: 'flex',
+							}}
+						/>
+						<Checkbox
+							ripple={true}
 							defaultChecked={mainSetting.enableAnalytics}
 							onClick={() =>
 								setSettingValue('enableAnalytics', !mainSetting.enableAnalytics)
@@ -131,9 +162,30 @@ export function AppSetting() {
 						/>
 					</div>
 
-					<div className="flex flex-col">
+					<div className="flex flex-row gap-4 mt-4">
 						<button
-							className="flex items-center w-32 gap-1 p-2 mt-4 text-xs text-center text-white bg-red-400 rounded-md hover:bg-red-500"
+							className="flex items-center justify-center w-40 gap-2 p-2 text-xs text-white transition-colors bg-blue-500 rounded-md hover:bg-blue-600"
+							onClick={reopenApp}
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								strokeWidth={1.5}
+								stroke="currentColor"
+								className="size-5"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+								/>
+							</svg>
+							راه‌اندازی مجدد برنامه
+						</button>
+
+						<button
+							className="flex items-center justify-center w-40 gap-2 p-2 text-xs text-white transition-colors bg-red-400 rounded-md hover:bg-red-500"
 							onClick={resetSettings}
 						>
 							<svg
@@ -142,7 +194,7 @@ export function AppSetting() {
 								viewBox="0 0 24 24"
 								strokeWidth={1.5}
 								stroke="currentColor"
-								className="size-6"
+								className="size-5"
 							>
 								<path
 									strokeLinecap="round"

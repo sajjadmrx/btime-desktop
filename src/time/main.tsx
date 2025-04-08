@@ -11,23 +11,16 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 const queryClient = new QueryClient()
 if (document.getElementById('root')) {
 	ReactDOM.createRoot(document.getElementById('root')).render(
-		<React.StrictMode>
-			<QueryClientProvider client={queryClient}>
-				<ThemeProvider>
-					<App />
-				</ThemeProvider>
-			</QueryClientProvider>
-		</React.StrictMode>,
+		<QueryClientProvider client={queryClient}>
+			<ThemeProvider>
+				<App />
+			</ThemeProvider>
+		</QueryClientProvider>,
 	)
 }
 
 // Remove Preload scripts loading
 postMessage({ payload: 'removeLoading' }, '*')
-
-// Use contextBridge
-window.ipcRenderer.on('main-process-message', (_event, message) => {
-	console.log(message)
-})
 
 window.ipcRenderer.on('transparent_status', (evt, message) => {
 	const bodyElement = document.querySelector('.h-screen')

@@ -5,12 +5,17 @@ import ReactDOM from 'react-dom/client'
 import '../index.css'
 import './app.css'
 import { ThemeProvider } from '@material-tailwind/react'
-import App from './app.nerkh'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import App from './sub-shomaar'
+
+const queryClient = new QueryClient()
 
 if (document.getElementById('root')) {
 	ReactDOM.createRoot(document.getElementById('root')).render(
 		<ThemeProvider>
-			<App />
+			<QueryClientProvider client={queryClient}>
+				<App />
+			</QueryClientProvider>
 		</ThemeProvider>,
 	)
 }

@@ -12,13 +12,11 @@ const queryClient = new QueryClient()
 
 if (document.getElementById('root')) {
 	ReactDOM.createRoot(document.getElementById('root')).render(
-		<React.StrictMode>
-			<ThemeProvider>
-				<QueryClientProvider client={queryClient}>
-					<App />
-				</QueryClientProvider>
-			</ThemeProvider>
-		</React.StrictMode>,
+		<ThemeProvider>
+			<QueryClientProvider client={queryClient}>
+				<App />
+			</QueryClientProvider>
+		</ThemeProvider>,
 	)
 }
 

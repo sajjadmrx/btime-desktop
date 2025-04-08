@@ -85,7 +85,10 @@ export function WeatherSetting() {
 		setCityInput(value)
 	}
 
-	const { data: cities, isLoading } = useGetRelatedCities(cityInput)
+	const { data: cities, isLoading } = useGetRelatedCities(
+		cityInput,
+		!!cityInput,
+	)
 
 	useEffect(() => {
 		if (cities) {
@@ -117,7 +120,7 @@ export function WeatherSetting() {
 	if (!setting) return null
 	return (
 		<>
-			<div className="p-2 mt-2 h-80 not-moveable font-[Vazir] overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-500 dark:scrollbar-track-gray-800">
+			<div className="p-2 mt-2 h-full not-moveable font-[Vazir] overflow-y-scroll custom-scrollbar">
 				<div className="flex flex-col gap-3">
 					<div className="flex flex-row items-center justify-between w-full gap-2">
 						<Switch

@@ -6,6 +6,7 @@ import {
 	Menu,
 	Tray,
 	app,
+	globalShortcut,
 	nativeImage,
 	nativeTheme,
 	shell,
@@ -14,6 +15,7 @@ import isDev from 'electron-is-dev'
 import { getIconPath, getPublicFilePath } from '../shared/getIconPath'
 import { widgetKey } from '../shared/widgetKey'
 import { initIpcMain } from './ipc-main'
+import { addChildWindow, createParentWindow } from './parentWindow'
 import { store } from './store'
 import { update } from './update'
 import { toggleStartUp } from './utils/startup.util'
@@ -29,8 +31,12 @@ process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
 	: process.env.DIST
 
 let mainWin: BrowserWindow | null
+let parentWin: BrowserWindow | null
 const icon = nativeImage.createFromPath(getIconPath())
 global.VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL
+
+const openSettingShortcut =
+	process.platform === 'darwin' ? 'Command+Shift+W' : 'Control+Shift+W'
 
 initIpcMain()
 if (release().startsWith('6.1')) app.disableHardwareAcceleration()
@@ -56,13 +62,23 @@ if (isWindoAndDrawin) {
 }
 
 async function onAppReady() {
+	const mainSettings = store.get('main')
+	const useParentWindowMode = mainSettings.useParentWindowMode
+	const moveable = mainSettings.moveable
+
+	// Only create parent window if parent window mode is enabled
+	if (useParentWindowMode) {
+		parentWin = createParentWindow()
+	}
+
 	const nerkhStore = store.get(widgetKey.NerkhYab)
 	const btimeStore = store.get(widgetKey.BTime)
 	const arzChandStore = store.get(widgetKey.ArzChand)
 	const weatherStore = store.get(widgetKey.Weather)
 	const clockStore = store.get(widgetKey.Clock)
 	const damDasti = store.get(widgetKey.DamDasti)
-	const moveable = store.get('main').moveable
+	const subShomaar = store.get(widgetKey.SubShomaar)
+
 	// Btime widget
 	if (btimeStore.enable) {
 		const btime = await createWindow({
@@ -82,6 +98,10 @@ async function onAppReady() {
 			moveable,
 			saveBounds: true,
 		})
+
+		if (useParentWindowMode && parentWin) {
+			addChildWindow(btime)
+		}
 		mainWin = btime
 	}
 
@@ -104,6 +124,10 @@ async function onAppReady() {
 			moveable,
 			saveBounds: true,
 		})
+
+		if (useParentWindowMode && parentWin) {
+			addChildWindow(nerkhWindow)
+		}
 
 		if (!mainWin) {
 			mainWin = nerkhWindow
@@ -131,6 +155,10 @@ async function onAppReady() {
 			saveBounds: true,
 		})
 
+		if (useParentWindowMode && parentWin) {
+			addChildWindow(arzChandWindow)
+		}
+
 		if (!mainWin) {
 			mainWin = arzChandWindow
 		}
@@ -156,6 +184,10 @@ async function onAppReady() {
 			moveable,
 		})
 
+		if (useParentWindowMode && parentWin) {
+			addChildWindow(weatherWindow)
+		}
+
 		if (!mainWin) {
 			mainWin = weatherWindow
 		}
@@ -179,6 +211,9 @@ async function onAppReady() {
 			saveBounds: true,
 			moveable,
 		})
+		if (useParentWindowMode && parentWin) {
+			addChildWindow(clockWindow)
+		}
 
 		if (!mainWin) {
 			mainWin = clockWindow
@@ -204,18 +239,53 @@ async function onAppReady() {
 			moveable,
 		})
 
+		if (useParentWindowMode && parentWin) {
+			addChildWindow(damdasti)
+		}
+
 		if (!mainWin) {
 			mainWin = damdasti
 		}
 	}
+
+	if (subShomaar.enable) {
+		const subShomaarWindow = await createWindow({
+			height: subShomaar.bounds.height,
+			width: subShomaar.bounds.width,
+			minHeight: subShomaar.bounds.minHeight,
+			minWidth: subShomaar.bounds.minWidth,
+			maxHeight: 1000,
+			maxWidth: 1000,
+			x: subShomaar.bounds.x,
+			y: subShomaar.bounds.y,
+			title: widgetKey.SubShomaar,
+			html: subShomaar.html,
+			devTools: true,
+			alwaysOnTop: subShomaar.alwaysOnTop,
+			reziable: true,
+			saveBounds: true,
+			moveable,
+		})
+
+		if (useParentWindowMode && parentWin) {
+			addChildWindow(subShomaarWindow)
+		}
+
+		if (!mainWin) {
+			mainWin = subShomaarWindow
+		}
+	}
+
 	if (!mainWin) {
-		mainWin = await createSettingWindow()
+		const settingWindow = await createSettingWindow()
+		mainWin = settingWindow
 	}
 
 	const appVersion = app.getVersion()
 	if (store.get('currentVersion') !== appVersion) {
 		store.set('currentVersion', appVersion)
 		const settingPage = await createSettingWindow()
+
 		settingPage.once('ready-to-show', async () => {
 			await new Promise((resolve) => setTimeout(resolve, 2000))
 			settingPage.webContents.send('update-details', { hello: 'world' })
@@ -225,6 +295,19 @@ async function onAppReady() {
 	nativeTheme.themeSource = store.get('main').theme
 	createTray()
 	update(mainWin, app)
+
+	globalShortcut.register(openSettingShortcut, async () => {
+		if (mainWin) {
+			let settingWin = BrowserWindow.getAllWindows().find(
+				(win) => win.getTitle() === 'Setting',
+			)
+			if (settingWin) {
+				settingWin.show()
+			} else {
+				settingWin = await createSettingWindow()
+			}
+		}
+	})
 }
 
 app.on('window-all-closed', () => {
@@ -295,6 +378,7 @@ function getContextMenu() {
 					settingWin = await createSettingWindow()
 				}
 			},
+			accelerator: openSettingShortcut,
 		},
 
 		{

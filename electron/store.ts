@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import electronStore from 'electron-store'
+import type { AuthData } from '../shared/user.interface'
 import { widgetKey } from '../shared/widgetKey'
 import type { FetchedCurrency } from '../src/api/api'
 
@@ -46,7 +47,10 @@ export interface WeatherSettingStore extends windowSettings {
 }
 
 export interface DamDastiSettingStore extends windowSettings {}
-
+export interface SubShomaarSettingStore extends windowSettings {
+	channelName: string
+	subscriberFormat: 'short' | 'full'
+}
 export interface AnalogClockASettingStore {
 	timzones: {
 		label: string
@@ -74,6 +78,7 @@ export interface MainSettingStore {
 	startup: boolean
 	theme: Theme
 	moveable: boolean
+	useParentWindowMode: boolean
 	currentVersion: string
 	enableAnalytics: boolean
 	userId: string
@@ -87,8 +92,10 @@ export interface StoreKey {
 	[widgetKey.Weather]: WeatherSettingStore
 	[widgetKey.Clock]: ClockSettingStore
 	[widgetKey.DamDasti]: DamDastiSettingStore
+	[widgetKey.SubShomaar]: SubShomaarSettingStore
 	[key: `currency:${string}`]: FetchedCurrency
 	main: MainSettingStore
+	auth: AuthData | null
 }
 
 const storeDefaults: StoreKey = {
@@ -226,8 +233,28 @@ const storeDefaults: StoreKey = {
 		startup: true,
 		theme: 'light',
 		moveable: true,
+		useParentWindowMode: true,
 		currentVersion: null,
 	},
+	SubShomaar: {
+		alwaysOnTop: false,
+		borderRadius: 12,
+		bounds: {
+			width: 217,
+			height: 180,
+			x: 0,
+			y: 0,
+			minWidth: 150,
+			minHeight: 76,
+		},
+		enable: false,
+		html: 'sub-shomaar.html',
+		isBackgroundDisabled: false,
+		channelName: null,
+		transparentStatus: false,
+		subscriberFormat: 'short',
+	},
+	auth: null,
 }
 
 export const store = new electronStore<StoreKey>({

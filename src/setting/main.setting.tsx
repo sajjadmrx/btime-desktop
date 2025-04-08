@@ -5,23 +5,19 @@ import ReactDOM from 'react-dom/client'
 import '../index.css'
 import './app.css'
 import { ThemeProvider } from '@material-tailwind/react'
+import { AuthProvider } from '../context/auth.context'
 import App from './setting'
 if (document.getElementById('root')) {
 	ReactDOM.createRoot(document.getElementById('root')).render(
-		<React.StrictMode>
-			<ThemeProvider>
+		<ThemeProvider>
+			<AuthProvider>
 				<App />
-			</ThemeProvider>
-		</React.StrictMode>,
+			</AuthProvider>
+		</ThemeProvider>,
 	)
 }
-// Remove Preload scripts loading
-postMessage({ payload: 'removeLoading' }, '*')
 
-// Use contextBridge
-window.ipcRenderer.on('main-process-message', (_event, message) => {
-	console.log(message)
-})
+postMessage({ payload: 'removeLoading' }, '*')
 
 window.ipcRenderer.on('transparent_status', (evt, message) => {
 	const bodyElement = document.body

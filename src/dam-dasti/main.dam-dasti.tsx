@@ -8,21 +8,14 @@ import { ThemeProvider } from '@material-tailwind/react'
 import App from './dam-dasti'
 if (document.getElementById('root')) {
 	ReactDOM.createRoot(document.getElementById('root')).render(
-		<React.StrictMode>
-			<ThemeProvider>
-				<App />
-			</ThemeProvider>
-		</React.StrictMode>,
+		<ThemeProvider>
+			<App />
+		</ThemeProvider>,
 	)
 }
 
 // Remove Preload scripts loading
 postMessage({ payload: 'removeLoading' }, '*')
-
-// Use contextBridge
-window.ipcRenderer.on('main-process-message', (_event, message) => {
-	console.log(message)
-})
 
 window.ipcRenderer.on('transparent_status', (evt, message) => {
 	const bodyElement = document.querySelector('.h-screen')

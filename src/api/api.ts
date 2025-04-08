@@ -1,9 +1,6 @@
 import axios, { type AxiosInstance } from 'axios'
+import { userLogger } from '../../shared/logger'
 import type { FetchedAllEvents, News, Timezone } from './api.interface'
-import type {
-	FetchedWeather,
-	ForecastResponse,
-} from './hooks/weather/weather.interface'
 
 const api = axios.create()
 const rawGithubApi = axios.create({
@@ -47,7 +44,7 @@ export async function getRateByCurrency(
 		const response = await api.get(`/v2/arz/${currency}`)
 		return response.data
 	} catch (err) {
-		console.log(err)
+		userLogger.log(err)
 		return null
 	}
 }
@@ -75,7 +72,7 @@ export async function getSupportedCurrencies(): Promise<SupportedCurrencies> {
 
 		return response.data
 	} catch (err) {
-		console.log(err.response)
+		userLogger.log(err.response)
 		return []
 	}
 }
@@ -154,15 +151,41 @@ export async function getMainApi(): Promise<string> {
 	return urlResponse.data
 }
 
+let mainClient: AxiosInstance | null = null
+
 export async function getMainClient(): Promise<AxiosInstance> {
-	if (import.meta.env.VITE_API) {
-		return axios.create({
-			baseURL: import.meta.env.VITE_API,
-		})
+	if (mainClient) {
+		return mainClient
 	}
 
-	const urlResponse = await rawGithubApi.get('/.github/api.txt')
-	return axios.create({
-		baseURL: urlResponse.data,
+	const baseURL =
+		import.meta.env.VITE_API ||
+		(await rawGithubApi.get('/.github/api.txt')).data
+
+	mainClient = axios.create({ baseURL })
+
+	mainClient.interceptors.request.use(async (config) => {
+		const auth = await window.store.get('auth')
+
+		if (auth?.token) {
+			config.headers.Authorization = `Bearer ${auth.token}`
+		}
+
+		return config
 	})
+
+	mainClient.interceptors.response.use(
+		(response) => response,
+		async (error) => {
+			if (error.response && error.response.status === 401) {
+				const url = error.config?.url
+				if (!url || !url.includes('/auth/signin')) {
+					await window.store.set('auth', null)
+				}
+			}
+			return Promise.reject(error)
+		},
+	)
+
+	return mainClient
 }
