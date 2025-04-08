@@ -1,7 +1,7 @@
 import type { BtimeSettingStore } from 'electron/store'
 import moment from 'jalali-moment'
 import ms from 'ms'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useGetEvents } from '../../api/hooks/events/getEvents.hook'
 import { JalaliCalendar } from './jalaliCalendar'
 import { getHijriEvents, getShamsiEvents } from './utils'
@@ -30,9 +30,6 @@ export function JalaliComponent(prop: Prop) {
 
 		return isHoliday
 	}
-
-	const dayOfWeek = (today.locale('fa').day() + 1) % 7
-	const isHoliday = checkIfHoliday(today, dayOfWeek)
 
 	useEffect(() => {
 		setIsTransparent(
@@ -77,7 +74,6 @@ export function JalaliComponent(prop: Prop) {
 	return (
 		<div className="flex flex-row-reverse items-center justify-center w-full h-full">
 			<div className="flex flex-col items-center lg:gap-4 gap-2 moveable w-[40%] relative">
-				{isHoliday && <Holiday isBackgroundActive={isBackgroundActive} />}
 				<div
 					className={`select-none ${getTextColor(isTransparent, isBackgroundActive)}`}
 				>
@@ -106,26 +102,6 @@ export function JalaliComponent(prop: Prop) {
 					/>
 				</div>
 			)}
-		</div>
-	)
-}
-interface WeekDayComponentProp {
-	isBackgroundActive: boolean
-}
-function Holiday({ isBackgroundActive }: WeekDayComponentProp) {
-	return (
-		<div
-			className={`
-		 absolute -top-5 right-10 text-center ${isBackgroundActive ? 'bg-red-500 text-gray-100' : 'bg-red-600/20 text-red-400'}
-		 text-sm select-none transform 
-		 lg:hidden
-		 md:hidden
-		 sm:hidden
-		 xs:top-0 xs:-rotate-45 xs:right-10  xs:w-32
-		 xxs:w-24 xxs:top-0 xxs:-rotate-45
-		 `}
-		>
-			تعطیل
 		</div>
 	)
 }

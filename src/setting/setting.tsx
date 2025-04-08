@@ -82,7 +82,7 @@ const TAB_DATA = [
 		category: 'widgets',
 	},
 	{
-		label: 'ساب‌شمارش',
+		label: 'ساب‌شمار',
 		value: 'subShomaar',
 		icon: <CgProfile className="size-5" />,
 		element: <SubShomaarSetting />,
