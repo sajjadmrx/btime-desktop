@@ -87,15 +87,24 @@ export function DigitalClock({ digital }: Prop) {
 	}, [])
 
 	return (
-		<div className="flex h-full items-center text-center justify-center px-2">
+		<div className="flex items-center justify-center h-full px-2 text-center">
 			<div
-				className={`flex flex-col text-6xl font-bold font-mono relative w-60 overflow-clip justify-center items-center font-[digital7] ${getTextColor(isTransparent, isBackgroundActive)}`}
+				className={`flex flex-col text-6xl font-bold font-mono relative w-60 overflow-hidden justify-center items-center font-[digital7] ${getTextColor(isTransparent, isBackgroundActive)}`}
 			>
-				<div ref={timeRef} className=" min-w-44 max-w-44">
+				<div
+					ref={timeRef}
+					className="w-full text-center tabular-nums"
+					style={{
+						minWidth: digital?.showSecond ? '180px' : '120px',
+						letterSpacing: '0.025em',
+					}}
+				>
 					00:00:00
 				</div>
 				<div
-					className={'font-[vazir] text-sm flex flex-col gap-1'}
+					className={
+						'font-[vazir] text-sm flex flex-col gap-1 w-full text-center'
+					}
 					ref={dateRef}
 				>
 					<div>
