@@ -1,3 +1,5 @@
+import { FaTelegram } from 'react-icons/fa6'
+
 const EmojiWithText = ({ emoji, text }) => (
 	<li className="flex items-center justify-end gap-2.5 py-1.5">
 		<span className="text-sm leading-tight text-gray-700 dark:text-gray-200">
@@ -51,6 +53,27 @@ const UpdateModal = ({ onClick }) => {
 	}
 
 	const updateDetails: Update[] = [
+		{
+			version: '1.4.9',
+			changes: [
+				{
+					text: 'اضافه شدن ویجت "ساب شمار" برای نمایش تعداد سابسکرایب های یوتیوب',
+					emoji: '📊',
+				},
+				{
+					text: 'اضافه شدن قابلیت دسته بندی ویجت ها و جابجایی همه ویجت ها با هم',
+					emoji: '🗂️',
+				},
+				{
+					text: 'اضافه شدن امکان ثبت نام و ورود به حساب کاربری',
+					emoji: '👤',
+				},
+				{
+					text: 'بهبود جزئی',
+					emoji: '⚙️',
+				},
+			],
+		},
 		{
 			version: '1.4.8',
 			changes: [
@@ -219,10 +242,10 @@ const UpdateModal = ({ onClick }) => {
 			<div className="w-full max-w-lg p-6 overflow-hidden transition-all duration-300 transform shadow-xl bg-gray-50 dark:bg-gray-800 rounded-xl animate-slideUp">
 				<div className="flex items-center justify-center space-x-2 text-blue-400">
 					<span className="text-3xl">🎉</span>
-					<h2 className="text-xl font-bold">بروز رسانی جدید نصب شد</h2>
+					<h2 className="text-xl font-bold">بروزرسانی جدید نصب شد</h2>
 				</div>
 
-				<div className="dark:bg-gray-900/50 bg-gray-100/80 rounded-xl p-5 mt-4 max-h-[60vh] overflow-y-auto custom-scrollbar">
+				<div className="dark:bg-gray-900/50 bg-gray-100/80 rounded-xl p-3 mt-2 max-h-[60vh] overflow-y-auto custom-scrollbar">
 					{updateDetails.map((update, index) => (
 						<UpdateList
 							key={index}
@@ -236,6 +259,14 @@ const UpdateModal = ({ onClick }) => {
 				<div className="flex gap-3 mt-6">
 					<Button primary onClick={onClick}>
 						متوجه شدم
+					</Button>
+					<Button
+						onClick={() => window.ipcMain.openUrl('https://t.me/widgetify')}
+					>
+						<div className="flex items-center justify-center gap-2">
+							<span>کانال تلگرام</span>
+							<FaTelegram />
+						</div>
 					</Button>
 				</div>
 			</div>
