@@ -14,6 +14,7 @@ import {
 import isDev from 'electron-is-dev'
 import { getIconPath, getPublicFilePath } from '../shared/getIconPath'
 import { widgetKey } from '../shared/widgetKey'
+import { logAppStartupEvent } from './analytics'
 import { initIpcMain } from './ipc-main'
 import { addChildWindow, createParentWindow } from './parentWindow'
 import { store } from './store'
@@ -21,7 +22,6 @@ import { update } from './update'
 import { toggleStartUp } from './utils/startup.util'
 import { BtimeConfig } from './widgets/btime-config'
 import { createSettingWindow, createWindow } from './window'
-
 config()
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
 
@@ -310,6 +310,8 @@ async function onAppReady() {
 			}
 		}
 	})
+
+	logAppStartupEvent()
 }
 
 app.on('window-all-closed', () => {
