@@ -1,30 +1,20 @@
 import { Tooltip } from '@material-tailwind/react'
 import type moment from 'jalali-moment'
 import { BsCalendarEvent, BsInfoCircle } from 'react-icons/bs'
-import { FaCalendarAlt, FaExclamationCircle } from 'react-icons/fa'
 import { IoCalendarOutline } from 'react-icons/io5'
 import type { FetchedAllEvents } from 'src/api/api.interface'
 
-import {
-	convertShamsiToHijri,
-	getGregorianEvents,
-	getHijriEvents,
-	getShamsiEvents,
-} from './utils'
+import { getHijriEvents, getShamsiEvents } from './utils'
 
 interface JalaliCalendarProp {
-	isTransparent: boolean
-	isBackgroundActive: boolean
 	currentTime: moment.Moment
 	isHoliday: (day: any, dayOfWeek: number) => boolean
 	events: FetchedAllEvents
 }
 export function JalaliCalendar({
-	isTransparent,
 	currentTime,
 	isHoliday,
 	events,
-	isBackgroundActive,
 }: JalaliCalendarProp) {
 	const weekDays = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج']
 	const firstDayOfMonth = currentTime.clone().startOf('jMonth').day()
@@ -45,13 +35,7 @@ export function JalaliCalendar({
 		>
 			<div className="grid grid-cols-7 gap-1 space-x-1">
 				{weekDays.map((day, index) => (
-					<WeekDayComponent
-						key={day}
-						day={day}
-						isTransparent={isTransparent}
-						isBackgroundActive={isBackgroundActive}
-						index={index}
-					/>
+					<WeekDayComponent key={day} day={day} index={index} />
 				))}
 				{Array.from({ length: emptyDays }).map((_, i) => (
 					<div
@@ -71,8 +55,6 @@ export function JalaliCalendar({
 						key={index}
 						index={index}
 						isHoliday={isHoliday}
-						isTransparent={isTransparent}
-						isBackgroundActive={isBackgroundActive}
 						jalaliFirstDay={firstDayOfMonth}
 						events={events}
 						currentDate={currentTime}
@@ -99,8 +81,7 @@ export function JalaliCalendar({
 interface Prop {
 	index: number
 	jalaliFirstDay: number
-	isTransparent: boolean
-	isBackgroundActive: boolean
+
 	isHoliday: (day: any, dayOfWeek: number) => boolean
 	events: FetchedAllEvents
 	currentDate: moment.Moment
@@ -108,11 +89,9 @@ interface Prop {
 function DayComponent({
 	index,
 	jalaliFirstDay,
-	isTransparent,
 	isHoliday,
 	events,
 	currentDate,
-	isBackgroundActive,
 }: Prop) {
 	const day = index + 1
 	const cellDate = currentDate.clone().jDate(day)
@@ -122,18 +101,6 @@ function DayComponent({
 	const isCurrentDay = day === currentDate.jDate()
 
 	const getTextColorClass = () => {
-		if (isTransparent) {
-			return isHolidayDay
-				? 'dark:text-red-400 text-red-900 drop-shadow-md'
-				: 'dark:text-gray-200 text-gray-200 drop-shadow-md'
-		}
-
-		if (!isBackgroundActive) {
-			return isHolidayDay
-				? 'dark:text-red-400 text-red-600'
-				: 'dark:text-gray-400 text-gray-300'
-		}
-
 		if (isHolidayDay) {
 			return 'dark:text-red-400 text-red-700'
 		}
@@ -143,40 +110,16 @@ function DayComponent({
 
 	const getBackgroundClass = () => {
 		if (!isCurrentDay) {
-			if (isTransparent) {
-				return isHolidayDay ? 'dark:bg-red-800/10 bg-red-400/40 ' : ''
-			}
-
-			if (!isBackgroundActive) {
-				return isHolidayDay ? 'dark:bg-red-900/10 bg-red-400/10' : ''
-			}
-
 			return isHolidayDay ? 'dark:bg-red-900/10 bg-red-400/10' : ''
 		}
 
-		if (isTransparent) {
-			return isHolidayDay
-				? 'dark:bg-black/40 bg-black/20 dark:ring-1 ring-1 dark:ring-red-400 ring-red-300'
-				: 'dark:bg-black/40 bg-black/20 dark:ring-1 ring-1 dark:ring-gray-400 ring-gray-300'
-		}
-
-		if (!isBackgroundActive) {
-			return isHolidayDay
-				? 'dark:bg-red-900/20  dark:ring-1 ring-1 dark:ring-red-500 ring-red-400'
-				: 'bg-black/20 dark:text-gray-200 backdrop-blur-sm hover:bg-neutral-800/80 dark:ring-1 ring-1 dark:ring-black/30 ring-gray-400'
-		}
-
 		return isHolidayDay
-			? 'dark:bg-red-900/20 bg-red-50 dark:ring-1 ring-1 dark:ring-red-500 ring-red-400'
+			? 'dark:bg-red-900/20 bg-red-400/10 dark:ring-1 ring-1 dark:ring-red-500 ring-red-400'
 			: 'dark:bg-gray-800 bg-gray-100 dark:ring-1 ring-1 dark:ring-gray-600 ring-gray-400'
 	}
 
 	const getHoverClass = () => {
 		if (isCurrentDay) return ''
-
-		if (isTransparent) {
-			return 'hover:bg-white/10 dark:hover:bg-black/20'
-		}
 
 		return 'hover:bg-gray-200 dark:hover:bg-gray-700'
 	}
@@ -294,31 +237,12 @@ function DayComponent({
 
 interface WeekDayProp {
 	day: string
-	isTransparent: boolean
 	index: number
-	isBackgroundActive: boolean
 }
-function WeekDayComponent({
-	day,
-	isTransparent,
-	index,
-	isBackgroundActive,
-}: WeekDayProp) {
+function WeekDayComponent({ day, index }: WeekDayProp) {
 	const isFriday = index === 6
 
 	const getWeekdayClass = () => {
-		if (isTransparent) {
-			return isFriday
-				? 'dark:text-red-400 text-red-400'
-				: 'dark:text-white text-gray-200 drop-shadow-sm'
-		}
-
-		if (!isBackgroundActive) {
-			return isFriday
-				? 'dark:text-red-400 text-red-600'
-				: 'dark:text-gray-400 text-gray-100'
-		}
-
 		return isFriday
 			? 'dark:text-red-400 text-red-600'
 			: 'dark:text-gray-400 text-gray-700'

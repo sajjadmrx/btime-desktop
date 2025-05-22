@@ -41,34 +41,6 @@ export function initIpcMain() {
 		shell.openExternal(url)
 	})
 
-	ipcMain.on('toggle-transparent', (event, windowKey: string) => {
-		const win = BrowserWindow.getAllWindows().filter(
-			(win) => win.title === windowKey,
-		)[0]
-		if (win) {
-			win.webContents.send('transparent_status', {
-				enableTransparent: (
-					store.get(widgetKey[windowKey]) as unknown as windowSettings
-				).transparentStatus,
-			})
-		}
-	})
-
-	ipcMain.on('toggle-isBackgroundDisabled', (event, windowKey: string) => {
-		const win = BrowserWindow.getAllWindows().filter(
-			(win) => win.title === windowKey,
-		)[0]
-		if (win) {
-			const isBackgroundDisabled = (
-				store.get(widgetKey[windowKey]) as unknown as windowSettings
-			).isBackgroundDisabled
-
-			win.webContents.send('background_status', {
-				isBackgroundDisabled: isBackgroundDisabled,
-			})
-		}
-	})
-
 	ipcMain.handle('getBorderRadius', async (event, window: string) => {
 		try {
 			const win = BrowserWindow.getAllWindows().filter(

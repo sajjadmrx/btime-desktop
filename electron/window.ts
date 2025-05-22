@@ -78,14 +78,6 @@ export async function createWindow(payload: Window) {
 			widgetKey[payload.title],
 		) as unknown as windowSettings
 
-		win.webContents.send('transparent_status', {
-			enableTransparent: setting.transparentStatus,
-		})
-
-		win.webContents.send('background_status', {
-			isBackgroundDisabled: setting.isBackgroundDisabled,
-		})
-
 		const borderRadius = setting.borderRadius
 
 		win.webContents.send('border-radius', {

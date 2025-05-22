@@ -11,9 +11,6 @@ function App() {
 		window.store.get(widgetKey.ArzChand),
 	)
 
-	const [isTransparent, setIsTransparent] = useState<boolean>(false)
-	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(false)
-
 	useEffect(() => {
 		const handleColorSchemeChange = (e) => {
 			document.documentElement.classList.remove('dark')
@@ -28,30 +25,6 @@ function App() {
 
 		handleColorSchemeChange(colorSchemeMediaQuery)
 
-		const observer = new MutationObserver(() => {
-			setIsTransparent(
-				document
-					.querySelector('.h-screen')
-					?.classList?.contains('transparent-active'),
-			)
-		})
-
-		const observerBackground = new MutationObserver(() => {
-			setBackgroundActive(
-				document.querySelector('.h-screen')?.classList?.contains('background'),
-			)
-		})
-
-		observer.observe(document.querySelector('.h-screen'), {
-			attributes: true,
-			attributeFilter: ['class'],
-		})
-
-		observerBackground.observe(document.querySelector('.h-screen'), {
-			attributes: true,
-			attributeFilter: ['class'],
-		})
-
 		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
 
 		window.ipcRenderer.on('updated-setting', () => {
@@ -64,8 +37,6 @@ function App() {
 				'change',
 				handleColorSchemeChange,
 			)
-			observer.disconnect()
-			observerBackground.disconnect()
 		}
 	}, [])
 
@@ -74,17 +45,9 @@ function App() {
 			<div className="h-full">
 				<div className="flex flex-col items-center h-full p-2">
 					{setting.template === 'default' || !setting.template ? (
-						<CurrenciesDefault
-							currencies={setting.currencies}
-							isBackgroundActive={isBackgroundActive}
-							isTransparent={isTransparent}
-						/>
+						<CurrenciesDefault currencies={setting.currencies} />
 					) : (
-						<CurrenciesClassic
-							currencies={setting.currencies}
-							isTransparent={isTransparent}
-							isBackgroundActive={isBackgroundActive}
-						/>
+						<CurrenciesClassic currencies={setting.currencies} />
 					)}
 					<div
 						className="flex items-center w-full h-10 p-2 mt-2 transition-all duration-300 ease-in-out overflow-clip"
@@ -94,7 +57,7 @@ function App() {
 							className={`w-7 h-7  moveable flex justify-center items-center rounded-full 
 								cursor-pointer hover:text-gray-300 dark:hover:bg-[#3c3c3c8a] dark:text-gray-400/90
 								dark:bg-transparent
-								${isTransparent ? 'text-gray-300' : 'text-gray-500'} 
+								text-gray-500 
 							`}
 							style={{ backdropFilter: 'blur(20px)' }}
 						>

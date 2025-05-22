@@ -12,9 +12,6 @@ function App() {
 		window.matchMedia('(prefers-color-scheme: dark)').matches,
 	)
 
-	const [isTransparent, setIsTransparent] = useState(false)
-	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(true)
-
 	useEffect(() => {
 		const handleColorSchemeChange = (e: MediaQueryListEvent) => {
 			setIsDarkMode(e.matches)
@@ -38,41 +35,11 @@ function App() {
 
 		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
 
-		const isContainClass = (className: string) => {
-			const element = document.querySelector('.h-screen')
-			if (!element) return false
-			return element.classList.contains(className)
-		}
-
-		setIsTransparent(isContainClass('transparent-active'))
-
-		const observer = new MutationObserver(() => {
-			setIsTransparent(isContainClass('transparent-active'))
-		})
-
-		const observerBackground = new MutationObserver(() => {
-			setBackgroundActive(isContainClass('background'))
-		})
-
-		if (document.querySelector('.h-screen'))
-			observer.observe(document.querySelector('.h-screen'), {
-				attributes: true,
-				attributeFilter: ['class'],
-			})
-
-		if (document.querySelector('.h-screen'))
-			observerBackground.observe(document.querySelector('.h-screen'), {
-				attributes: true,
-				attributeFilter: ['class'],
-			})
-
 		return () => {
 			colorSchemeMediaQuery.removeEventListener(
 				'change',
 				handleColorSchemeChange,
 			)
-			observer.disconnect()
-			observerBackground.disconnect()
 		}
 	}, [])
 
@@ -112,8 +79,6 @@ function App() {
 								isDarkMode={isDarkMode}
 								weatherData={weather}
 								weatherStore={weatherStore}
-								isTransparent={isTransparent}
-								isBackgroundActive={isBackgroundActive}
 							/>
 						) : weatherStore.city ? (
 							<WeatherSkeleton />

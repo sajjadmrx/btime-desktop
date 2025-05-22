@@ -17,8 +17,6 @@ export interface windowSettings {
 	}
 	borderRadius: number
 	alwaysOnTop: boolean
-	transparentStatus: boolean
-	isBackgroundDisabled: boolean
 	enable: boolean
 	html: string
 }
@@ -116,8 +114,6 @@ const storeDefaults: StoreKey = {
 		showDayEvents: true,
 		borderRadius: 28,
 		alwaysOnTop: false,
-		transparentStatus: false,
-		isBackgroundDisabled: false,
 		html: 'time.html',
 	},
 	NerkhYab: {
@@ -132,8 +128,6 @@ const storeDefaults: StoreKey = {
 		},
 		borderRadius: 28,
 		alwaysOnTop: false,
-		transparentStatus: false,
-		isBackgroundDisabled: false,
 		html: 'rate.html',
 		currencies: ['usd'],
 	},
@@ -151,8 +145,6 @@ const storeDefaults: StoreKey = {
 		},
 		borderRadius: 28,
 		alwaysOnTop: false,
-		transparentStatus: false,
-		isBackgroundDisabled: false,
 		html: 'arzchand.html',
 		currencies: ['usd', 'eur'],
 		template: 'classic',
@@ -169,8 +161,6 @@ const storeDefaults: StoreKey = {
 		},
 		borderRadius: 28,
 		alwaysOnTop: false,
-		transparentStatus: false,
-		isBackgroundDisabled: false,
 		city: null,
 		stateColor: true,
 		html: 'weather.html',
@@ -207,8 +197,6 @@ const storeDefaults: StoreKey = {
 				value: 'Asia/Tehran',
 			},
 		},
-		transparentStatus: false,
-		isBackgroundDisabled: false,
 		html: 'clock.html',
 	},
 	DamDasti: {
@@ -224,8 +212,6 @@ const storeDefaults: StoreKey = {
 		},
 		enable: false,
 		html: 'dam-dasti.html',
-		isBackgroundDisabled: false,
-		transparentStatus: false,
 	},
 	main: {
 		userId: randomUUID(),
@@ -249,9 +235,7 @@ const storeDefaults: StoreKey = {
 		},
 		enable: false,
 		html: 'sub-shomaar.html',
-		isBackgroundDisabled: false,
 		channelName: null,
-		transparentStatus: false,
 		subscriberFormat: 'short',
 	},
 	auth: null,

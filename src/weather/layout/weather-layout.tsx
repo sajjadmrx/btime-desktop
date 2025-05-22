@@ -10,14 +10,10 @@ interface WeatherComponentProps {
 	isDarkMode: boolean
 	weatherStore: WeatherSettingStore
 	weatherData: FetchedWeather
-	isTransparent: boolean
-	isBackgroundActive: boolean
 }
 export function WeatherLayout({
 	isDarkMode,
 	weatherStore,
-	isBackgroundActive,
-	isTransparent,
 	weatherData,
 }: WeatherComponentProps) {
 	const { data: forecast } = useGetForecastWeatherByLatLon(
@@ -34,14 +30,6 @@ export function WeatherLayout({
 
 	// Improved text color handling for all modes
 	const getTextColorClass = () => {
-		if (isTransparent) {
-			return isDarkMode
-				? 'text-gray-100 drop-shadow-md'
-				: 'text-gray-100 drop-shadow-lg'
-		}
-		if (!isBackgroundActive) {
-			return isDarkMode ? 'text-gray-200' : 'text-gray-400'
-		}
 		return isDarkMode ? 'text-gray-100' : 'text-gray-700'
 	}
 
@@ -78,7 +66,6 @@ export function WeatherLayout({
 									? getMainColorFromImage(
 											iconColor,
 											isDarkMode ? 'dark' : 'light',
-											isTransparent,
 										)
 									: '',
 						}}
@@ -104,8 +91,6 @@ export function WeatherLayout({
 							<ForecastComponent
 								weather={item}
 								key={index}
-								isBackgroundActive={isBackgroundActive}
-								isTransparent={isTransparent}
 								isDarkMode={isDarkMode}
 								iconColor={weatherStore.stateColor ? iconColor : null}
 							/>
@@ -115,7 +100,7 @@ export function WeatherLayout({
 			</div>
 			{weatherStore.stateColor && iconColor ? (
 				<div
-					className={`absolute z-0 w-full h-20 xs:h-24 ${isTransparent ? 'opacity-30' : isDarkMode ? 'opacity-40' : 'opacity-20'} -bottom-10 blur-2xl`}
+					className={`absolute z-0 w-full h-20 xs:h-24 ${isDarkMode ? 'opacity-40' : 'opacity-20'} -bottom-10 blur-2xl`}
 					style={{
 						background: `linear-gradient(to bottom, ${iconColor} 0%, ${`${iconColor}00`} 10%, ${iconColor} 100%)`,
 					}}
@@ -125,33 +110,7 @@ export function WeatherLayout({
 	)
 }
 
-function getMainColorFromImage(
-	hexColor: string,
-	theme: string,
-	isTransparent: boolean,
-) {
-	// If transparent, make color more vibrant
-	if (isTransparent) {
-		// Convert hex to RGB
-		const color = hexColor.replace('#', '')
-		const r = Number.parseInt(color.substring(0, 2), 16)
-		const g = Number.parseInt(color.substring(2, 4), 16)
-		const b = Number.parseInt(color.substring(4, 6), 16)
-
-		// Brighten for transparent mode
-		const factor = theme === 'dark' ? 3.7 : 3.0
-		const brighten = (value: number) =>
-			Math.max(0, Math.min(255, Math.floor(value * factor + 50)))
-
-		const brightR = brighten(r)
-		const brightG = brighten(g)
-		const brightB = brighten(b)
-
-		// Convert RGB back to hex
-		const toHex = (value: number) => value.toString(16).padStart(2, '0')
-		return `#${toHex(brightR)}${toHex(brightG)}${toHex(brightB)}`
-	}
-
+function getMainColorFromImage(hexColor: string, theme: string) {
 	// Standard theme-based color
 	if (theme === 'light') {
 		return hexColor

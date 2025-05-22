@@ -18,10 +18,3 @@ if (document.getElementById('root')) {
 }
 
 postMessage({ payload: 'removeLoading' }, '*')
-
-window.ipcRenderer.on('transparent_status', (evt, message) => {
-	const bodyElement = document.body
-	if (message.enableTransparent) {
-		bodyElement.classList.add('transparent-active')
-	} else bodyElement.classList.remove('transparent-active')
-})

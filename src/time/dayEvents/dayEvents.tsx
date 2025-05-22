@@ -26,8 +26,6 @@ export function DayEventsComponent({
 	const { data: events, refetch: refetchEvents } = useGetEvents()
 	const dayEvents = combineAndSortEvents(events, today, googleEvents)
 
-	const [isTransparent, setIsTransparent] = useState<boolean>(false)
-
 	// Handle refresh trigger
 	useEffect(() => {
 		if (refreshTrigger > 0) {
@@ -38,49 +36,18 @@ export function DayEventsComponent({
 		}
 	}, [refreshTrigger, isAuthenticated, refetchEvents, refetchGoogleEvents])
 
-	useEffect(() => {
-		setIsTransparent(
-			document
-				.querySelector('.h-screen')
-				?.classList?.contains('transparent-active'),
-		)
-
-		const observer = new MutationObserver(() => {
-			setIsTransparent(
-				document
-					.querySelector('.h-screen')
-					?.classList?.contains('transparent-active'),
-			)
-		})
-
-		observer.observe(document.querySelector('.h-screen'), {
-			attributes: true,
-			attributeFilter: ['class'],
-		})
-
-		return () => {
-			observer.disconnect()
-		}
-	}, [])
-
 	return (
 		<div>
 			<div
-				className={`w-full ${
-					isTransparent
-						? 'bg-gray-400/20 dark:bg-[#85858536]'
-						: 'bg-gray-400 dark:bg-[#a8a8a833]'
-				} h-0.5 mt-1 sm:invisible xs:invisible h-xs:invisible`}
+				className={
+					'w-full bg-gray-400 dark:bg-[#a8a8a833] h-0.5 mt-1 sm:invisible xs:invisible h-xs:invisible'
+				}
 			></div>
 			<div className="flex flex-row-reverse justify-between h-full">
 				<div
-					className={`flex-col items-end w-72 h-24 overflow-y-auto scrollbar-thin 
-						${
-							isTransparent
-								? 'scrollbar-thumb-gray-300/20 scrollbar-track-gray-100/20 dark:scrollbar-thumb-gray-600/20 dark:scrollbar-track-gray-800/20'
-								: 'scrollbar-thumb-gray-300 scrollbar-track-gray-100/60 dark:scrollbar-thumb-gray-600/20 dark:scrollbar-track-gray-800/20'
-						}
-						`}
+					className={
+						'flex-col items-end w-72 h-24 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100/60 dark:scrollbar-thumb-gray-600/20 dark:scrollbar-track-gray-800/20'
+					}
 				>
 					{' '}
 					<div className="flex flex-col w-full gap-0.5 p-1 pb-4 text-right">

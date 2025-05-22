@@ -153,7 +153,7 @@ export function getGregorianEvents(
 
 export function getCurrentDate(timeZone = 'Asia/Tehran') {
 	const date = new Date(new Date().toLocaleString('en-US', { timeZone }))
-	return jalaliMoment(date).locale('fa').utc().add(3.5, 'hours').add(13, 'days')
+	return jalaliMoment(date).locale('fa').utc().add(3.5, 'hours')
 }
 
 export interface CombinedEvent {

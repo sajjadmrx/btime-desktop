@@ -4,17 +4,13 @@ import type { FetchedAllEvents } from 'src/api/api.interface'
 import { getGregorianEvents } from '../jalali/utils'
 
 interface GregorianCalendarProp {
-	isTransparent: boolean
-	isBackgroundActive: boolean
 	currentTime: moment.Moment
 	events: FetchedAllEvents
 }
 
 export function GregorianCalendar({
-	isTransparent,
 	currentTime,
 	events,
-	isBackgroundActive,
 }: GregorianCalendarProp) {
 	const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 	const firstDayOfMonth = currentTime.clone().startOf('month').day()
@@ -28,12 +24,7 @@ export function GregorianCalendar({
 		>
 			<div className="grid grid-cols-7 gap-1 xs:gap-1.5 sm:gap-2">
 				{weekDays.map((day, index) => (
-					<WeekDayComponent
-						key={day}
-						day={day}
-						isTransparent={isTransparent}
-						isBackgroundActive={isBackgroundActive}
-					/>
+					<WeekDayComponent key={day} day={day} />
 				))}
 				{[...Array(firstDayOfMonth)].map((_, index) => (
 					<div key={index} className="p-1 text-center sm:p-2"></div>
@@ -42,8 +33,6 @@ export function GregorianCalendar({
 					<DayComponent
 						key={index}
 						index={index}
-						isTransparent={isTransparent}
-						isBackgroundActive={isBackgroundActive}
 						gregorianFirstDay={firstDayOfMonth}
 						events={events}
 						currentDate={currentTime}
@@ -57,20 +46,11 @@ export function GregorianCalendar({
 interface Prop {
 	index: number
 	gregorianFirstDay: number
-	isTransparent: boolean
-	isBackgroundActive: boolean
 	events: FetchedAllEvents
 	currentDate: moment.Moment
 }
 
-function DayComponent({
-	index,
-	gregorianFirstDay,
-	isTransparent,
-	events,
-	currentDate,
-	isBackgroundActive,
-}: Prop) {
+function DayComponent({ index, gregorianFirstDay, events, currentDate }: Prop) {
 	const day = index + 1
 	const cellDate = currentDate.clone().date(day)
 
@@ -79,14 +59,6 @@ function DayComponent({
 	const isCurrentDay = day === currentDate.date()
 
 	const getTextColorClass = () => {
-		if (isTransparent) {
-			return 'dark:text-gray-200 text-gray-200 drop-shadow-md'
-		}
-
-		if (!isBackgroundActive) {
-			return 'dark:text-gray-400 text-gray-300/90'
-		}
-
 		return 'dark:text-gray-300 text-gray-700'
 	}
 
@@ -95,24 +67,11 @@ function DayComponent({
 			return ''
 		}
 
-		// Current day styling
-		if (isTransparent) {
-			return 'dark:bg-black/40 bg-black/20 dark:ring-1 ring-1 dark:ring-gray-400 ring-gray-300'
-		}
-
-		if (!isBackgroundActive) {
-			return 'bg-black/20 dark:text-gray-200 backdrop-blur-sm hover:bg-neutral-800/80 dark:ring-1 ring-1 dark:ring-black/30 ring-gray-400'
-		}
-
 		return 'dark:bg-gray-800 bg-gray-100 dark:ring-1 ring-1 dark:ring-gray-600 ring-gray-400'
 	}
 
 	const getHoverClass = () => {
 		if (isCurrentDay) return ''
-
-		if (isTransparent) {
-			return 'hover:bg-white/10 dark:hover:bg-black/20'
-		}
 
 		return 'hover:bg-gray-200 dark:hover:bg-gray-700'
 	}
@@ -120,9 +79,6 @@ function DayComponent({
 	const dayEventsList = dayEvents.length ? dayEvents : []
 
 	const getTooltipClass = () => {
-		if (isTransparent) {
-			return 'backdrop-blur-md bg-black/40 dark:bg-black/60 text-gray-100'
-		}
 		return 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-lg'
 	}
 
@@ -181,24 +137,10 @@ function DayComponent({
 
 interface WeekDayProp {
 	day: string
-	isTransparent: boolean
-	isBackgroundActive: boolean
 }
 
-function WeekDayComponent({
-	day,
-	isTransparent,
-	isBackgroundActive,
-}: WeekDayProp) {
+function WeekDayComponent({ day }: WeekDayProp) {
 	const getWeekdayClass = () => {
-		if (isTransparent) {
-			return 'dark:text-white text-gray-200 drop-shadow-sm'
-		}
-
-		if (!isBackgroundActive) {
-			return 'dark:text-gray-400 text-gray-100'
-		}
-
 		return 'dark:text-gray-400 text-gray-700'
 	}
 
