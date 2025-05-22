@@ -3,12 +3,7 @@ import { useGetEvents } from '../../api/hooks/events/getEvents.hook'
 import { useGetGoogleCalendarEvents } from '../../api/hooks/events/getGoogleCalendarEvents.hook'
 import { useAuth } from '../../context/auth.context'
 import { useDate } from '../context/date.context'
-import {
-	combineAndSortEvents,
-	getGregorianEvents,
-	getHijriEvents,
-	getShamsiEvents,
-} from '../jalali/utils'
+import { combineAndSortEvents } from '../jalali/utils'
 import { EventCard } from './events/eventCard'
 
 interface DayEventsComponentProps {
@@ -41,7 +36,7 @@ export function DayEventsComponent({
 			const fetchData = async () => {
 				setIsLoading(true)
 				try {
-					const promises: Promise<any>[] = [refetchEvents()] // Explicitly type promises array
+					const promises: Promise<any>[] = [refetchEvents()]
 					if (isAuthenticated) {
 						promises.push(refetchGoogleEvents())
 					}
@@ -80,11 +75,6 @@ export function DayEventsComponent({
 						)}
 					</div>
 				</div>
-				{/* {gif && (
-					<div className="flex items-center justify-center w-2/5 h-full pb-px">
-						{<img className="h-16" src={gif} />}
-					</div>
-				)} */}
 			</div>
 		</div>
 	)
