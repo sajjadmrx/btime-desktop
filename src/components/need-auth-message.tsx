@@ -38,9 +38,9 @@ export function NeedAuthMessage({
 
 			<Typography
 				variant="h5"
-				className="mb-2 text-center text-gray-800 dark:text-white font-[Vazir]"
+				className="mb-2 text-center font-medium text-gray-800 dark:text-white font-[Vazir]"
 			>
-				نیاز به ورود به حساب کاربری
+				نیازمند ورود به حساب
 			</Typography>
 
 			<Typography

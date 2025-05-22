@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { widgetKey } from '../../shared/widgetKey'
 import type { ClockSettingStore } from '../../electron/store'
-import { DigitalClock } from './digital'
+import { widgetKey } from '../../shared/widgetKey'
+import { useThemeMode } from '../hooks/useTheme'
 import { AnalogClockA } from './analog_clock_a'
+import { DigitalClock } from './digital'
 
 function App() {
 	const [setting, setSetting] = useState<ClockSettingStore>(
@@ -10,40 +11,16 @@ function App() {
 	)
 
 	useEffect(() => {
-		const handleColorSchemeChange = (e) => {
-			document.documentElement.classList.remove('dark')
-			if (e.matches) {
-				document.documentElement.classList.add('dark')
-			}
-		}
-
-		const colorSchemeMediaQuery = window.matchMedia(
-			'(prefers-color-scheme: dark)',
-		)
-
 		window.ipcRenderer.on('updated-setting', () => {
 			setSetting(window.store.get(widgetKey.Clock))
 		})
-
-		handleColorSchemeChange(colorSchemeMediaQuery)
-
-		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
-
-		return () => {
-			colorSchemeMediaQuery.removeEventListener(
-				'change',
-				handleColorSchemeChange,
-			)
-
-			window.ipcRenderer.removeListener('updated-setting', () => {
-				setSetting(window.store.get(widgetKey.Clock))
-			})
-		}
 	}, [])
 
+	useThemeMode()
+
 	return (
-		<div className="h-screen w-screen overflow-hidden">
-			<div className="moveable px-0 h-full">
+		<div className="w-screen h-screen overflow-hidden">
+			<div className="h-full px-0 moveable">
 				{setting.currentClock === 'digital' ? (
 					<DigitalClock digital={setting.digital} />
 				) : (

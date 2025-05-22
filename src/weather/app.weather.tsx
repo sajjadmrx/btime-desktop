@@ -2,78 +2,21 @@ import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { widgetKey } from '../../shared/widgetKey'
 import { useGetWeatherByLatLon } from '../api/hooks/weather/getWeatherByLatLon'
+import { useThemeMode } from '../hooks/useTheme'
 import { WeatherLayout } from './layout/weather-layout'
 
 function App() {
 	const [weatherStore, setWeatherStore] = useState(
 		window.store.get('Weather' as widgetKey.Weather),
 	)
-	const [isDarkMode, setIsDarkMode] = useState(
-		window.matchMedia('(prefers-color-scheme: dark)').matches,
-	)
 
-	const [isTransparent, setIsTransparent] = useState(false)
-	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(true)
+	useThemeMode()
 
 	useEffect(() => {
-		const handleColorSchemeChange = (e: MediaQueryListEvent) => {
-			setIsDarkMode(e.matches)
-			document.documentElement.classList.remove('dark')
-			if (e.matches) {
-				document.documentElement.classList.add('dark')
-			}
-		}
-
-		const colorSchemeMediaQuery = window.matchMedia(
-			'(prefers-color-scheme: dark)',
-		)
-		handleColorSchemeChange(
-			colorSchemeMediaQuery as unknown as MediaQueryListEvent,
-		)
-
 		window.ipcRenderer.on('updated-setting', () => {
 			const weatherSetting = window.store.get(widgetKey.Weather)
 			setWeatherStore(weatherSetting)
 		})
-
-		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
-
-		const isContainClass = (className: string) => {
-			const element = document.querySelector('.h-screen')
-			if (!element) return false
-			return element.classList.contains(className)
-		}
-
-		setIsTransparent(isContainClass('transparent-active'))
-
-		const observer = new MutationObserver(() => {
-			setIsTransparent(isContainClass('transparent-active'))
-		})
-
-		const observerBackground = new MutationObserver(() => {
-			setBackgroundActive(isContainClass('background'))
-		})
-
-		if (document.querySelector('.h-screen'))
-			observer.observe(document.querySelector('.h-screen'), {
-				attributes: true,
-				attributeFilter: ['class'],
-			})
-
-		if (document.querySelector('.h-screen'))
-			observerBackground.observe(document.querySelector('.h-screen'), {
-				attributes: true,
-				attributeFilter: ['class'],
-			})
-
-		return () => {
-			colorSchemeMediaQuery.removeEventListener(
-				'change',
-				handleColorSchemeChange,
-			)
-			observer.disconnect()
-			observerBackground.disconnect()
-		}
 	}, [])
 
 	const { data: weather, isSuccess } = useGetWeatherByLatLon(
@@ -109,11 +52,8 @@ function App() {
 					>
 						{weather && isSuccess ? (
 							<WeatherLayout
-								isDarkMode={isDarkMode}
 								weatherData={weather}
 								weatherStore={weatherStore}
-								isTransparent={isTransparent}
-								isBackgroundActive={isBackgroundActive}
 							/>
 						) : weatherStore.city ? (
 							<WeatherSkeleton />

@@ -19,21 +19,10 @@ export function BtimeSetting() {
 		setSetting({ ...setting })
 
 		applyChanges()
-		if (key === 'transparentStatus') {
-			window.ipcRenderer.send('toggle-transparent', widgetKey.BTime)
-		}
-
-		if (key === 'isBackgroundDisabled') {
-			window.ipcRenderer.send('toggle-isBackgroundDisabled', widgetKey.BTime)
-		}
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.BTime)
-		} else if (
-			!['transparentStatus', 'borderRadius', 'isBackgroundDisabled'].includes(
-				key,
-			)
-		) {
+		} else if (!['borderRadius'].includes(key)) {
 			window.ipcRenderer.send('updated-setting', widgetKey.BTime)
 		}
 	}
@@ -43,7 +32,7 @@ export function BtimeSetting() {
 			...setting,
 			alwaysOnTop: setting.alwaysOnTop,
 			enable: setting.enable,
-			transparentStatus: setting.transparentStatus,
+
 			bounds: window.store.get(widgetKey.BTime).bounds,
 			borderRadius: setting.borderRadius,
 		})
@@ -94,54 +83,6 @@ export function BtimeSetting() {
 						}}
 					/>
 					<div className="flex flex-col">
-						<Checkbox
-							ripple={true}
-							defaultChecked={setting.transparentStatus}
-							onClick={() =>
-								setSettingValue('transparentStatus', !setting.transparentStatus)
-							}
-							label={
-								<div>
-									<Typography
-										variant={'h5'}
-										color="blue-gray"
-										className="dark:text-[#c7c7c7] text-gray-600  text-[13px] font-[Vazir] items-center "
-									>
-										شفاف <span className="font-light">(پس زمینه شفاف)</span>
-									</Typography>
-								</div>
-							}
-							containerProps={{
-								className: 'flex',
-							}}
-						/>
-						<Checkbox
-							ripple={true}
-							defaultChecked={setting.isBackgroundDisabled}
-							onClick={() =>
-								setSettingValue(
-									'isBackgroundDisabled',
-									!setting.isBackgroundDisabled,
-								)
-							}
-							label={
-								<div>
-									<Typography
-										variant={'h5'}
-										color="blue-gray"
-										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] items-center "
-									>
-										غیرفعال کردن پشت زمینه{' '}
-										<span className="font-light">
-											(غیرفعال کردن نمایش پشت زمینه برای ویجت)
-										</span>
-									</Typography>
-								</div>
-							}
-							containerProps={{
-								className: 'flex',
-							}}
-						/>
 						<Checkbox
 							ripple={true}
 							defaultChecked={setting.alwaysOnTop}

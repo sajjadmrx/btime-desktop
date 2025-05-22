@@ -83,6 +83,14 @@ export const UserProfile = () => {
 					{user.name}
 				</h2>
 				<p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+				{user.username && (
+					<p
+						className="mt-1 text-xs text-gray-500 dark:text-gray-600"
+						dir="ltr"
+					>
+						(@{user.username})
+					</p>
+				)}
 			</div>
 
 			<div className="p-4 mb-6 rounded-lg bg-gray-50 dark:bg-gray-800">
@@ -105,14 +113,13 @@ export const UserProfile = () => {
 									</div>
 								))
 						) : (
-							<>
-								{[0, 1, 2].map((index) => (
-									<div
-										key={index}
-										className="w-10 h-10 bg-gray-200 rounded-lg dark:bg-gray-700"
-									></div>
-								))}
-							</>
+							<div className="p-2 text-sm text-gray-700 rounded-lg text-balance bg-yellow-50 dark:bg-yellow-700/30 dark:text-yellow-200">
+								<p>
+									جهت دسترسی به گوگل کلندر و سایر سرویس‌های مشابه، افزونه مرورگر
+									ویجتی‌فای را نصب کرده و در بخش پروفایل به پلتفرم مورد نظر متصل
+									شوید.
+								</p>
+							</div>
 						)}
 					</div>
 				</div>

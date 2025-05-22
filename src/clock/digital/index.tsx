@@ -7,8 +7,6 @@ interface Prop {
 export function DigitalClock({ digital }: Prop) {
 	const timeRef = useRef(null)
 	const dateRef = useRef(null)
-	const [isTransparent, setIsTransparent] = useState<boolean>(false)
-	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(false)
 
 	useEffect(() => {
 		const updateClock = () => {
@@ -51,45 +49,12 @@ export function DigitalClock({ digital }: Prop) {
 		return () => clearInterval(timerId)
 	}, [digital])
 
-	useEffect(() => {
-		setIsTransparent(
-			document
-				.querySelector('.h-screen')
-				.classList.contains('transparent-active'),
-		)
-		const observer = new MutationObserver(() => {
-			setIsTransparent(
-				document
-					.querySelector('.h-screen')
-					.classList.contains('transparent-active'),
-			)
-		})
-
-		const observerBackground = new MutationObserver(() => {
-			setBackgroundActive(
-				document.querySelector('.h-screen')?.classList?.contains('background'),
-			)
-		})
-
-		observer.observe(document.querySelector('.h-screen'), {
-			attributes: true,
-			attributeFilter: ['class'],
-		})
-		observerBackground.observe(document.querySelector('.h-screen'), {
-			attributes: true,
-			attributeFilter: ['class'],
-		})
-
-		return () => {
-			observer.disconnect()
-			observerBackground.disconnect()
-		}
-	}, [])
-
 	return (
 		<div className="flex items-center justify-center h-full px-2 text-center">
 			<div
-				className={`flex flex-col text-6xl font-bold font-mono relative w-60 overflow-hidden justify-center items-center font-[digital7] ${getTextColor(isTransparent, isBackgroundActive)}`}
+				className={
+					'flex flex-col text-6xl font-bold font-mono relative w-60 overflow-hidden justify-center items-center font-[digital7] text-gray-600 dark:text-[#d3d3d3]'
+				}
 			>
 				<div
 					ref={timeRef}
@@ -118,12 +83,4 @@ export function DigitalClock({ digital }: Prop) {
 			</div>
 		</div>
 	)
-}
-
-function getTextColor(isTransparent: boolean, isBackgroundActive: boolean) {
-	let textColor = 'text-gray-600 dark:text-[#d3d3d3]'
-	if (isTransparent || !isBackgroundActive) {
-		textColor = 'text-gray-100 text-gray-trasnparent'
-	}
-	return textColor
 }

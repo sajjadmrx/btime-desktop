@@ -3,83 +3,16 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { widgetKey } from '../../shared/widgetKey'
 import { useGetYoutubeProfile } from '../api/hooks/channel/youtube-profile.hook'
 import { CountUpAnimation } from '../hooks/useCountAnimation'
+import { useThemeMode } from '../hooks/useTheme'
 import { formatSubscribeCount } from '../utils/format'
-
-const useUIStateObserver = () => {
-	const [isTransparent, setIsTransparent] = useState<boolean>(false)
-	const [isBackgroundActive, setIsBackgroundActive] = useState<boolean>(false)
-
-	useEffect(() => {
-		const targetElement = document.querySelector('.h-screen')
-		if (!targetElement) return
-
-		const observer = new MutationObserver(() => {
-			setIsTransparent(targetElement.classList.contains('transparent-active'))
-			setIsBackgroundActive(targetElement.classList.contains('background'))
-		})
-
-		observer.observe(targetElement, {
-			attributes: true,
-			attributeFilter: ['class'],
-		})
-
-		return () => observer.disconnect()
-	}, [])
-
-	const getSubscribeCountStyle = useCallback(() => {
-		if (isTransparent) return 'text-gray-200/80 dark:text-gray-200'
-		if (!isBackgroundActive) return 'text-gray-300/90'
-		return 'text-gray-800 dark:text-gray-200/80'
-	}, [isTransparent, isBackgroundActive])
-
-	const getTextColor = useCallback(() => {
-		if (isTransparent) return 'text-gray-300/90 dark:text-gray-200'
-		if (!isBackgroundActive) return 'text-gray-300'
-		return 'text-gray-800 dark:text-gray-100/80'
-	}, [isTransparent, isBackgroundActive])
-
-	return {
-		isTransparent,
-		isBackgroundActive,
-		getSubscribeCountStyle,
-		getTextColor,
-	}
-}
-
-const useDarkMode = () => {
-	const handleColorSchemeChange = useCallback(
-		(e: MediaQueryListEvent | MediaQueryList) => {
-			document.documentElement.classList.remove('dark')
-			if (e.matches) {
-				document.documentElement.classList.add('dark')
-			}
-		},
-		[],
-	)
-
-	useEffect(() => {
-		const colorSchemeMediaQuery = window.matchMedia(
-			'(prefers-color-scheme: dark)',
-		)
-		handleColorSchemeChange(colorSchemeMediaQuery)
-		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
-
-		return () => {
-			colorSchemeMediaQuery.removeEventListener(
-				'change',
-				handleColorSchemeChange,
-			)
-		}
-	}, [handleColorSchemeChange])
-}
 
 function App() {
 	const [channelName, setChannelName] = useState<string>('')
 	const [subscriberFormat, setSubscriberFormat] = useState<'short' | 'full'>(
 		'short',
 	)
-	const { getSubscribeCountStyle, getTextColor } = useUIStateObserver()
-	useDarkMode()
+
+	useThemeMode()
 
 	useEffect(() => {
 		function handleSettingsUpdate() {
@@ -132,17 +65,21 @@ function App() {
 								/>
 							</div>
 						)}
-						<h1 className={`text-xl font-medium text-center ${getTextColor()}`}>
+						<h1
+							className={`text-xl font-medium text-center 'text-gray-800 dark:text-gray-100/80`}
+						>
 							{channelInfo.name}
 						</h1>
 						<div className="flex flex-col items-center">
 							<span
-								className={`text-3xl font-semibold font-[balooTamma] xxs:text-sm xs:text-lg sm:text-xl ${getSubscribeCountStyle()}`}
+								className={
+									'text-3xl font-semibold font-[balooTamma] xxs:text-sm xs:text-lg sm:text-xl text-gray-800 dark:text-gray-200/80'
+								}
 							>
 								{formattedSubscriberCount}
 							</span>
 							<span
-								className={`mt-1 text-base font-light text-[12px] xxs:text-xs ${getTextColor()} opacity-90`}
+								className={`mt-1 text-base font-light text-[12px] xxs:text-xs 'text-gray-800 dark:text-gray-100/80 opacity-90`}
 							>
 								subscribers
 							</span>

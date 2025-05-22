@@ -7,15 +7,9 @@ import { extractMainColorFromImage } from '../../../utils/colorUtils'
 
 interface Prop {
 	currencyCode: string
-	isBackgroundActive: boolean
-	isTransparent: boolean
 }
 
-export function CurrencyDefaultComponent({
-	currencyCode,
-	isBackgroundActive,
-	isTransparent,
-}: Prop) {
+export function CurrencyDefaultComponent({ currencyCode }: Prop) {
 	if (!currencyCode) {
 		return null
 	}
@@ -44,10 +38,7 @@ export function CurrencyDefaultComponent({
 		}
 	}, [currency?.icon])
 
-	let textColor = 'text-gray-600 dark:text-[#d3d3d3]'
-	if (isTransparent || !isBackgroundActive) {
-		textColor = 'text-gray-400'
-	}
+	const textColor = 'text-gray-600 dark:text-[#d3d3d3]'
 
 	return (
 		<div className="flex flex-row flex-wrap items-center justify-around w-full gap-2">

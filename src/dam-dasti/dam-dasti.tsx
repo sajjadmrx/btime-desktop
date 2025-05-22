@@ -3,6 +3,7 @@ import { IoMdAdd } from 'react-icons/io'
 import { MdOutlineDragIndicator } from 'react-icons/md'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { userLogger } from '../../shared/logger'
+import { useThemeMode } from '../hooks/useTheme'
 
 interface AppItem {
 	id: string
@@ -14,58 +15,8 @@ interface AppItem {
 function App() {
 	const [apps, setApps] = useState<AppItem[]>([])
 	const [isDragging, setIsDragging] = useState(false)
-	const [isTransparent, setIsTransparent] = useState<boolean>(false)
-	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(false)
 
-	useEffect(() => {
-		const handleColorSchemeChange = (e) => {
-			document.documentElement.classList.remove('dark')
-			if (e.matches) {
-				document.documentElement.classList.add('dark')
-			}
-		}
-
-		const colorSchemeMediaQuery = window.matchMedia(
-			'(prefers-color-scheme: dark)',
-		)
-
-		handleColorSchemeChange(colorSchemeMediaQuery)
-
-		const observer = new MutationObserver(() => {
-			setIsTransparent(
-				document
-					.querySelector('.h-screen')
-					?.classList?.contains('transparent-active'),
-			)
-		})
-
-		const observerBackground = new MutationObserver(() => {
-			setBackgroundActive(
-				document.querySelector('.h-screen')?.classList?.contains('background'),
-			)
-		})
-
-		observer.observe(document.querySelector('.h-screen'), {
-			attributes: true,
-			attributeFilter: ['class'],
-		})
-
-		observerBackground.observe(document.querySelector('.h-screen'), {
-			attributes: true,
-			attributeFilter: ['class'],
-		})
-
-		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
-
-		return () => {
-			colorSchemeMediaQuery.removeEventListener(
-				'change',
-				handleColorSchemeChange,
-			)
-			observer.disconnect()
-			observerBackground.disconnect()
-		}
-	}, [])
+	useThemeMode()
 
 	useEffect(() => {
 		window.ipcMain.invoke('get-apps').then((savedApps: AppItem[]) => {
@@ -148,15 +99,8 @@ function App() {
 		}
 	}, [])
 
-	const appNameTextColor = isTransparent
-		? 'text-gray-300 dark:text-gray-200'
-		: isBackgroundActive
-			? 'text-gray-600 dark:text-gray-400'
-			: 'text-gray-300 dark:text-gray-200'
-
-	const iconButtonStyle = isTransparent
-		? 'text-gray-300 hover:bg-gray-700/30'
-		: 'text-gray-500 dark:text-gray-400/90 hover:bg-gray-200/70 dark:hover:bg-[#3c3c3c8a]'
+	const iconButtonStyle =
+		'text-gray-500 dark:text-gray-400/90 hover:bg-gray-200/70 dark:hover:bg-[#3c3c3c8a]'
 
 	return (
 		<div
@@ -202,8 +146,7 @@ function App() {
 
 						<div
 							className={`relative mb-2 transition-all rounded-full shadow-md cursor-pointer w-12 h-12 xs:w-12 xs:h-12 sm:w-10 sm:h-10 hover:scale-110  xxs:w-8 xxs:h-8 
-                                group-hover:ring-2 group-hover:ring-blue-400 dark:group-hover:ring-blue-500 
-                                ${isTransparent ? 'opacity-90' : 'opacity-100'}`}
+                                group-hover:ring-2 group-hover:ring-blue-400 dark:group-hover:ring-blue-500`}
 							onClick={() => handleLaunchApp(app)}
 							title={`اجرای ${app.name}`}
 						>
@@ -211,7 +154,7 @@ function App() {
 								<img
 									src={app.icon}
 									alt={app.name}
-									className={`object-cover w-full h-full p-1 rounded-full ${isTransparent ? 'opacity-80' : ''}`}
+									className={'object-cover w-full h-full p-1 rounded-full'}
 									onError={(e) => {
 										e.currentTarget.style.display = 'none'
 										const defaultIcon = document.createElement('div')
@@ -229,7 +172,9 @@ function App() {
 						</div>
 
 						<span
-							className={`w-full px-1 text-xs xxs:text-[10px] sm:text-xs font-medium text-center truncate ${appNameTextColor}`}
+							className={
+								'w-full px-1 text-xs xxs:text-[10px] sm:text-xs font-medium text-center truncate text-gray-600 dark:text-gray-300'
+							}
 						>
 							{app.name.charAt(0).toUpperCase() + app.name.slice(1)}
 						</span>
@@ -240,13 +185,13 @@ function App() {
 					<div
 						className={`flex items-center justify-center mb-2 transition-all border-2 border-gray-400/30 border-dashed rounded-full cursor-pointer w-12 h-12 xs:w-13 xs:h-13 sm:w-14 sm:h-14 
                         hover:border-blue-400 hover:scale-105 dark:hover:border-blue-500 
-                        ${isTransparent ? 'hover:bg-blue-50/30' : 'hover:bg-blue-50'} dark:hover:bg-blue-900/30 group`}
+                        hover:bg-blue-50 dark:hover:bg-blue-900/30 group`}
 						title="افزودن برنامه جدید"
 						onClick={handleAddApp}
 					>
 						<IoMdAdd
 							size={20}
-							className={`${isTransparent ? 'text-gray-400/70' : 'text-gray-400'} 
+							className={`text-gray-400
                                 transition-colors dark:text-gray-500 group-hover:text-blue-500 dark:group-hover:text-blue-400`}
 						/>
 					</div>

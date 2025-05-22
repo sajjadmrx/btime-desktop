@@ -10,9 +10,15 @@ import {
 } from 'electron'
 import { userLogger } from '../shared/logger'
 import { widgetKey } from '../shared/widgetKey'
-import { type MainSettingStore, store, type windowSettings } from './store'
-import { createSettingWindow, createWindow } from './window'
 import { addChildWindow } from './parentWindow'
+import {
+	type BtimeSettingStore,
+	type MainSettingStore,
+	store,
+	type windowSettings,
+} from './store'
+import { BtimeConfig } from './widgets/btime-config'
+import { createSettingWindow, createWindow } from './window'
 
 const windowsShortcuts = require('windows-shortcuts')
 const resolveShortcut = promisify(windowsShortcuts.query)
@@ -33,34 +39,6 @@ export function initIpcMain() {
 
 	ipcMain.on('open-url', (event, url: string) => {
 		shell.openExternal(url)
-	})
-
-	ipcMain.on('toggle-transparent', (event, windowKey: string) => {
-		const win = BrowserWindow.getAllWindows().filter(
-			(win) => win.title === windowKey,
-		)[0]
-		if (win) {
-			win.webContents.send('transparent_status', {
-				enableTransparent: (
-					store.get(widgetKey[windowKey]) as unknown as windowSettings
-				).transparentStatus,
-			})
-		}
-	})
-
-	ipcMain.on('toggle-isBackgroundDisabled', (event, windowKey: string) => {
-		const win = BrowserWindow.getAllWindows().filter(
-			(win) => win.title === windowKey,
-		)[0]
-		if (win) {
-			const isBackgroundDisabled = (
-				store.get(widgetKey[windowKey]) as unknown as windowSettings
-			).isBackgroundDisabled
-
-			win.webContents.send('background_status', {
-				isBackgroundDisabled: isBackgroundDisabled,
-			})
-		}
 	})
 
 	ipcMain.handle('getBorderRadius', async (event, window: string) => {
@@ -103,6 +81,20 @@ export function initIpcMain() {
 			(win) => win.title === windowKey,
 		)[0]
 		if (win) {
+			const setting = store.get(
+				widgetKey[windowKey],
+			) as unknown as windowSettings
+			if (windowKey === widgetKey.BTime) {
+				const bTimeSetting = setting as unknown as BtimeSettingStore
+				if (bTimeSetting.showCalendar) {
+					win.setSize(BtimeConfig.minWidth, BtimeConfig.minHeight)
+					win.setResizable(false)
+				} else {
+					win.setResizable(true)
+					win.setSize(setting.bounds.width, setting.bounds.height)
+				}
+			}
+
 			win.webContents.send('updated-setting')
 		}
 	})

@@ -7,15 +7,9 @@ import { useGetCurrencyByCode } from '../../../api/hooks/currency/getCurrencyByC
 
 interface Prop {
 	currencyCode: string
-	isTransparent: boolean
-	isBackgroundActive: boolean
 }
 
-export function CurrencyClassicComponent({
-	currencyCode,
-	isTransparent,
-	isBackgroundActive,
-}: Prop) {
+export function CurrencyClassicComponent({ currencyCode }: Prop) {
 	const [priceChange, setPriceChange] = useState(0)
 	const [currency, setCurrencyData] = useState<FetchedCurrency | null>(
 		JSONParse(`currency:${currencyCode}`),
@@ -36,23 +30,13 @@ export function CurrencyClassicComponent({
 		}
 	}, [dataUpdatedAt])
 
-	const isBackgroundVisible = !isTransparent && isBackgroundActive
 	const isPriceUp = priceChange > 0
 	const priceDirection = isPriceUp ? 'text-red-500' : 'text-green-500'
 	const PriceIcon = isPriceUp ? FaCaretUp : FaCaretDown
 
-	const textColor = isBackgroundVisible
-		? '!text-gray-600 dark:!text-gray-300'
-		: '!text-gray-300 dark:!text-gray-200'
-
 	const currencyStyle = 'border-t border-gray-100/60 shadow-sm'
 
-	let priceIconStyle = 'bg-white dark:bg-gray-800'
-	if (isTransparent) {
-		priceIconStyle = 'bg-transparent dark:bg-gray-800/80'
-	} else if (!isBackgroundActive) {
-		priceIconStyle = 'bg-transparent backdrop-blur text-gray-300'
-	}
+	const priceIconStyle = 'bg-white dark:bg-gray-800'
 
 	return (
 		<div
@@ -64,7 +48,7 @@ export function CurrencyClassicComponent({
 					<div className="relative">
 						<img
 							src={currency.icon}
-							className={`w-6 h-6 rounded-full object-cover ${isTransparent ? 'opacity-70' : ''}`}
+							className={'w-6 h-6 rounded-full object-cover'}
 							alt={currency.code}
 						/>
 						<div
@@ -80,7 +64,9 @@ export function CurrencyClassicComponent({
 				<div className="flex flex-col">
 					{currency ? (
 						<p
-							className={`font-medium text-sm ${textColor} truncate max-w-[80px]`}
+							className={
+								'font-medium text-sm text-gray-600 dark:text-gray-300 truncate max-w-[80px]'
+							}
 						>
 							{currency.code?.toUpperCase()}
 						</p>
@@ -105,7 +91,9 @@ export function CurrencyClassicComponent({
 			<div className="flex items-end">
 				{currency ? (
 					<p
-						className={`font-medium text-xs ${textColor} tabular-nums truncate max-w-[100px]`}
+						className={
+							'font-medium text-xs text-gray-600 dark:text-gray-300 tabular-nums truncate max-w-[100px]'
+						}
 					>
 						{currency.rialPrice
 							? Math.round(currency.rialPrice).toLocaleString()

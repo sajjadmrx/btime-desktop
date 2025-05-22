@@ -14,6 +14,8 @@ import { useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
 import { getTimezones } from '../../../api/api'
 import type { Timezone } from '../../../api/api.interface'
+import { NeedAuthMessage } from '../../../components/need-auth-message'
+import { useAuth } from '../../../context/auth.context'
 import { AnalogAClockTab } from './tabs/analogA'
 import { DigitalClockTab } from './tabs/digital'
 
@@ -29,7 +31,7 @@ export type SetSettingValue = <K extends keyof ClockSettingStore>(
 export function ClockSetting() {
 	const [setting, setSetting] = useState<ClockSettingStore>(null)
 	const [timezones, setTimeZones] = useState<Timezone[]>([])
-
+	const { isAuthenticated } = useAuth()
 	useEffect(() => {
 		const clock: ClockSettingStore = window.store.get(widgetKey.Clock)
 		clock.borderRadius = clock.borderRadius || 28
@@ -64,21 +66,9 @@ export function ClockSetting() {
 		setSetting({ ...setting })
 		applyChanges()
 
-		if (key === 'transparentStatus') {
-			window.ipcRenderer.send('toggle-transparent', widgetKey.Clock)
-		}
-
-		if (key === 'isBackgroundDisabled') {
-			window.ipcRenderer.send('toggle-isBackgroundDisabled', widgetKey.Clock)
-		}
-
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.Clock)
-		} else if (
-			!['transparentStatus', 'borderRadius', 'isBackgroundDisabled'].includes(
-				key,
-			)
-		) {
+		} else if (!['borderRadius'].includes(key)) {
 			window.ipcRenderer.send('updated-setting', widgetKey.Clock)
 		}
 	}
@@ -88,7 +78,7 @@ export function ClockSetting() {
 			...setting,
 			alwaysOnTop: setting.alwaysOnTop,
 			enable: setting.enable,
-			transparentStatus: setting.transparentStatus,
+
 			bounds: window.store.get(widgetKey.Clock).bounds,
 			borderRadius: setting.borderRadius,
 		})
@@ -106,7 +96,14 @@ export function ClockSetting() {
 	}
 
 	if (!setting) return null
-
+	if (!isAuthenticated) {
+		return (
+			<NeedAuthMessage
+				widgetName="ساعت"
+				widgetDescription="برای دسترسی به تنظیمات و قابلیت‌های کامل ویجت ساعت، لطفا وارد حساب کاربری خود شوید. این به شما امکان می‌دهد تا از تمام امکانات شخصی‌سازی بهره‌مند شوید."
+			/>
+		)
+	}
 	return (
 		<>
 			<div className="p-2 mt-2 h-full not-moveable font-[Vazir] overflow-y-scroll custom-scrollbar">
@@ -141,54 +138,6 @@ export function ClockSetting() {
 						/>
 					</div>
 					<div className="flex flex-col">
-						<Checkbox
-							ripple={true}
-							defaultChecked={setting.transparentStatus}
-							onClick={() =>
-								setSettingValue('transparentStatus', !setting.transparentStatus)
-							}
-							label={
-								<div>
-									<Typography
-										variant={'h5'}
-										color="blue-gray"
-										className="dark:text-[#c7c7c7] text-gray-600  text-[13px] font-[Vazir] font-normal"
-									>
-										شفاف <span className="font-light">(پس زمینه شفاف)</span>
-									</Typography>
-								</div>
-							}
-							containerProps={{
-								className: 'flex',
-							}}
-						/>
-						<Checkbox
-							ripple={true}
-							defaultChecked={setting.isBackgroundDisabled}
-							onClick={() =>
-								setSettingValue(
-									'isBackgroundDisabled',
-									!setting.isBackgroundDisabled,
-								)
-							}
-							label={
-								<div>
-									<Typography
-										variant={'h5'}
-										color="blue-gray"
-										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] items-center "
-									>
-										غیرفعال کردن پشت زمینه{' '}
-										<span className="font-light">
-											(غیرفعال کردن نمایش پشت زمینه برای ویجت)
-										</span>
-									</Typography>
-								</div>
-							}
-							containerProps={{
-								className: 'flex',
-							}}
-						/>
 						<Checkbox
 							ripple={true}
 							defaultChecked={setting.alwaysOnTop}

@@ -165,10 +165,12 @@ export async function getMainClient(): Promise<AxiosInstance> {
 	mainClient = axios.create({ baseURL })
 
 	mainClient.interceptors.request.use(async (config) => {
-		const auth = await window.store.get('auth')
+		if (window) {
+			const auth = await window.store.get('auth')
 
-		if (auth?.token) {
-			config.headers.Authorization = `Bearer ${auth.token}`
+			if (auth?.token) {
+				config.headers.Authorization = `Bearer ${auth.token}`
+			}
 		}
 
 		return config

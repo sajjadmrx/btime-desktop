@@ -9,10 +9,10 @@ import { store, type windowSettings } from './store'
 
 export interface Window {
 	height: number
-	minHeight: number
+	minHeight?: number
 	width: number
 	moveable: boolean
-	minWidth: number
+	minWidth?: number
 	maxWidth?: number
 	maxHeight?: number
 	x: number
@@ -77,14 +77,6 @@ export async function createWindow(payload: Window) {
 		const setting: windowSettings = store.get(
 			widgetKey[payload.title],
 		) as unknown as windowSettings
-
-		win.webContents.send('transparent_status', {
-			enableTransparent: setting.transparentStatus,
-		})
-
-		win.webContents.send('background_status', {
-			isBackgroundDisabled: setting.isBackgroundDisabled,
-		})
 
 		const borderRadius = setting.borderRadius
 
