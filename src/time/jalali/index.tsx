@@ -1,8 +1,9 @@
 import type { BtimeSettingStore } from 'electron/store'
-import moment from 'jalali-moment'
+import type moment from 'jalali-moment'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { useGetEvents } from '../../api/hooks/events/getEvents.hook'
+import { useDate } from '../context/date.context'
 import { JalaliCalendar } from './jalaliCalendar'
 import { getHijriEvents, getShamsiEvents } from './utils'
 
@@ -11,9 +12,7 @@ interface Prop {
 }
 
 export function JalaliComponent(prop: Prop) {
-	const [today, setToday] = useState(
-		moment().locale('fa').utc().add(3.5, 'hours'),
-	)
+	const { today } = useDate()
 	const [isTransparent, setIsTransparent] = useState<boolean>(false)
 	const [isBackgroundActive, setBackgroundActive] = useState<boolean>(false)
 	const { data: events } = useGetEvents()
@@ -60,14 +59,9 @@ export function JalaliComponent(prop: Prop) {
 			attributeFilter: ['class'],
 		})
 
-		const interval = setInterval(() => {
-			setToday(moment().locale('fa').utc().add(3.5, 'hours'))
-		}, ms('5m')) // 5m
-
 		return () => {
 			observer.disconnect()
 			observerBackground.disconnect()
-			clearInterval(interval)
 		}
 	}, [])
 

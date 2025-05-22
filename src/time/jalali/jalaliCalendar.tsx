@@ -181,7 +181,15 @@ function DayComponent({
 		return 'hover:bg-gray-200 dark:hover:bg-gray-700'
 	}
 
-	const dayEvents = [...getShamsiEvents(events, cellDate)]
+	const dayEvents = [
+		...getShamsiEvents(events, cellDate),
+		...getHijriEvents(events, cellDate),
+	]
+		.sort((a, b) => {
+			if (a.isHoliday && !b.isHoliday) return -1
+		})
+		.slice(0, 1)
+
 	const dayEventsList = dayEvents.length ? dayEvents : []
 
 	const getTooltipClass = () => {
