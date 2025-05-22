@@ -3,6 +3,7 @@ import { IoMdAdd } from 'react-icons/io'
 import { MdOutlineDragIndicator } from 'react-icons/md'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { userLogger } from '../../shared/logger'
+import { useThemeMode } from '../hooks/useTheme'
 
 interface AppItem {
 	id: string
@@ -15,29 +16,7 @@ function App() {
 	const [apps, setApps] = useState<AppItem[]>([])
 	const [isDragging, setIsDragging] = useState(false)
 
-	useEffect(() => {
-		const handleColorSchemeChange = (e) => {
-			document.documentElement.classList.remove('dark')
-			if (e.matches) {
-				document.documentElement.classList.add('dark')
-			}
-		}
-
-		const colorSchemeMediaQuery = window.matchMedia(
-			'(prefers-color-scheme: dark)',
-		)
-
-		handleColorSchemeChange(colorSchemeMediaQuery)
-
-		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
-
-		return () => {
-			colorSchemeMediaQuery.removeEventListener(
-				'change',
-				handleColorSchemeChange,
-			)
-		}
-	}, [])
+	useThemeMode()
 
 	useEffect(() => {
 		window.ipcMain.invoke('get-apps').then((savedApps: AppItem[]) => {

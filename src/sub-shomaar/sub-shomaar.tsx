@@ -3,34 +3,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { widgetKey } from '../../shared/widgetKey'
 import { useGetYoutubeProfile } from '../api/hooks/channel/youtube-profile.hook'
 import { CountUpAnimation } from '../hooks/useCountAnimation'
+import { useThemeMode } from '../hooks/useTheme'
 import { formatSubscribeCount } from '../utils/format'
-
-const useDarkMode = () => {
-	const handleColorSchemeChange = useCallback(
-		(e: MediaQueryListEvent | MediaQueryList) => {
-			document.documentElement.classList.remove('dark')
-			if (e.matches) {
-				document.documentElement.classList.add('dark')
-			}
-		},
-		[],
-	)
-
-	useEffect(() => {
-		const colorSchemeMediaQuery = window.matchMedia(
-			'(prefers-color-scheme: dark)',
-		)
-		handleColorSchemeChange(colorSchemeMediaQuery)
-		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
-
-		return () => {
-			colorSchemeMediaQuery.removeEventListener(
-				'change',
-				handleColorSchemeChange,
-			)
-		}
-	}, [handleColorSchemeChange])
-}
 
 function App() {
 	const [channelName, setChannelName] = useState<string>('')
@@ -38,7 +12,7 @@ function App() {
 		'short',
 	)
 
-	useDarkMode()
+	useThemeMode()
 
 	useEffect(() => {
 		function handleSettingsUpdate() {

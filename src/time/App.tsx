@@ -3,6 +3,7 @@ import { FiRefreshCw } from 'react-icons/fi'
 import type { BtimeSettingStore } from '../../electron/store'
 import { widgetKey } from '../../shared/widgetKey'
 import { AuthProvider } from '../context/auth.context'
+import { useThemeMode } from '../hooks/useTheme'
 import { DateProvider } from './context/date.context'
 import { DayEventsComponent } from './dayEvents/dayEvents'
 import { GregorianComponent } from './gregorian'
@@ -15,32 +16,12 @@ function App() {
 	const [refreshTrigger, setRefreshTrigger] = useState(0)
 
 	useEffect(() => {
-		const handleColorSchemeChange = (e) => {
-			document.documentElement.classList.remove('dark')
-			if (e.matches) {
-				document.documentElement.classList.add('dark')
-			}
-		}
-
-		const colorSchemeMediaQuery = window.matchMedia(
-			'(prefers-color-scheme: dark)',
-		)
-		handleColorSchemeChange(colorSchemeMediaQuery)
-
 		window.ipcRenderer.on('updated-setting', () => {
 			setWidgetSetting(window.store.get(widgetKey.BTime))
 		})
-
-		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
-
-		return () => {
-			colorSchemeMediaQuery.removeEventListener(
-				'change',
-				handleColorSchemeChange,
-			)
-		}
 	}, [])
 
+	useThemeMode()
 	const handleRefetch = () => {
 		setRefreshTrigger((prev) => prev + 1)
 	}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { widgetKey } from '../../shared/widgetKey'
 import { type FetchedCurrency, getRateByCurrency } from '../api/api'
+import { useThemeMode } from '../hooks/useTheme'
 import { extractMainColorFromImage } from '../utils/colorUtils'
 
 function App() {
@@ -10,33 +11,13 @@ function App() {
 	const [currencyData, setCurrencyData] = useState<FetchedCurrency>(null)
 
 	useEffect(() => {
-		const currencyStore = window.store.get(widgetKey.NerkhYab)
-		setCurrency(currencyStore.currencies[0])
-		const handleColorSchemeChange = (e) => {
-			document.documentElement.classList.remove('dark')
-			if (e.matches) {
-				document.documentElement.classList.add('dark')
-			}
-		}
-
-		const colorSchemeMediaQuery = window.matchMedia(
-			'(prefers-color-scheme: dark)',
-		)
-		handleColorSchemeChange(colorSchemeMediaQuery)
-
 		window.ipcRenderer.on('updated-setting', () => {
 			const currencyStore = window.store.get(widgetKey.NerkhYab)
 			setCurrency(currencyStore.currencies[0])
 		})
-
-		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
-		return () => {
-			colorSchemeMediaQuery.removeEventListener(
-				'change',
-				handleColorSchemeChange,
-			)
-		}
 	}, [])
+
+	useThemeMode()
 
 	useEffect(() => {
 		async function fetchData() {

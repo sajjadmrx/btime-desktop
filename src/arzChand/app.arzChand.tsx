@@ -1,8 +1,8 @@
 import type { ArzChandSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
 import { MdOutlineDragIndicator } from 'react-icons/md'
-import { StoreKey } from '../../electron/store'
 import { widgetKey } from '../../shared/widgetKey'
+import { useThemeMode } from '../hooks/useTheme'
 import { CurrenciesClassic } from './templates/classic'
 import { CurrenciesDefault } from './templates/default'
 
@@ -12,33 +12,13 @@ function App() {
 	)
 
 	useEffect(() => {
-		const handleColorSchemeChange = (e) => {
-			document.documentElement.classList.remove('dark')
-			if (e.matches) {
-				document.documentElement.classList.add('dark')
-			}
-		}
-
-		const colorSchemeMediaQuery = window.matchMedia(
-			'(prefers-color-scheme: dark)',
-		)
-
-		handleColorSchemeChange(colorSchemeMediaQuery)
-
-		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
-
 		window.ipcRenderer.on('updated-setting', () => {
 			const arzChandSetting = window.store.get(widgetKey.ArzChand)
 			setSetting(arzChandSetting)
 		})
-
-		return () => {
-			colorSchemeMediaQuery.removeEventListener(
-				'change',
-				handleColorSchemeChange,
-			)
-		}
 	}, [])
+
+	useThemeMode()
 
 	return (
 		<div className="w-screen h-screen overflow-hidden">

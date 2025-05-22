@@ -4,22 +4,16 @@ interface ForecastComponentProps {
 		icon: string
 		date: string
 	}
-	isDarkMode: boolean
 	iconColor: string | null
 }
 
 export function ForecastComponent({
 	weather,
-	isDarkMode,
 	iconColor,
 }: ForecastComponentProps) {
 	const time = weather.date.split(' ')[1]
 	const h = time.split(':')[0]
 	const m = time.split(':')[1]
-
-	const getTextClass = () => {
-		return isDarkMode ? 'text-gray-100' : 'text-gray-700'
-	}
 
 	return (
 		<div
@@ -27,9 +21,11 @@ export function ForecastComponent({
       h-auto gap-0.5 xs:gap-1 p-1 backdrop-blur-sm bg-neutral-900/70 rounded-lg`}
 		>
 			<p
-				className={`text-[0.55rem] xs:text-[0.65rem] sm:text-xs font-medium ${getTextClass()}`}
+				className={
+					'text-[0.55rem] xs:text-[0.65rem] sm:text-xs font-medium text-gray-700 dark:text-gray-100'
+				}
 				style={{
-					color: iconColor ? getAdjustedColor(iconColor, isDarkMode) : '',
+					color: iconColor ? getAdjustedColor(iconColor) : '',
 				}}
 			>
 				{h}:{m}
@@ -40,9 +36,11 @@ export function ForecastComponent({
 				alt="Weather icon"
 			/>
 			<p
-				className={`text-[0.65rem] xs:text-[0.75rem] sm:text-sm font-medium ${getTextClass()}`}
+				className={
+					'text-[0.65rem] xs:text-[0.75rem] sm:text-sm font-medium text-gray-700 dark:text-gray-100'
+				}
 				style={{
-					color: iconColor ? getAdjustedColor(iconColor, isDarkMode) : '',
+					color: iconColor ? getAdjustedColor(iconColor) : '',
 				}}
 			>
 				{weather.temp.toFixed(0)}
@@ -54,7 +52,7 @@ export function ForecastComponent({
 	)
 }
 
-function getAdjustedColor(hexColor: string, isDarkMode: boolean) {
+function getAdjustedColor(hexColor: string) {
 	// Simple color adjustment based on mode
 	if (!hexColor) return ''
 

@@ -6,11 +6,7 @@ import {
 	TabsHeader,
 	Typography,
 } from '@material-tailwind/react'
-import {
-	AnyUseBaseQueryOptions,
-	QueryClient,
-	QueryClientProvider,
-} from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { CgProfile } from 'react-icons/cg'
 import {
@@ -24,6 +20,7 @@ import {
 	HiUserGroup,
 } from 'react-icons/hi2'
 import { TbAppsFilled } from 'react-icons/tb'
+import { useThemeMode } from '../hooks/useTheme'
 import UpdateModal from './components/updateModal'
 import { AboutUs } from './pages/about-us/aboutUs'
 import { AccountSetting } from './pages/account/account.setting'
@@ -124,23 +121,9 @@ function App() {
 	const [open, setOpen] = useState(false)
 
 	useEffect(() => {
-		const handleColorSchemeChange = (e) => {
-			document.documentElement.classList.remove('dark')
-			if (e.matches) {
-				document.documentElement.classList.add('dark')
-			}
-		}
-
 		window.electronAPI.onUpdateDetails(() => {
 			setOpen(true)
 		})
-
-		const colorSchemeMediaQuery = window.matchMedia(
-			'(prefers-color-scheme: dark)',
-		)
-		handleColorSchemeChange(colorSchemeMediaQuery)
-
-		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
 
 		window.addEventListener('open-setting', (event: any) => {
 			const page = event.detail.page
@@ -150,14 +133,9 @@ function App() {
 				document.querySelector(`[data-value="${tab.value}"]`).click()
 			}
 		})
-
-		return () => {
-			colorSchemeMediaQuery.removeEventListener(
-				'change',
-				handleColorSchemeChange,
-			)
-		}
 	}, [])
+
+	useThemeMode()
 
 	const closeUpdateModal = () => setOpen(false)
 	const onExitButtonClick = () => window.close()

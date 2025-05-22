@@ -7,12 +7,10 @@ import { extractMainColorFromImage } from '../../utils/colorUtils'
 import { ForecastComponent } from '../components/forecast.component'
 
 interface WeatherComponentProps {
-	isDarkMode: boolean
 	weatherStore: WeatherSettingStore
 	weatherData: FetchedWeather
 }
 export function WeatherLayout({
-	isDarkMode,
 	weatherStore,
 	weatherData,
 }: WeatherComponentProps) {
@@ -29,9 +27,6 @@ export function WeatherLayout({
 	const [iconColor, setIconColor] = useState('')
 
 	// Improved text color handling for all modes
-	const getTextColorClass = () => {
-		return isDarkMode ? 'text-gray-100' : 'text-gray-700'
-	}
 
 	useEffect(() => {
 		if (weatherData && weatherStore.stateColor) {
@@ -59,14 +54,11 @@ export function WeatherLayout({
 				</div>
 				<div className="relative w-16 mt-1 text-xl text-center truncate xs:w-18 sm:w-20 xs:text-2xl sm:text-3xl">
 					<div
-						className={`z-10 font-semibold ${getTextColorClass()}`}
+						className={'z-10 font-semibold text-gray-700 dark:text-gray-100'}
 						style={{
 							color:
 								weatherStore.stateColor && iconColor
-									? getMainColorFromImage(
-											iconColor,
-											isDarkMode ? 'dark' : 'light',
-										)
+									? getMainColorFromImage(iconColor)
 									: '',
 						}}
 					>
@@ -81,7 +73,9 @@ export function WeatherLayout({
 			</div>
 			<div className="z-10 flex flex-col w-full mt-2 font-bold text-center">
 				<div
-					className={`w-auto truncate font-normal text-center text-[0.65rem] xs:text-xs sm:text-sm mb-2 ${getTextColorClass()}`}
+					className={
+						'w-auto truncate font-normal text-center text-[0.65rem] xs:text-xs sm:text-sm mb-2 text-gray-700 dark:text-gray-100'
+					}
 				>
 					{weatherData.weather.temperature.temp_description}
 				</div>
@@ -91,7 +85,6 @@ export function WeatherLayout({
 							<ForecastComponent
 								weather={item}
 								key={index}
-								isDarkMode={isDarkMode}
 								iconColor={weatherStore.stateColor ? iconColor : null}
 							/>
 						)
@@ -100,7 +93,9 @@ export function WeatherLayout({
 			</div>
 			{weatherStore.stateColor && iconColor ? (
 				<div
-					className={`absolute z-0 w-full h-20 xs:h-24 ${isDarkMode ? 'opacity-40' : 'opacity-20'} -bottom-10 blur-2xl`}
+					className={
+						'absolute z-0 w-full h-20 xs:h-24 opacity-20 -bottom-10 blur-2xl'
+					}
 					style={{
 						background: `linear-gradient(to bottom, ${iconColor} 0%, ${`${iconColor}00`} 10%, ${iconColor} 100%)`,
 					}}
@@ -110,12 +105,7 @@ export function WeatherLayout({
 	)
 }
 
-function getMainColorFromImage(hexColor: string, theme: string) {
-	// Standard theme-based color
-	if (theme === 'light') {
-		return hexColor
-	}
-
+function getMainColorFromImage(hexColor: string) {
 	// Convert hex to RGB
 	const color = hexColor.replace('#', '')
 	const r = Number.parseInt(color.substring(0, 2), 16)

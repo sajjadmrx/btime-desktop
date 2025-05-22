@@ -2,45 +2,21 @@ import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { widgetKey } from '../../shared/widgetKey'
 import { useGetWeatherByLatLon } from '../api/hooks/weather/getWeatherByLatLon'
+import { useThemeMode } from '../hooks/useTheme'
 import { WeatherLayout } from './layout/weather-layout'
 
 function App() {
 	const [weatherStore, setWeatherStore] = useState(
 		window.store.get('Weather' as widgetKey.Weather),
 	)
-	const [isDarkMode, setIsDarkMode] = useState(
-		window.matchMedia('(prefers-color-scheme: dark)').matches,
-	)
+
+	useThemeMode()
 
 	useEffect(() => {
-		const handleColorSchemeChange = (e: MediaQueryListEvent) => {
-			setIsDarkMode(e.matches)
-			document.documentElement.classList.remove('dark')
-			if (e.matches) {
-				document.documentElement.classList.add('dark')
-			}
-		}
-
-		const colorSchemeMediaQuery = window.matchMedia(
-			'(prefers-color-scheme: dark)',
-		)
-		handleColorSchemeChange(
-			colorSchemeMediaQuery as unknown as MediaQueryListEvent,
-		)
-
 		window.ipcRenderer.on('updated-setting', () => {
 			const weatherSetting = window.store.get(widgetKey.Weather)
 			setWeatherStore(weatherSetting)
 		})
-
-		colorSchemeMediaQuery.addEventListener('change', handleColorSchemeChange)
-
-		return () => {
-			colorSchemeMediaQuery.removeEventListener(
-				'change',
-				handleColorSchemeChange,
-			)
-		}
 	}, [])
 
 	const { data: weather, isSuccess } = useGetWeatherByLatLon(
@@ -76,7 +52,6 @@ function App() {
 					>
 						{weather && isSuccess ? (
 							<WeatherLayout
-								isDarkMode={isDarkMode}
 								weatherData={weather}
 								weatherStore={weatherStore}
 							/>
