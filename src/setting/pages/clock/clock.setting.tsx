@@ -14,6 +14,8 @@ import { useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
 import { getTimezones } from '../../../api/api'
 import type { Timezone } from '../../../api/api.interface'
+import { NeedAuthMessage } from '../../../components/need-auth-message'
+import { useAuth } from '../../../context/auth.context'
 import { AnalogAClockTab } from './tabs/analogA'
 import { DigitalClockTab } from './tabs/digital'
 
@@ -29,7 +31,7 @@ export type SetSettingValue = <K extends keyof ClockSettingStore>(
 export function ClockSetting() {
 	const [setting, setSetting] = useState<ClockSettingStore>(null)
 	const [timezones, setTimeZones] = useState<Timezone[]>([])
-
+	const { isAuthenticated } = useAuth()
 	useEffect(() => {
 		const clock: ClockSettingStore = window.store.get(widgetKey.Clock)
 		clock.borderRadius = clock.borderRadius || 28
@@ -94,7 +96,14 @@ export function ClockSetting() {
 	}
 
 	if (!setting) return null
-
+	if (!isAuthenticated) {
+		return (
+			<NeedAuthMessage
+				widgetName="ساعت"
+				widgetDescription="برای دسترسی به تنظیمات و قابلیت‌های کامل ویجت ساعت، لطفا وارد حساب کاربری خود شوید. این به شما امکان می‌دهد تا از تمام امکانات شخصی‌سازی بهره‌مند شوید."
+			/>
+		)
+	}
 	return (
 		<>
 			<div className="p-2 mt-2 h-full not-moveable font-[Vazir] overflow-y-scroll custom-scrollbar">

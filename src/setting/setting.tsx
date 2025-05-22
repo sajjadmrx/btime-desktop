@@ -20,6 +20,7 @@ import {
 	HiUserGroup,
 } from 'react-icons/hi2'
 import { TbAppsFilled } from 'react-icons/tb'
+import { AuthProvider } from '../context/auth.context'
 import { useThemeMode } from '../hooks/useTheme'
 import UpdateModal from './components/updateModal'
 import { AboutUs } from './pages/about-us/aboutUs'
@@ -68,7 +69,11 @@ const TAB_DATA = [
 		label: 'ساعت',
 		value: 'clock',
 		icon: <HiClock className="size-5" />,
-		element: <ClockSetting />,
+		element: (
+			<AuthProvider>
+				<ClockSetting />
+			</AuthProvider>
+		),
 		category: 'widgets',
 	},
 	{
