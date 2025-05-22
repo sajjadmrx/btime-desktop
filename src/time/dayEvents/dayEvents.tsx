@@ -4,11 +4,7 @@ import type { FetchedEvent } from 'src/api/api.interface'
 import { getAppLogo } from '../../api/api'
 import { EventsDisplay } from './events/eventsDisplay'
 import { NewsDisplay } from './news/newsDisplay'
-interface Prop {
-	currentDate: moment.Moment
-	event: FetchedEvent
-}
-export function DayEventsComponent({ currentDate }: Prop) {
+export function DayEventsComponent() {
 	const [events, setEvents] = useState<any[]>([])
 	const [gif, setGif] = useState<string | null>(null)
 
@@ -42,7 +38,7 @@ export function DayEventsComponent({ currentDate }: Prop) {
 	return (
 		<div>
 			<div
-				className={`w-full ${isTransparent ? 'bg-gray-400/20 dark:bg-[#85858536]' : 'bg-gray-400 dark:bg-[#a8a8a8]'} h-0.5 mt-1 sm:invisible xs:invisible h-xs:invisible`}
+				className={`w-full ${isTransparent ? 'bg-gray-400/20 dark:bg-[#85858536]' : 'bg-gray-400 dark:bg-[#a8a8a833]'} h-0.5 mt-1 sm:invisible xs:invisible h-xs:invisible`}
 			></div>
 			<div className="flex flex-row-reverse justify-between p-2 lg:p-0 h-28 sm:invisible xs:invisible h-xs:invisible">
 				<div
@@ -52,7 +48,6 @@ export function DayEventsComponent({ currentDate }: Prop) {
 				>
 					<div className="w-full px-4 py-2 text-right">
 						{<EventsDisplay events={events} />}
-						{<NewsDisplay />}
 					</div>
 				</div>
 				{gif && (

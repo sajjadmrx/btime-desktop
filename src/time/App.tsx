@@ -49,9 +49,7 @@ function App() {
 					) : (
 						<JalaliComponent setting={widgetSetting} />
 					)}
-					{/* {widgetSetting.showDayEvents && (
-						<DayEventsComponent   event={[]} />
-					)} */}
+					{widgetSetting.showCalendar && <DayEventsComponent />}
 				</div>
 			</div>
 		</>

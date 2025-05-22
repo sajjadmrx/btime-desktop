@@ -73,9 +73,9 @@ export function JalaliComponent(prop: Prop) {
 
 	const isHoliday = checkIfHoliday(today, today.day())
 
-	return (
-		<div className="flex flex-row-reverse items-center justify-center w-full h-full">
-			<div className="flex flex-col items-center lg:gap-4 gap-2 moveable w-[40%] relative">
+	return setting.showCalendar ? (
+		<div className="flex flex-row-reverse items-start w-full h-full py-1">
+			<div className="flex flex-col items-center self-center lg:gap-4 gap-2 moveable w-[40%] relative">
 				<div
 					className={`select-none ${getTextColor(isTransparent, isBackgroundActive)}`}
 				>
@@ -100,8 +100,8 @@ export function JalaliComponent(prop: Prop) {
 					</div>
 				</div>
 			</div>
-			{setting.showCalendar && (
-				<div className="justify-center hidden md:flex lg:flex not-moveable h-xs:hidden">
+			{
+				<div className="justify-center hidden ml-2 md:flex lg:flex not-moveable h-xs:hidden">
 					<JalaliCalendar
 						events={events}
 						isBackgroundActive={isBackgroundActive}
@@ -110,7 +110,35 @@ export function JalaliComponent(prop: Prop) {
 						isTransparent={isTransparent}
 					/>
 				</div>
-			)}
+			}
+		</div>
+	) : (
+		<div className="flex justify-center w-full h-full py-1">
+			<div className="flex flex-col items-center justify-center lg:gap-4 gap-2 moveable w-[40%] relative">
+				<div
+					className={`select-none ${getTextColor(isTransparent, isBackgroundActive)}`}
+				>
+					{today.locale('fa').format('dddd')}
+				</div>
+				<div
+					className={`text-6xl select-none ${getTextColor(isTransparent, isBackgroundActive)} ${isHoliday ? '!text-red-600' : ''}`}
+				>
+					{today.locale('fa').jDate()}
+				</div>
+				<div
+					className={`flex flex-col gap-2 ${getTextColor(isTransparent, isBackgroundActive)}`}
+				>
+					<div className="flex flex-row items-center gap-2">
+						<div className="font-medium">{today.locale('fa').jYear()}</div>
+						<div className="font-medium">
+							{today.locale('fa').format('jMMMM')}
+						</div>
+					</div>
+					<div className="text-xs font-medium text-center opacity-95">
+						{today.doAsGregorian().format('YYYY/DD/MM')}
+					</div>
+				</div>
+			</div>
 		</div>
 	)
 }

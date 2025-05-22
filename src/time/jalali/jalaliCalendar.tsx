@@ -30,13 +30,20 @@ export function JalaliCalendar({
 	const firstDayOfMonth = currentTime.clone().startOf('jMonth').day()
 	const daysInMonth = currentTime.clone().endOf('jMonth').jDate()
 	const emptyDays = (firstDayOfMonth + 1) % 7
+	const prevMonth = currentTime.clone().subtract(1, 'jMonth')
+	const daysInPrevMonth = prevMonth.clone().endOf('jMonth').jDate()
+	const prevMonthStartDay = daysInPrevMonth - emptyDays + 1
+
+	const totalCells = 42
+
+	const nextMonthDays = totalCells - daysInMonth - emptyDays
 
 	return (
 		<div
-			className="w-full h-full px-1 pt-2 overflow-hidden rounded-lg max-w-96 not-moveable lg:pt-4"
+			className="w-full h-full p-1 px-1 overflow-hidden rounded-lg max-w-96 not-moveable lg:pt-4"
 			dir="rtl"
 		>
-			<div className="grid grid-cols-7 gap-1 space-x-2 sm:p-2 lg:space-x-4">
+			<div className="grid grid-cols-7 gap-1 space-x-1">
 				{weekDays.map((day, index) => (
 					<WeekDayComponent
 						key={day}
@@ -46,9 +53,19 @@ export function JalaliCalendar({
 						index={index}
 					/>
 				))}
-				{[...Array(emptyDays)].map((_, index) => (
-					<div key={index} className="p-1 text-center sm:p-2"></div>
+				{Array.from({ length: emptyDays }).map((_, i) => (
+					<div
+						key={`prev-month-${i}`}
+						className={`
+						p-0 text-xs
+						h-6 w-6 mx-auto flex items-center justify-center rounded-full
+						dark:text-gray-300 text-gray-700 opacity-40
+					`}
+					>
+						{prevMonthStartDay + i}
+					</div>
 				))}
+
 				{Array.from({ length: daysInMonth }, (_, index) => (
 					<DayComponent
 						key={index}
@@ -60,6 +77,19 @@ export function JalaliCalendar({
 						events={events}
 						currentDate={currentTime}
 					/>
+				))}
+
+				{Array.from({ length: nextMonthDays }).map((_, i) => (
+					<div
+						key={`next-month-${i}`}
+						className={`
+						p-0 text-xs 
+						h-6 w-6 mx-auto flex items-center justify-center rounded-full
+					dark:text-gray-300 text-gray-700 opacity-40
+					`}
+					>
+						{i + 1}
+					</div>
 				))}
 			</div>
 		</div>
@@ -187,7 +217,7 @@ function DayComponent({
 				content={
 					<div className="flex flex-col w-full" dir="rtl">
 						{/* Date Information Header */}
-						<div className="w-full p-2 border-b bg-black/10 dark:bg-white/5 border-gray-200/10 dark:border-gray-700/50 font-[Vazir]">
+						<div className="w-full p-1 border-b bg-black/10 dark:bg-white/5 border-gray-200/10 dark:border-gray-700/50 font-[Vazir]">
 							<div
 								className="flex flex-row items-center justify-between"
 								dir="rtl"
@@ -288,7 +318,7 @@ function WeekDayComponent({
 
 	return (
 		<div
-			className={`text-center font-medium text-xs xs:text-[10px] truncate mb-1.5 ${getWeekdayClass()}`}
+			className={`text-center font-medium text-xs xs:text-[10px] truncate  ${getWeekdayClass()}`}
 		>
 			{day}
 		</div>

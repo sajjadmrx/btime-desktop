@@ -19,6 +19,7 @@ import { addChildWindow, createParentWindow } from './parentWindow'
 import { store } from './store'
 import { update } from './update'
 import { toggleStartUp } from './utils/startup.util'
+import { BtimeConfig } from './widgets/btime-config'
 import { createSettingWindow, createWindow } from './window'
 
 config()
@@ -66,7 +67,6 @@ async function onAppReady() {
 	const useParentWindowMode = mainSettings.useParentWindowMode
 	const moveable = mainSettings.moveable
 
-	// Only create parent window if parent window mode is enabled
 	if (useParentWindowMode) {
 		parentWin = createParentWindow()
 	}
@@ -82,19 +82,21 @@ async function onAppReady() {
 	// Btime widget
 	if (btimeStore.enable) {
 		const btime = await createWindow({
-			height: btimeStore.bounds.height,
-			minHeight: btimeStore.bounds.minHeight || 150,
-			minWidth: btimeStore.bounds.minWidth || 150,
-			maxHeight: btimeStore.bounds.maxHeight,
-			maxWidth: btimeStore.bounds.maxWidth,
-			width: btimeStore.bounds.width,
+			height: btimeStore.showCalendar
+				? BtimeConfig.minHeight
+				: btimeStore.bounds.height,
+			minWidth: btimeStore.showCalendar && BtimeConfig.minWidth,
+			minHeight: btimeStore.showCalendar && BtimeConfig.minHeight,
+			width: btimeStore.showCalendar
+				? BtimeConfig.minWidth
+				: btimeStore.bounds.width,
 			x: btimeStore.bounds.x,
 			y: btimeStore.bounds.y,
 			title: widgetKey.BTime,
 			html: btimeStore.html || 'time.html',
 			devTools: true,
 			alwaysOnTop: btimeStore.alwaysOnTop,
-			reziable: true,
+			reziable: !btimeStore.showCalendar,
 			moveable,
 			saveBounds: true,
 		})

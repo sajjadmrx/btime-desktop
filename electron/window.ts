@@ -9,10 +9,10 @@ import { store, type windowSettings } from './store'
 
 export interface Window {
 	height: number
-	minHeight: number
+	minHeight?: number
 	width: number
 	moveable: boolean
-	minWidth: number
+	minWidth?: number
 	maxWidth?: number
 	maxHeight?: number
 	x: number
