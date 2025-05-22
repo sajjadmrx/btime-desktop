@@ -311,7 +311,7 @@ async function onAppReady() {
 		}
 	})
 
-	logAppStartupEvent()
+	logAppStartupEvent(app)
 }
 
 app.on('window-all-closed', () => {
