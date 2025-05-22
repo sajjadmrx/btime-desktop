@@ -13,10 +13,12 @@ import { EventCard } from './events/eventCard'
 
 interface DayEventsComponentProps {
 	refreshTrigger?: number
+	onLoadingStateChange?: (isLoading: boolean) => void
 }
 
 export function DayEventsComponent({
 	refreshTrigger = 0,
+	onLoadingStateChange,
 }: DayEventsComponentProps) {
 	const { today } = useDate()
 	const { isAuthenticated } = useAuth()
@@ -26,13 +28,29 @@ export function DayEventsComponent({
 	const { data: events, refetch: refetchEvents } = useGetEvents()
 	const dayEvents = combineAndSortEvents(events, today, googleEvents)
 
-	// Handle refresh trigger
+	const [isLoading, setIsLoading] = useState(false)
+
+	useEffect(() => {
+		if (onLoadingStateChange) {
+			onLoadingStateChange(isLoading)
+		}
+	}, [isLoading, onLoadingStateChange])
+
 	useEffect(() => {
 		if (refreshTrigger > 0) {
-			refetchEvents()
-			if (isAuthenticated) {
-				refetchGoogleEvents()
+			const fetchData = async () => {
+				setIsLoading(true)
+				try {
+					const promises: Promise<any>[] = [refetchEvents()] // Explicitly type promises array
+					if (isAuthenticated) {
+						promises.push(refetchGoogleEvents())
+					}
+					await Promise.all(promises)
+				} finally {
+					setIsLoading(false)
+				}
 			}
+			fetchData()
 		}
 	}, [refreshTrigger, isAuthenticated, refetchEvents, refetchGoogleEvents])
 

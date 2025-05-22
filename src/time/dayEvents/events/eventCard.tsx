@@ -82,7 +82,7 @@ export const EventCard = ({ event }: EventCardProps) => {
 
 	return (
 		<div
-			className={` rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800/60 backdrop-blur-sm border-r ${event.isHoliday ? 'border-red-500' : event.source === 'google' ? 'border-blue-500' : 'border-gray-300 dark:border-gray-600'}`}
+			className={` rounded-lg overflow-hidden bg-gray-100/50 dark:bg-gray-800/60 backdrop-blur-sm border-r ${event.isHoliday ? 'border-red-500' : event.source === 'google' ? 'border-blue-500' : 'border-gray-300 dark:border-gray-600'}`}
 			dir="rtl"
 		>
 			<div className="p-1">

@@ -14,6 +14,7 @@ function App() {
 		window.store.get(widgetKey.BTime),
 	)
 	const [refreshTrigger, setRefreshTrigger] = useState(0)
+	const [dayEventsLoading, setDayEventsLoading] = useState(false)
 
 	useEffect(() => {
 		window.ipcRenderer.on('updated-setting', () => {
@@ -41,12 +42,20 @@ function App() {
 								<div className="relative">
 									<button
 										onClick={handleRefetch}
-										className="absolute top-2 left-2 p-1.5 rounded-full bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 shadow-sm z-10"
-										title="بروزرسانی رویدادها"
+										disabled={dayEventsLoading}
+										className={`absolute top-2 left-2 p-1.5 rounded-full bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 shadow-sm z-10 ${
+											dayEventsLoading ? 'opacity-50 cursor-not-allowed' : ''
+										}`}
 									>
-										<FiRefreshCw size={16} />
+										<FiRefreshCw
+											size={16}
+											className={dayEventsLoading ? 'animate-spin' : ''}
+										/>{' '}
 									</button>
-									<DayEventsComponent refreshTrigger={refreshTrigger} />
+									<DayEventsComponent
+										refreshTrigger={refreshTrigger}
+										onLoadingStateChange={setDayEventsLoading}
+									/>
 								</div>
 							</AuthProvider>
 						)}
