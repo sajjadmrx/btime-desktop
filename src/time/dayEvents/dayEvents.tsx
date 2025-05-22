@@ -25,6 +25,19 @@ export function DayEventsComponent({
 
 	const [isLoading, setIsLoading] = useState(false)
 
+	const fetchData = async () => {
+		setIsLoading(true)
+		try {
+			const promises: Promise<any>[] = [refetchEvents()]
+			if (isAuthenticated) {
+				promises.push(refetchGoogleEvents())
+			}
+			await Promise.all(promises)
+		} finally {
+			setIsLoading(false)
+		}
+	}
+
 	useEffect(() => {
 		if (onLoadingStateChange) {
 			onLoadingStateChange(isLoading)
@@ -32,22 +45,14 @@ export function DayEventsComponent({
 	}, [isLoading, onLoadingStateChange])
 
 	useEffect(() => {
+		fetchData()
+	}, [isAuthenticated])
+
+	useEffect(() => {
 		if (refreshTrigger > 0) {
-			const fetchData = async () => {
-				setIsLoading(true)
-				try {
-					const promises: Promise<any>[] = [refetchEvents()]
-					if (isAuthenticated) {
-						promises.push(refetchGoogleEvents())
-					}
-					await Promise.all(promises)
-				} finally {
-					setIsLoading(false)
-				}
-			}
 			fetchData()
 		}
-	}, [refreshTrigger, isAuthenticated, refetchEvents, refetchGoogleEvents])
+	}, [refreshTrigger])
 
 	return (
 		<div>
