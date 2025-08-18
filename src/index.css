@@ -114,3 +114,11 @@ body {
 .not-moveable {
   -webkit-app-region: none;
 }
+
+.text-content {
+  @apply text-gray-200 opacity-85 dark:text-gray-200 dark:opacity-100;
+}
+
+.text-muted {
+  @apply text-white opacity-50 dark:text-gray-100;
+}

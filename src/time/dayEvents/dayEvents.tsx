@@ -58,27 +58,21 @@ export function DayEventsComponent({
 		<div>
 			<div
 				className={
-					'w-full bg-gray-400 dark:bg-[#a8a8a833] h-0.5 mt-1 sm:invisible xs:invisible h-xs:invisible'
+					'w-full bg-gray-400/30 dark:bg-[#a8a8a833] h-[1px] mt-1 sm:invisible xs:invisible h-xs:invisible'
 				}
 			></div>
-			<div className="flex flex-row-reverse justify-between h-full">
+			<div
+				className={
+					'flex-col items-end w-full h-24 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100/60 dark:scrollbar-thumb-gray-600/20 dark:scrollbar-track-gray-800/20'
+				}
+			>
 				<div
-					className={
-						'flex-col items-end w-72 h-24 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100/60 dark:scrollbar-thumb-gray-600/20 dark:scrollbar-track-gray-800/20'
-					}
+					className="flex flex-col w-full gap-0.5 p-1 pb-4 text-right"
+					dir="rtl"
 				>
-					{' '}
-					<div className="flex flex-col w-full gap-0.5 p-1 pb-4 text-right">
-						{dayEvents.length > 0 ? (
-							dayEvents.map((event, index) => (
-								<EventCard key={index} event={event} />
-							))
-						) : (
-							<div className="flex items-center justify-center py-3 text-sm text-gray-500 dark:text-gray-400">
-								رویدادی وجود ندارد
-							</div>
-						)}
-					</div>
+					{dayEvents.map((event, index) => (
+						<EventCard key={index} event={event} />
+					))}
 				</div>
 			</div>
 		</div>

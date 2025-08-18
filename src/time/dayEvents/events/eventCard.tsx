@@ -82,17 +82,17 @@ export const EventCard = ({ event }: EventCardProps) => {
 
 	return (
 		<div
-			className={` rounded-lg overflow-hidden bg-gray-100/50 dark:bg-gray-800/60 backdrop-blur-sm border-r ${event.isHoliday ? 'border-red-500' : event.source === 'google' ? 'border-blue-500' : 'border-gray-300 dark:border-gray-600'}`}
+			className={` rounded-lg overflow-hidden backdrop-blur-2xl bg-gray-600/20 border-r ${event.isHoliday ? 'border-red-500' : event.source === 'google' ? 'border-blue-500' : 'border-gray-300 dark:border-gray-600'}`}
 			dir="rtl"
 		>
 			<div className="p-1">
 				<div className="flex items-center mb-0.5">
-					<h4 className="text-sm font-medium text-gray-700 grow text-wrap dark:text-gray-200">
+					<h4 className="text-sm font-medium text-content grow text-wrap">
 						{event.title}
 					</h4>
 					<div className="flex gap-1 mr-1">
 						{event.isHoliday && (
-							<span className="text-xs px-2 py-0.5 rounded-md bg-red-100 text-red-600/60 dark:bg-red-900/30 dark:text-red-400">
+							<span className="text-xs px-2 py-0.5 rounded-md bg-red-100 text-red-600/60 dark:bg-red-900/20 dark:text-red-500">
 								تعطیل
 							</span>
 						)}
