@@ -1,12 +1,13 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
+import * as electronToolkit from '@electron-toolkit/preload'
 
 import { contextBridge, ipcRenderer } from 'electron'
-import { type StoreKey, store, type widgetKey } from './store'
+import { type StoreKey, store } from './store'
 
 // --------- Expose some API to the Renderer process ---------
-contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer))
-
+contextBridge.exposeInMainWorld(
+	'ipcRenderer',
+	electronToolkit.electronAPI.ipcRenderer,
+)
 // `exposeInMainWorld` can't detect attributes and methods of `prototype`, manually patching it.
 function withPrototype(obj: Record<string, any>) {
 	const protos = Object.getPrototypeOf(obj)
@@ -108,7 +109,6 @@ function useLoading() {
 		},
 	}
 }
-
 // ----------------------------------------------------------------------
 
 const { appendLoading, removeLoading } = useLoading()

@@ -24,6 +24,7 @@ export interface Window {
 	reziable: boolean
 	saveBounds: boolean
 	closable?: boolean
+	ui: 'normal' | 'acrylic'
 }
 export async function createWindow(payload: Window) {
 	const isValidate = isPointWithinDisplay(payload.x, payload.y)
@@ -54,25 +55,30 @@ export async function createWindow(payload: Window) {
 		minWidth: payload.minWidth,
 		maxWidth: payload.maxWidth,
 		maxHeight: payload.maxHeight,
-		frame: false,
-		transparent: true,
 		resizable: payload.reziable,
 		alwaysOnTop: payload.alwaysOnTop,
-		skipTaskbar: true,
-		fullscreenable: false,
 		movable: payload.moveable,
-		maximizable: false,
-		minimizable: false,
 		closable: payload.closable,
-		center: true,
 		x: payload.x || undefined,
 		y: payload.y || undefined,
 		title: payload.title,
+		skipTaskbar: true,
+		transparent: payload.ui !== 'acrylic',
+		fullscreenable: false,
+		frame: false,
+		center: true,
+		maximizable: false,
+		minimizable: false,
+		focusable: false,
 		titleBarStyle: 'hidden',
+		...(payload.ui === 'acrylic' && {
+			vibrancy: 'fullscreen-ui', // on MacOS
+			backgroundMaterial: 'acrylic', // on Windows 11
+			backgroundColor: '#00000000',
+		}),
 	})
 
 	if (os.platform() === 'darwin') win.setWindowButtonVisibility(false)
-
 	win.webContents.on('did-finish-load', () => {
 		const setting: windowSettings = store.get(
 			widgetKey[payload.title],
@@ -83,6 +89,10 @@ export async function createWindow(payload: Window) {
 		win.webContents.send('border-radius', {
 			radius: borderRadius ? `${borderRadius}px` : '28px',
 		})
+
+		if (payload.devTools) {
+			win.webContents.openDevTools()
+		}
 	})
 
 	if (global.VITE_DEV_SERVER_URL) {
@@ -205,7 +215,7 @@ export async function createSettingWindow() {
 	}
 
 	return await createWindow({
-		height: 432,
+		height: 348,
 		width: 595,
 		minHeight: 432,
 		minWidth: 595,
@@ -219,5 +229,6 @@ export async function createSettingWindow() {
 		reziable: false,
 		saveBounds: false,
 		closable: true,
+		ui: 'acrylic',
 	})
 }

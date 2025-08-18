@@ -114,20 +114,3 @@ body {
 .not-moveable {
   -webkit-app-region: none;
 }
-
-@media (prefers-color-scheme: dark) {
-  .h-screen {
-    background: #333;
-  }
-
-
-}
-
-@media (prefers-color-scheme: light) {
-  .h-screen {
-    background: #ddd;
-    color: black;
-  }
-
-
-}

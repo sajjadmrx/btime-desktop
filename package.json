@@ -20,6 +20,7 @@
 		"format": "prettier --write ."
 	},
 	"dependencies": {
+		"@electron-toolkit/preload": "^3.0.2",
 		"@material-tailwind/react": "^2.1.4",
 		"@tanstack/react-query": "^5.66.0",
 		"axios": "^1.7.4",
@@ -42,12 +43,13 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.2",
+		"@electron-toolkit/tsconfig": "^1.0.1",
 		"@types/react": "18.2.9",
 		"@types/react-dom": "^18.2.7",
 		"@vitejs/plugin-react": "^4.0.4",
 		"autoprefixer": "^10.4.16",
-		"electron": "^26.6.10",
-		"electron-builder": "^24.13.3",
+		"electron": "^37.3.0",
+		"electron-builder": "^26.0.12",
 		"postcss": "^8.4.31",
 		"postcss-loader": "^7.3.3",
 		"tailwind-scrollbar": "^3.1.0",

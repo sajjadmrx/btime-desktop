@@ -5,7 +5,6 @@ module.exports = withMT({
     './**/node_modules/react-tailwindcss-select/**/*/*.esm.js',
     './**/@material-tailwind/**/*.{html,js,ts,jsx,tsx,mdx}',
   ],
-  darkMode: 'class',
   theme: {
     screens: {
       xxs: { min: '0px', max: '150px' },

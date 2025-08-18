@@ -99,6 +99,7 @@ async function onAppReady() {
 			reziable: !btimeStore.showCalendar,
 			moveable,
 			saveBounds: true,
+			ui: 'acrylic',
 		})
 
 		if (useParentWindowMode && parentWin) {
@@ -124,6 +125,7 @@ async function onAppReady() {
 			alwaysOnTop: nerkhStore.alwaysOnTop,
 			reziable: true,
 			moveable,
+			ui: 'acrylic',
 			saveBounds: true,
 		})
 
@@ -155,6 +157,7 @@ async function onAppReady() {
 			alwaysOnTop: arzChandStore.alwaysOnTop,
 			reziable: true,
 			saveBounds: true,
+			ui: 'acrylic',
 		})
 
 		if (useParentWindowMode && parentWin) {
@@ -184,6 +187,7 @@ async function onAppReady() {
 			reziable: true,
 			saveBounds: true,
 			moveable,
+			ui: 'acrylic',
 		})
 
 		if (useParentWindowMode && parentWin) {
@@ -212,6 +216,7 @@ async function onAppReady() {
 			reziable: true,
 			saveBounds: true,
 			moveable,
+			ui: 'acrylic',
 		})
 		if (useParentWindowMode && parentWin) {
 			addChildWindow(clockWindow)
@@ -239,6 +244,7 @@ async function onAppReady() {
 			reziable: true,
 			saveBounds: true,
 			moveable,
+			ui: 'acrylic',
 		})
 
 		if (useParentWindowMode && parentWin) {
@@ -267,6 +273,7 @@ async function onAppReady() {
 			reziable: true,
 			saveBounds: true,
 			moveable,
+			ui: 'acrylic',
 		})
 
 		if (useParentWindowMode && parentWin) {
