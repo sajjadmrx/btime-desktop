@@ -43,7 +43,7 @@ export function AppSetting() {
 		window.ipcMain.send('reOpen')
 	}
 
-	const thmes = [
+	const themes = [
 		{
 			theme: 'light',
 			icon: 'sun.png',
@@ -72,7 +72,7 @@ export function AppSetting() {
 							تم
 						</h1>
 						<div className="flex flex-row justify-around w-full h-20 gap-4 px-3 mt-2 duration-200">
-							{thmes.map((item, index) => (
+							{themes.map((item, index) => (
 								<ThemeComponent
 									key={index}
 									setThemeValue={setThemeValue}

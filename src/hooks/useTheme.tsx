@@ -3,10 +3,10 @@ import { useCallback, useEffect } from 'react'
 export const useThemeMode = () => {
 	const handleColorSchemeChange = useCallback(
 		(e: MediaQueryListEvent | MediaQueryList) => {
-			// document.documentElement.classList.remove('dark')
-			// if (e.matches) {
-			// 	document.documentElement.classList.add('dark')
-			// }
+			document.documentElement.classList.remove('dark')
+			if (e.matches) {
+				document.documentElement.classList.add('dark')
+			}
 		},
 		[],
 	)
