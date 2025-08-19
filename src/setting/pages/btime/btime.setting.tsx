@@ -7,7 +7,6 @@ export function BtimeSetting() {
 	const [setting, setSetting] = useState<BtimeSettingStore>(null)
 	useEffect(() => {
 		const btime: BtimeSettingStore = window.store.get(widgetKey.BTime)
-		btime.borderRadius = btime.borderRadius || 28
 		setSetting(btime)
 	}, [])
 
@@ -22,7 +21,7 @@ export function BtimeSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.BTime)
-		} else if (!['borderRadius'].includes(key)) {
+		} else {
 			window.ipcRenderer.send('updated-setting', widgetKey.BTime)
 		}
 	}
@@ -34,19 +33,7 @@ export function BtimeSetting() {
 			enable: setting.enable,
 
 			bounds: window.store.get(widgetKey.BTime).bounds,
-			borderRadius: setting.borderRadius,
 		})
-	}
-
-	async function onSliderChange(value: number) {
-		const fixedValue = Math.floor(value)
-
-		await window.ipcRenderer.invoke(
-			'setBorderRadius',
-			'BTime',
-			`${fixedValue}px`,
-		)
-		setSettingValue('borderRadius', fixedValue)
 	}
 
 	if (!setting) return null
@@ -146,45 +133,6 @@ export function BtimeSetting() {
 								selected={setting.currentCalender === 'Gregorian'}
 								onClick={() => setSettingValue('currentCalender', 'Gregorian')}
 							/>
-						</div>
-
-						<div className="text-gray-600 dark:text-gray-300 text-sm p-2 bg-[#e8e6e6] dark:bg-[#24242459] rounded-lg mt-2 flex items-center">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-								className="w-6 h-6 ml-1"
-							>
-								<path
-									fillRule="evenodd"
-									d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
-									clipRule="evenodd"
-								/>
-							</svg>{' '}
-							<p className="font-light">
-								برای نمایش تقویم، ویجت رو در سایز مناسب قرار بدید.
-							</p>
-						</div>
-					</div>
-					<div className="flex flex-col justify-between w-full">
-						<label
-							htmlFor="currency-select"
-							className="text-gray-600 dark:text-[#eee] font-semibold text-sm"
-						>
-							حاشیه ها
-						</label>
-						<div className="flex items-center gap-2 px-2 py-2 rounded w-36 h-fit">
-							<Slider
-								size="md"
-								color="blue"
-								defaultValue={setting.borderRadius}
-								onChange={(change) =>
-									onSliderChange(Number(change.target.value))
-								}
-							/>
-							<div className="flex flex-row justify-between w-full text-gray-600 dark:text-[#eee]">
-								{setting.borderRadius}px
-							</div>
 						</div>
 					</div>
 				</div>

@@ -6,8 +6,7 @@ interface Prop {
 export function CurrenciesDefault({ currencies }: Prop) {
 	return (
 		<div
-			className="flex flex-col items-center w-full h-64 px-2 overflow-y-scroll scrollbar-thin not-moveable"
-			style={{ maxHeight: '80vh' }}
+			className="flex flex-col items-center w-full h-full gap-1 overflow-y-auto divide-y scrollbar-thin dark:divide-gray-300/20 divide-gray-300/20"
 			dir="rtl"
 		>
 			{currencies.map((currency) => (

@@ -1,10 +1,5 @@
-import { Tooltip } from '@material-tailwind/react'
 import type moment from 'jalali-moment'
-import { BsCalendarEvent, BsInfoCircle } from 'react-icons/bs'
-import { IoCalendarOutline } from 'react-icons/io5'
 import type { FetchedAllEvents } from 'src/api/api.interface'
-
-import { getHijriEvents, getShamsiEvents } from './utils'
 
 interface JalaliCalendarProp {
 	currentTime: moment.Moment
@@ -30,7 +25,7 @@ export function JalaliCalendar({
 
 	return (
 		<div
-			className="w-full h-full p-1 px-1 overflow-hidden rounded-lg max-w-96 not-moveable lg:pt-4"
+			className="w-full h-full p-1 px-1 overflow-hidden rounded-lg max-w-96 lg:pt-4"
 			dir="rtl"
 		>
 			<div className="grid grid-cols-7 gap-1 space-x-1">
@@ -43,7 +38,7 @@ export function JalaliCalendar({
 						className={`
 						p-0 text-xs
 						h-6 w-6 mx-auto flex items-center justify-center rounded-full
-						dark:text-gray-300 text-gray-700 opacity-40
+						text-muted font-thin
 					`}
 					>
 						{prevMonthStartDay + i}
@@ -56,7 +51,6 @@ export function JalaliCalendar({
 						index={index}
 						isHoliday={isHoliday}
 						jalaliFirstDay={firstDayOfMonth}
-						events={events}
 						currentDate={currentTime}
 					/>
 				))}
@@ -65,9 +59,9 @@ export function JalaliCalendar({
 					<div
 						key={`next-month-${i}`}
 						className={`
-						p-0 text-xs 
+						p-0 text-xs
 						h-6 w-6 mx-auto flex items-center justify-center rounded-full
-					dark:text-gray-300 text-gray-700 opacity-40
+						text-muted font-thin
 					`}
 					>
 						{i + 1}
@@ -83,16 +77,9 @@ interface Prop {
 	jalaliFirstDay: number
 
 	isHoliday: (day: any, dayOfWeek: number) => boolean
-	events: FetchedAllEvents
 	currentDate: moment.Moment
 }
-function DayComponent({
-	index,
-	jalaliFirstDay,
-	isHoliday,
-	events,
-	currentDate,
-}: Prop) {
+function DayComponent({ index, jalaliFirstDay, isHoliday, currentDate }: Prop) {
 	const day = index + 1
 	const cellDate = currentDate.clone().jDate(day)
 
@@ -105,7 +92,7 @@ function DayComponent({
 			return 'dark:text-red-400 text-red-700'
 		}
 
-		return 'dark:text-gray-300 text-gray-700'
+		return 'text-gray-300'
 	}
 
 	const getBackgroundClass = () => {
@@ -114,124 +101,20 @@ function DayComponent({
 		}
 
 		return isHolidayDay
-			? 'dark:bg-red-900/20 bg-red-400/10 dark:ring-1 ring-1 dark:ring-red-500 ring-red-400'
-			: 'dark:bg-gray-800 bg-gray-100 dark:ring-1 ring-1 dark:ring-gray-600 ring-gray-400'
-	}
-
-	const getHoverClass = () => {
-		if (isCurrentDay) return ''
-
-		return 'hover:bg-gray-200 dark:hover:bg-gray-700'
-	}
-
-	const dayEvents = [
-		...getShamsiEvents(events, cellDate),
-		...getHijriEvents(events, cellDate),
-	]
-		.sort((a, b) => {
-			if (a.isHoliday && !b.isHoliday) return -1
-		})
-		.slice(0, 1)
-
-	const dayEventsList = dayEvents.length ? dayEvents : []
-
-	const getTooltipClass = () => {
-		return 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-xl border-gray-200/30 dark:border-gray-700/70'
-	}
-
-	function DayEvents() {
-		return dayEventsList.map((eventInfo, index) => (
-			<li
-				key={index}
-				className="flex font-[Vazir] items-center max-w-full space-x-1 space-x-reverse truncate"
-			>
-				<div
-					className={`h-2 w-2 rounded-full flex-shrink-0 ${eventInfo.isHoliday ? 'bg-red-500' : 'bg-blue-400'}`}
-				></div>
-				<span
-					className={`whitespace-break-spaces font-[Vazir] text-xs ${
-						eventInfo.isHoliday
-							? 'font-medium dark:text-red-400 text-red-600'
-							: 'font-light dark:text-gray-300 text-gray-700'
-					}`}
-				>
-					{eventInfo.title} {eventInfo.isHoliday ? '(تعطیل)' : ''}
-				</span>
-			</li>
-		))
+			? 'dark:bg-red-900/20 bg-red-400/10 ring-1 dark:ring-red-500/50 ring-red-400'
+			: 'dark:bg-gray-800/20 bg-gray-100/30 ring-1 dark:ring-gray-800/40 ring-gray-300/60'
 	}
 
 	return (
-		<>
-			<Tooltip
-				className={`rounded-lg ${getTooltipClass()} w-64 min-h-2 p-0 overflow-hidden border shadow-lg`}
-				content={
-					<div className="flex flex-col w-full" dir="rtl">
-						{/* Date Information Header */}
-						<div className="w-full p-1 border-b bg-black/10 dark:bg-white/5 border-gray-200/10 dark:border-gray-700/50 font-[Vazir]">
-							<div
-								className="flex flex-row items-center justify-between"
-								dir="rtl"
-							>
-								<div className="flex items-center gap-2">
-									<IoCalendarOutline className="w-4 h-4 text-blue-400" />
-									<span className="text-xs font-semibold">
-										{cellDate.format('jDD jMMMM jYYYY')}
-									</span>
-								</div>
-								<div
-									className={`text-sm font-bold rounded-full h-7 w-7 flex items-center justify-center
-									${
-										isHolidayDay
-											? 'bg-red-500/20 text-red-500 ring-1 ring-red-500/30'
-											: 'bg-blue-500/10 text-blue-500 ring-1 ring-blue-500/20'
-									}`}
-								>
-									{day}
-								</div>
-							</div>
-						</div>
-
-						{/* Events List */}
-						<div className="px-3 py-2">
-							<h3 className="text-xs font-medium mb-2 flex items-center font-[Vazir] gap-1.5">
-								<BsCalendarEvent className="w-3.5 h-3.5" />
-								مناسبت‌های روز
-							</h3>
-							<ul
-								className="w-full space-y-1.5 max-h-48 overflow-y-auto"
-								dir="rtl"
-							>
-								{dayEventsList.length ? (
-									<DayEvents />
-								) : (
-									<li className="text-center font-[Vazir] font-light text-xs dark:text-gray-300 text-gray-700 py-1 flex items-center justify-center gap-1">
-										<BsInfoCircle className="w-3 h-3 text-gray-400" />
-										مناسبتی ثبت نشده.
-									</li>
-								)}
-							</ul>
-						</div>
-					</div>
-				}
-				animate={{
-					mount: { scale: 1, y: 0 },
-					unmount: { scale: 0, y: 15 },
-				}}
-				placement="bottom"
-			>
-				<div
-					className={`text-center h-6 w-6 flex items-center justify-center
-						rounded-md cursor-pointer text-xs sm:text-sm transition-all duration-200
+		<div
+			className={`text-center h-6 w-6 flex items-center justify-center
+						rounded-md  text-xs sm:text-sm transition-all duration-200
 						${getTextColorClass()}
 						${getBackgroundClass()}
-						${getHoverClass()}
 					`}
-				>
-					{day}
-				</div>
-			</Tooltip>
-		</>
+		>
+			{day}
+		</div>
 	)
 }
 
@@ -245,12 +128,12 @@ function WeekDayComponent({ day, index }: WeekDayProp) {
 	const getWeekdayClass = () => {
 		return isFriday
 			? 'dark:text-red-400 text-red-600'
-			: 'dark:text-gray-400 text-gray-700'
+			: 'dark:text-gray-100 text-white opacity-80'
 	}
 
 	return (
 		<div
-			className={`text-center font-medium text-xs xs:text-[10px] truncate  ${getWeekdayClass()}`}
+			className={`text-center font-medium text-xs xs:text-[10px] truncate ${getWeekdayClass()}`}
 		>
 			{day}
 		</div>

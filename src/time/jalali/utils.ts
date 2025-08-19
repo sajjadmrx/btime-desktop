@@ -180,6 +180,21 @@ export function combineAndSortEvents(
 		currentDate,
 	)
 
+	if (filteredGoogleEvents.length) {
+		return [
+			...filteredGoogleEvents.map((event) => ({
+				title: event.summary,
+				isHoliday: false,
+				icon: null,
+				source: 'google' as const,
+				id: event.id,
+				time: event.start.dateTime,
+				location: event.location,
+				googleItem: event,
+			})),
+		]
+	}
+
 	// All events combined
 	const allEvents = [
 		...shamsiEvents.map((event) => ({

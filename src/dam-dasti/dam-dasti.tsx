@@ -3,6 +3,7 @@ import { IoMdAdd } from 'react-icons/io'
 import { MdOutlineDragIndicator } from 'react-icons/md'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { userLogger } from '../../shared/logger'
+import { useAnalytics } from '../hooks/useAnalytics'
 import { useThemeMode } from '../hooks/useTheme'
 
 interface AppItem {
@@ -17,6 +18,7 @@ function App() {
 	const [isDragging, setIsDragging] = useState(false)
 
 	useThemeMode()
+	useAnalytics('dam-dasti')
 
 	useEffect(() => {
 		window.ipcMain.invoke('get-apps').then((savedApps: AppItem[]) => {
@@ -83,14 +85,16 @@ function App() {
 		const files = Array.from(e.dataTransfer.files)
 		if (files.length > 0) {
 			for (const file of files) {
-				const appInfo = await window.ipcMain.invoke('get-app-info', file.path)
+				const filePath =
+					(file as any).path || file.webkitRelativePath || file.name
+				const appInfo = await window.ipcMain.invoke('get-app-info', filePath)
 				if (appInfo) {
 					setApps((prevApps) => [
 						...prevApps,
 						{
 							id: Date.now().toString(),
 							name: appInfo.name,
-							path: file.path,
+							path: filePath,
 							icon: appInfo.icon,
 						},
 					])
@@ -105,13 +109,13 @@ function App() {
 	return (
 		<div
 			className={
-				'w-screen h-screen flex flex-col p-2 overflow-hidden transition-colors duration-300'
+				'w-screen h-screen flex flex-col p-1 overflow-hidden transition-colors duration-300'
 			}
 			onDragOver={handleDragOver}
 			onDragLeave={handleDragLeave}
 			onDrop={handleDrop}
 		>
-			<div className="absolute top-0 left-0 right-0 z-50 flex justify-end p-2">
+			<div className="absolute bottom-0 left-0 right-0 z-50 flex justify-end p-2">
 				<div className="flex items-center">
 					<button
 						className={`w-8 h-8 moveable flex justify-center items-center rounded-full transition-colors ${iconButtonStyle}`}
@@ -125,7 +129,7 @@ function App() {
 
 			<div
 				className={
-					'flex flex-wrap items-start justify-center w-full mt-3 h-full gap-4 py-4 px-2 overflow-y-auto scrollbar-thin scrollbar-track-transparent'
+					'flex flex-wrap items-start justify-center w-full py-2 h-full gap-2 px-1 overflow-y-auto scrollbar-thin hidden-scrollbar'
 				}
 			>
 				{apps.map((app) => (
@@ -145,7 +149,7 @@ function App() {
 						</button>
 
 						<div
-							className={`relative mb-2 transition-all rounded-full shadow-md cursor-pointer w-12 h-12 xs:w-12 xs:h-12 sm:w-10 sm:h-10 hover:scale-110  xxs:w-8 xxs:h-8 
+							className={`relative mb-2 transition-all rounded-2xl shadow-md cursor-pointer w-12 h-12 xs:w-12 xs:h-12 sm:w-10 sm:h-10 hover:scale-110  xxs:w-8 xxs:h-8 
                                 group-hover:ring-2 group-hover:ring-blue-400 dark:group-hover:ring-blue-500`}
 							onClick={() => handleLaunchApp(app)}
 							title={`اجرای ${app.name}`}
@@ -154,12 +158,12 @@ function App() {
 								<img
 									src={app.icon}
 									alt={app.name}
-									className={'object-cover w-full h-full p-1 rounded-full'}
+									className={'object-cover w-full h-full p-1 rounded-2xl'}
 									onError={(e) => {
 										e.currentTarget.style.display = 'none'
 										const defaultIcon = document.createElement('div')
 										defaultIcon.className =
-											'flex items-center justify-center w-full h-full text-xl font-medium text-white rounded-full xs:text-2xl sm:text-3xl bg-gradient-to-br from-purple-500 to-indigo-600'
+											'flex items-center justify-center w-full h-full text-xl font-medium text-white rounded-2xl xs:text-2xl sm:text-3xl bg-gradient-to-br from-purple-500 to-indigo-600'
 										defaultIcon.textContent = app.name.charAt(0).toUpperCase()
 										e.currentTarget.parentNode.appendChild(defaultIcon)
 									}}
@@ -173,7 +177,7 @@ function App() {
 
 						<span
 							className={
-								'w-full px-1 text-xs xxs:text-[10px] sm:text-xs font-medium text-center truncate text-gray-600 dark:text-gray-300'
+								'w-full px-1 text-xs xxs:text-[10px] sm:text-xs font-medium text-center truncate text-content'
 							}
 						>
 							{app.name.charAt(0).toUpperCase() + app.name.slice(1)}
@@ -181,11 +185,9 @@ function App() {
 					</div>
 				))}
 
-				<div className="relative flex flex-col items-center w-[60px] xs:w-[65px] sm:w-[75px] md:w-[85px]">
+				<div className="relative flex flex-col items-center w-[60px] xs:w-[65px] sm:w-[75px] md:w-[85px] group">
 					<div
-						className={`flex items-center justify-center mb-2 transition-all border-2 border-gray-400/30 border-dashed rounded-full cursor-pointer w-12 h-12 xs:w-13 xs:h-13 sm:w-14 sm:h-14 
-                        hover:border-blue-400 hover:scale-105 dark:hover:border-blue-500 
-                        hover:bg-blue-50 dark:hover:bg-blue-900/30 group`}
+						className="relative  flex flex-col items-center justify-center transition-all group w-[60px] xxs:w-[45px] xs:w-[55px]  sm:w-[55px] md:w-[85px] cursor-pointer border-2 border-gray-400/30 border-dashed rounded-full h-12 group-hover:border-blue-400 hover:scale-105 dark:group-hover:border-blue-500"
 						title="افزودن برنامه جدید"
 						onClick={handleAddApp}
 					>

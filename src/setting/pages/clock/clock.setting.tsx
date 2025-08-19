@@ -34,7 +34,6 @@ export function ClockSetting() {
 	const { isAuthenticated } = useAuth()
 	useEffect(() => {
 		const clock: ClockSettingStore = window.store.get(widgetKey.Clock)
-		clock.borderRadius = clock.borderRadius || 28
 		setSetting(clock)
 
 		function fetchTimezones() {
@@ -68,7 +67,7 @@ export function ClockSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.Clock)
-		} else if (!['borderRadius'].includes(key)) {
+		} else {
 			window.ipcRenderer.send('updated-setting', widgetKey.Clock)
 		}
 	}
@@ -80,19 +79,7 @@ export function ClockSetting() {
 			enable: setting.enable,
 
 			bounds: window.store.get(widgetKey.Clock).bounds,
-			borderRadius: setting.borderRadius,
 		})
-	}
-
-	async function onSliderChange(value: number) {
-		const fixedValue = Math.floor(value)
-
-		await window.ipcRenderer.invoke(
-			'setBorderRadius',
-			'Clock',
-			`${fixedValue}px`,
-		)
-		setSettingValue('borderRadius', fixedValue)
 	}
 
 	if (!setting) return null
@@ -161,27 +148,7 @@ export function ClockSetting() {
 							}}
 						/>
 					</div>
-					<div className="flex flex-col w-full gap-2">
-						<label
-							htmlFor="currency-select"
-							className="text-gray-600 dark:text-[#eee] font-semibold text-sm"
-						>
-							حاشیه ها
-						</label>
-						<div className="flex items-center gap-2 px-2 py-2 rounded w-36 h-fit">
-							<Slider
-								size="md"
-								color="blue"
-								defaultValue={setting.borderRadius}
-								onChange={(change) =>
-									onSliderChange(Number(change.target.value))
-								}
-							/>
-							<div className="flex flex-row justify-between w-full text-gray-600 dark:text-[#eee]">
-								{setting.borderRadius}px
-							</div>
-						</div>
-					</div>
+
 					<div className="w-full">
 						<label className="text-gray-600 dark:text-[#eee] font-semibold text-sm">
 							قالب ساعت

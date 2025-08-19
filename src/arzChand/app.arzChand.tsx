@@ -1,7 +1,7 @@
 import type { ArzChandSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
-import { MdOutlineDragIndicator } from 'react-icons/md'
 import { widgetKey } from '../../shared/widgetKey'
+import { useAnalytics } from '../hooks/useAnalytics'
 import { useThemeMode } from '../hooks/useTheme'
 import { CurrenciesClassic } from './templates/classic'
 import { CurrenciesDefault } from './templates/default'
@@ -19,9 +19,10 @@ function App() {
 	}, [])
 
 	useThemeMode()
+	useAnalytics('arz-chand')
 
 	return (
-		<div className="w-screen h-screen overflow-hidden">
+		<div className="w-screen h-screen overflow-hidden moveable">
 			<div className="h-full">
 				<div className="flex flex-col items-center h-full p-2">
 					{setting.template === 'default' || !setting.template ? (
@@ -29,21 +30,6 @@ function App() {
 					) : (
 						<CurrenciesClassic currencies={setting.currencies} />
 					)}
-					<div
-						className="flex items-center w-full h-10 p-2 mt-2 transition-all duration-300 ease-in-out overflow-clip"
-						dir="rtl"
-					>
-						<button
-							className={`w-7 h-7  moveable flex justify-center items-center rounded-full 
-								cursor-pointer hover:text-gray-300 dark:hover:bg-[#3c3c3c8a] dark:text-gray-400/90
-								dark:bg-transparent
-								text-gray-500 
-							`}
-							style={{ backdropFilter: 'blur(20px)' }}
-						>
-							<MdOutlineDragIndicator />
-						</button>
-					</div>
 				</div>
 			</div>
 		</div>

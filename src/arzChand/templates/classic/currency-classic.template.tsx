@@ -73,18 +73,6 @@ export function CurrencyClassicComponent({ currencyCode }: Prop) {
 					) : (
 						<div className="w-10 h-4 bg-gray-200 rounded dark:bg-gray-700"></div>
 					)}
-
-					{priceChange !== 0 ? (
-						<div className="flex items-center gap-1">
-							<span
-								className={`text-xs ${priceDirection} truncate max-w-[60px]`}
-							>
-								{Math.abs(Math.round(priceChange)).toLocaleString()}
-							</span>
-						</div>
-					) : (
-						<span className="text-xs text-gray-400 dark:text-gray-500">-</span>
-					)}
 				</div>
 			</div>
 
@@ -95,9 +83,7 @@ export function CurrencyClassicComponent({ currencyCode }: Prop) {
 							'font-medium text-xs text-gray-600 dark:text-gray-300 tabular-nums truncate max-w-[100px]'
 						}
 					>
-						{currency.rialPrice
-							? Math.round(currency.rialPrice).toLocaleString()
-							: '-'}
+						{getPrice(currency)}
 					</p>
 				) : (
 					<div className="w-20 h-5 bg-gray-100 rounded dark:bg-gray-800"></div>
@@ -105,4 +91,13 @@ export function CurrencyClassicComponent({ currencyCode }: Prop) {
 			</div>
 		</div>
 	)
+}
+
+function getPrice(currency: FetchedCurrency) {
+	if (currency.code.toLowerCase() === 'btc')
+		return `$${currency.price.toLocaleString()}`
+
+	return currency.rialPrice
+		? Math.round(currency.rialPrice).toLocaleString()
+		: '-'
 }

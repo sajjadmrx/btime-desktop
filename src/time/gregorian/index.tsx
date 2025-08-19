@@ -31,25 +31,13 @@ export function GregorianComponent(prop: Prop) {
 	return (
 		<div className="flex flex-row-reverse items-center justify-center w-full h-full">
 			<div className="flex flex-col items-center lg:gap-4 gap-2 moveable w-[40%] relative">
-				<div
-					className={
-						'select-none font-[balooTamma] text-gray-700 dark:text-gray-200'
-					}
-				>
+				<div className={'select-none font-[balooTamma] text-content'}>
 					{today.locale('en').format('dddd')}
 				</div>
-				<div
-					className={
-						'text-6xl select-none font-[balooTamma] text-gray-700 dark:text-gray-200'
-					}
-				>
+				<div className={'text-6xl select-none font-[balooTamma] text-content'}>
 					{today.locale('en').date()}
 				</div>
-				<div
-					className={
-						'flex flex-row gap-3 font-[balooTamma] text-gray-700 dark:text-gray-200'
-					}
-				>
+				<div className={'flex flex-row gap-3 font-[balooTamma] text-content'}>
 					<div>{today.locale('en').year()}</div>
 					<div>{today.locale('en').format('MMMM')}</div>
 				</div>

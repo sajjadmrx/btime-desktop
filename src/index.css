@@ -115,19 +115,24 @@ body {
   -webkit-app-region: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  .h-screen {
-    background: #333;
-  }
-
-
+.text-content {
+  @apply text-gray-200 opacity-85 dark:text-gray-200 dark:opacity-100;
 }
 
-@media (prefers-color-scheme: light) {
-  .h-screen {
-    background: #ddd;
-    color: black;
-  }
+.text-muted {
+  @apply text-white opacity-70 dark:text-gray-100;
+}
 
+.bg-content {
+  @apply bg-[#6565652a] dark:bg-[#4040406b] dark:backdrop-blur-xl;
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+  backdrop-filter: blur(10px) saturate(180%);
+}
 
+.border-content {
+  @apply border-gray-200 dark:border-[#5d5d5d];
+}
+
+.hidden-scrollbar {
+  @apply scrollbar-none;
 }
