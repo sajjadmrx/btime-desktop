@@ -29,8 +29,8 @@ export function DigitalClock({ digital }: DigitalClockProps) {
 	const minutes = time.getMinutes().toString().padStart(2, '0')
 	const seconds = time.getSeconds().toString().padStart(2, '0')
 
-	const isDay = Number(hours) >= 6 && Number(hours) < 18
-	const textColor = isDay ? 'text-gray-100' : 'text-[#536dfe]'
+	const isDay = true // Number(hours) >= 6 && Number(hours) < 18
+	const textColor = isDay ? 'text-gray-400' : 'text-[#536dfe]'
 
 	return (
 		<div className="relative flex flex-col items-center w-full h-full">
@@ -145,15 +145,14 @@ export function DigitalClock({ digital }: DigitalClockProps) {
 			>
 				<span>{hours}</span>
 				<span>{minutes}</span>
+				{digital.showTimeZone && (
+					<div
+						className={`${textColor} absolute -bottom-[1rem] ${digital.showSecond ? 'inset-x-5 w-[calc(100%-2.5rem)] text-xs' : 'translate-y-20 text-sm'} leading-none font-medium font-[Vazir] tracking-[0.05em] text-center truncate opacity-90 transition-all duration-300`}
+					>
+						{getTimeZoneLabel(digital.timeZone.value)}
+					</div>
+				)}
 			</div>
-
-			{digital.showTimeZone && (
-				<div
-					className={`${textColor} absolute bottom-[2.5rem] ${digital.showSecond ? 'inset-x-5 w-[calc(100%-2.5rem)] text-xs' : 'translate-y-20 text-sm'} leading-none font-medium tracking-[0.05em] text-center truncate opacity-90 transition-all duration-300`}
-				>
-					{getTimeZoneLabel(digital.timeZone.value)}
-				</div>
-			)}
 		</div>
 	)
 }
