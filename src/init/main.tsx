@@ -8,6 +8,7 @@ function App() {
 
 const rootElement = document.getElementById('root')
 if (rootElement) {
+	// @ts-ignore
 	ReactDOM.createRoot(rootElement).render(<App />)
 }
 

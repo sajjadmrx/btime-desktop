@@ -1,7 +1,7 @@
 import type { ArzChandSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
-import { useAnalytics } from 'src/hooks/useAnalytics'
 import { widgetKey } from '../../shared/widgetKey'
+import { useAnalytics } from '../hooks/useAnalytics'
 import { useThemeMode } from '../hooks/useTheme'
 import { CurrenciesClassic } from './templates/classic'
 import { CurrenciesDefault } from './templates/default'

@@ -236,7 +236,7 @@ async function onAppReady() {
 	await serve(initWin)
 	initWin.once('ready-to-show', async () => {
 		await new Promise((resolve) => setTimeout(resolve, 2000))
-		initWin.hide()
+		initWin.destroy()
 	})
 
 	// initWin.hide()

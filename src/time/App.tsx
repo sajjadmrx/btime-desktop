@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { FiRefreshCw } from 'react-icons/fi'
-import { useAnalytics } from 'src/hooks/useAnalytics'
+
 import type { BtimeSettingStore } from '../../electron/store'
 import { widgetKey } from '../../shared/widgetKey'
 import { AuthProvider } from '../context/auth.context'
+import { useAnalytics } from '../hooks/useAnalytics'
 import { useThemeMode } from '../hooks/useTheme'
 import { DateProvider } from './context/date.context'
 import { DayEventsComponent } from './dayEvents/dayEvents'
