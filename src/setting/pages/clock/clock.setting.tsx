@@ -67,6 +67,8 @@ export function ClockSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.Clock)
+		} else {
+			window.ipcRenderer.send('updated-setting', widgetKey.Clock)
 		}
 	}
 

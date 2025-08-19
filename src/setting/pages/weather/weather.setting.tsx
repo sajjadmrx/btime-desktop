@@ -35,6 +35,8 @@ export function WeatherSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.Weather)
+		} else {
+			window.ipcRenderer.send('updated-setting', widgetKey.Weather)
 		}
 	}
 

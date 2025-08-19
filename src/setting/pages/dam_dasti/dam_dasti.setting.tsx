@@ -21,6 +21,8 @@ export function DamDastiSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.DamDasti)
+		} else {
+			window.ipcRenderer.send('updated-setting', widgetKey.DamDasti)
 		}
 	}
 

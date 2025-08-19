@@ -21,6 +21,8 @@ export function BtimeSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.BTime)
+		} else {
+			window.ipcRenderer.send('updated-setting', widgetKey.BTime)
 		}
 	}
 

@@ -1,6 +1,6 @@
 import { Checkbox, Slider, Switch, Typography } from '@material-tailwind/react'
 import type { ArzChandSettingStore } from 'electron/store'
-import { lazy, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
 import {
 	type SupportedCurrencies,
@@ -37,6 +37,8 @@ export function ArzChandSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.ArzChand)
+		} else {
+			window.ipcRenderer.send('updated-setting', widgetKey.ArzChand)
 		}
 	}
 
@@ -74,7 +76,7 @@ export function ArzChandSetting() {
 									color="gray"
 									className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir] mr-3"
 								>
-									فعالسازی ویجت ویجی‌ارز(نمایش قیمت ارزها)
+									فعالسازی ویجت ارز چند (نمایش قیمت ارزها)
 								</Typography>
 							</div>
 						}
@@ -123,7 +125,6 @@ export function ArzChandSetting() {
 							/>
 						</div>
 					</div>
-
 					<div
 						className="flex flex-row items-center justify-between w-full gap-2"
 						dir="rtl"
