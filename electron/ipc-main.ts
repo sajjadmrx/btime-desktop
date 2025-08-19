@@ -17,7 +17,7 @@ import {
 	store,
 	type windowSettings,
 } from './store'
-import { BtimeConfig } from './widgets/btime-config'
+import { WidgetConfigs } from './widgets/config'
 import { createSettingWindow, createWindow } from './window'
 
 const windowsShortcuts = require('windows-shortcuts')
@@ -41,41 +41,6 @@ export function initIpcMain() {
 		shell.openExternal(url)
 	})
 
-	ipcMain.handle('getBorderRadius', async (event, window: string) => {
-		try {
-			const win = BrowserWindow.getAllWindows().filter(
-				(win) => win.title === window,
-			)[0]
-			const borderRadius = await win.webContents.executeJavaScript(`
- getComputedStyle(document.querySelector('.h-screen')).borderRadius
-  `)
-
-			return borderRadius
-		} catch (error) {
-			userLogger.error(`Error in getBorderRadius: ${error}`)
-			return ''
-		}
-	})
-
-	ipcMain.handle(
-		'setBorderRadius',
-		async (event, window: string, value: string) => {
-			const win = BrowserWindow.getAllWindows().filter(
-				(win) => win.title === window,
-			)[0]
-			if (!win) {
-				userLogger.log(`can't find ${window}`)
-				return
-			}
-			await win.webContents.executeJavaScript(
-				`
-        document.querySelector('.h-screen').style.borderRadius = '${value}'
-        `,
-				true,
-			)
-		},
-	)
-
 	ipcMain.on('updated-setting', async (event, windowKey: string) => {
 		const win = BrowserWindow.getAllWindows().filter(
 			(win) => win.title === windowKey,
@@ -87,10 +52,11 @@ export function initIpcMain() {
 			if (windowKey === widgetKey.BTime) {
 				const bTimeSetting = setting as unknown as BtimeSettingStore
 				if (bTimeSetting.showCalendar) {
-					win.setSize(BtimeConfig.minWidth, BtimeConfig.minHeight)
-					win.setResizable(false)
+					win.setSize(
+						WidgetConfigs[widgetKey.BTime].minWidth,
+						WidgetConfigs[widgetKey.BTime].minHeight,
+					)
 				} else {
-					win.setResizable(true)
 					win.setSize(setting.bounds.width, setting.bounds.height)
 				}
 			}
@@ -134,27 +100,24 @@ export function initIpcMain() {
 				userLogger.error(`Window not found for ${windowKey}`)
 			}
 		} else {
-			const win = await createWindow({
+			await createWindow({
 				height: setting.bounds.height,
 				width: setting.bounds.width,
-				minHeight: setting.bounds.minHeight,
-				minWidth: setting.bounds.minWidth,
-				maxHeight: setting.bounds.maxHeight,
-				maxWidth: setting.bounds.maxWidth,
+				minHeight: WidgetConfigs[windowKey].minHeight,
+				minWidth: WidgetConfigs[windowKey].minWidth,
+				maxHeight: WidgetConfigs[windowKey].maxHeight,
+				maxWidth: WidgetConfigs[windowKey].maxWidth,
 				x: setting.bounds.x,
 				y: setting.bounds.y,
 				title: windowKey,
 				html: setting.html,
 				devTools: true,
 				alwaysOnTop: setting.alwaysOnTop,
-				reziable: true,
+				resizable: windowKey !== widgetKey.BTime,
 				saveBounds: true,
 				moveable,
+				ui: 'acrylic',
 			})
-
-			if (mainSetting.useParentWindowMode) {
-				addChildWindow(win)
-			}
 
 			userLogger.info(`Widget ${windowKey} enabled`)
 		}

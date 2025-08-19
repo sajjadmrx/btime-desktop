@@ -24,7 +24,6 @@ export function SubShomaarSetting() {
 		const SubShomaar: SubShomaarSettingStore = window.store.get(
 			widgetKey.SubShomaar,
 		)
-		SubShomaar.borderRadius = SubShomaar.borderRadius || 12
 		setSetting(SubShomaar)
 		setInputChannelName(SubShomaar.channelName || '')
 	}, [])
@@ -39,8 +38,6 @@ export function SubShomaarSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.SubShomaar)
-		} else if (!['borderRadius'].includes(key)) {
-			window.ipcRenderer.send('updated-setting', widgetKey.SubShomaar)
 		}
 	}
 
@@ -51,7 +48,6 @@ export function SubShomaarSetting() {
 			enable: setting.enable,
 			bounds: window.store.get('SubShomaar' as widgetKey.SubShomaar).bounds,
 			channelName: setting.channelName,
-			borderRadius: setting.borderRadius,
 			subscriberFormat: setting.subscriberFormat,
 		})
 	}
@@ -74,17 +70,6 @@ export function SubShomaarSetting() {
 			})
 			setIsLoadingChannel(false)
 		}
-	}
-
-	async function onSliderChange(value: number) {
-		const fixedValue = Math.floor(value)
-
-		await window.ipcRenderer.invoke(
-			'setBorderRadius',
-			widgetKey.SubShomaar,
-			`${fixedValue}px`,
-		)
-		setSettingValue('borderRadius', fixedValue)
 	}
 
 	async function onChannelInputChange(
@@ -187,28 +172,6 @@ export function SubShomaarSetting() {
 								className: 'flex',
 							}}
 						/>
-					</div>
-
-					<div className="flex flex-col justify بین w-full ">
-						<label
-							htmlFor="border-radius-slider"
-							className="text-gray-600 dark:text-[#eee] font-semibold text-sm"
-						>
-							حاشیه ها
-						</label>
-						<div className="flex items-center gap-2 px-2 py-2 rounded w-36 h-fit">
-							<Slider
-								size="md"
-								color="blue"
-								defaultValue={setting.borderRadius}
-								onChange={(change) =>
-									onSliderChange(Number(change.target.value))
-								}
-							/>
-							<div className="flex flex-row justify بین w-full text-gray-600 dark:text-[#eee]">
-								{setting.borderRadius}px
-							</div>
-						</div>
 					</div>
 
 					<div

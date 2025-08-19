@@ -16,11 +16,11 @@ import { getIconPath, getPublicFilePath } from '../shared/getIconPath'
 import { widgetKey } from '../shared/widgetKey'
 import { logAppStartupEvent } from './analytics'
 import { initIpcMain } from './ipc-main'
-import { addChildWindow, createParentWindow } from './parentWindow'
 import { store } from './store'
 import { update } from './update'
+import serve from './utils/serve'
 import { toggleStartUp } from './utils/startup.util'
-import { BtimeConfig } from './widgets/btime-config'
+import { WidgetConfigs } from './widgets/config'
 import { createSettingWindow, createWindow } from './window'
 config()
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
@@ -64,31 +64,26 @@ if (isWindoAndDrawin) {
 
 async function onAppReady() {
 	const mainSettings = store.get('main')
-	const useParentWindowMode = mainSettings.useParentWindowMode
 	const moveable = mainSettings.moveable
 
-	if (useParentWindowMode) {
-		parentWin = createParentWindow()
-	}
-
-	const nerkhStore = store.get(widgetKey.NerkhYab)
 	const btimeStore = store.get(widgetKey.BTime)
 	const arzChandStore = store.get(widgetKey.ArzChand)
 	const weatherStore = store.get(widgetKey.Weather)
 	const clockStore = store.get(widgetKey.Clock)
 	const damDasti = store.get(widgetKey.DamDasti)
-	const subShomaar = store.get(widgetKey.SubShomaar)
 
 	// Btime widget
 	if (btimeStore.enable) {
 		const btime = await createWindow({
 			height: btimeStore.showCalendar
-				? BtimeConfig.minHeight
+				? WidgetConfigs[widgetKey.BTime].minHeight
 				: btimeStore.bounds.height,
-			minWidth: btimeStore.showCalendar && BtimeConfig.minWidth,
-			minHeight: btimeStore.showCalendar && BtimeConfig.minHeight,
+			minWidth:
+				btimeStore.showCalendar && WidgetConfigs[widgetKey.BTime].minWidth,
+			minHeight:
+				btimeStore.showCalendar && WidgetConfigs[widgetKey.BTime].minHeight,
 			width: btimeStore.showCalendar
-				? BtimeConfig.minWidth
+				? WidgetConfigs[widgetKey.BTime].minWidth
 				: btimeStore.bounds.width,
 			x: btimeStore.bounds.x,
 			y: btimeStore.bounds.y,
@@ -96,44 +91,13 @@ async function onAppReady() {
 			html: btimeStore.html || 'time.html',
 			devTools: true,
 			alwaysOnTop: btimeStore.alwaysOnTop,
-			reziable: !btimeStore.showCalendar,
+			resizable: false,
 			moveable,
 			saveBounds: true,
+			ui: 'acrylic',
 		})
 
-		if (useParentWindowMode && parentWin) {
-			addChildWindow(btime)
-		}
 		mainWin = btime
-	}
-
-	// NerkhYab widget
-	if (nerkhStore.enable) {
-		const nerkhWindow = await createWindow({
-			height: nerkhStore.bounds.height,
-			minHeight: nerkhStore.bounds.minHeight || 120,
-			minWidth: nerkhStore.bounds.minWidth || 226,
-			maxWidth: nerkhStore.bounds.maxWidth,
-			maxHeight: nerkhStore.bounds.maxHeight,
-			width: nerkhStore.bounds.width,
-			x: nerkhStore.bounds.x,
-			y: nerkhStore.bounds.y,
-			title: widgetKey.NerkhYab,
-			html: nerkhStore.html || 'rate.html',
-			devTools: true,
-			alwaysOnTop: nerkhStore.alwaysOnTop,
-			reziable: true,
-			moveable,
-			saveBounds: true,
-		})
-
-		if (useParentWindowMode && parentWin) {
-			addChildWindow(nerkhWindow)
-		}
-
-		if (!mainWin) {
-			mainWin = nerkhWindow
-		}
 	}
 
 	// ArzChand widget
@@ -141,10 +105,10 @@ async function onAppReady() {
 		const arzChandWindow = await createWindow({
 			height: arzChandStore.bounds.height,
 
-			minHeight: arzChandStore.bounds.minHeight || 120,
-			minWidth: arzChandStore.bounds.minWidth || 320,
-			maxWidth: arzChandStore.bounds.maxWidth || 410,
-			maxHeight: arzChandStore.bounds.maxHeight || 319,
+			minHeight: WidgetConfigs[widgetKey.ArzChand].minHeight,
+			minWidth: WidgetConfigs[widgetKey.ArzChand].minWidth,
+			maxWidth: WidgetConfigs[widgetKey.ArzChand].maxWidth,
+			maxHeight: WidgetConfigs[widgetKey.ArzChand].maxHeight,
 			moveable,
 			width: arzChandStore.bounds.width,
 			x: arzChandStore.bounds.x,
@@ -153,13 +117,10 @@ async function onAppReady() {
 			html: arzChandStore.html || 'arzchand.html',
 			devTools: true,
 			alwaysOnTop: arzChandStore.alwaysOnTop,
-			reziable: true,
+			resizable: true,
 			saveBounds: true,
+			ui: 'acrylic',
 		})
-
-		if (useParentWindowMode && parentWin) {
-			addChildWindow(arzChandWindow)
-		}
 
 		if (!mainWin) {
 			mainWin = arzChandWindow
@@ -170,10 +131,10 @@ async function onAppReady() {
 	if (weatherStore.enable) {
 		const weatherWindow = await createWindow({
 			height: weatherStore.bounds.height,
-			minWidth: weatherStore.bounds.minWidth || 183,
-			minHeight: weatherStore.bounds.minHeight || 203,
-			maxWidth: weatherStore.bounds.maxWidth,
-			maxHeight: weatherStore.bounds.maxHeight,
+			minWidth: WidgetConfigs[widgetKey.Weather].minWidth,
+			minHeight: WidgetConfigs[widgetKey.Weather].minHeight,
+			maxWidth: WidgetConfigs[widgetKey.Weather].maxWidth,
+			maxHeight: WidgetConfigs[widgetKey.Weather].maxHeight,
 			width: weatherStore.bounds.width,
 			x: weatherStore.bounds.x,
 			y: weatherStore.bounds.y,
@@ -181,14 +142,11 @@ async function onAppReady() {
 			html: weatherStore.html || 'weather.html',
 			devTools: true,
 			alwaysOnTop: weatherStore.alwaysOnTop,
-			reziable: true,
+			resizable: true,
 			saveBounds: true,
 			moveable,
+			ui: 'acrylic',
 		})
-
-		if (useParentWindowMode && parentWin) {
-			addChildWindow(weatherWindow)
-		}
 
 		if (!mainWin) {
 			mainWin = weatherWindow
@@ -199,23 +157,21 @@ async function onAppReady() {
 		const clockWindow = await createWindow({
 			height: clockStore.bounds.height,
 			width: clockStore.bounds.width,
-			minHeight: clockStore.bounds.minHeight,
-			minWidth: clockStore.bounds.minWidth,
-			maxHeight: clockStore.bounds.maxHeight,
-			maxWidth: clockStore.bounds.maxWidth,
+			minHeight: WidgetConfigs[widgetKey.Clock].minHeight,
+			minWidth: WidgetConfigs[widgetKey.Clock].minWidth,
+			maxHeight: WidgetConfigs[widgetKey.Clock].maxHeight,
+			maxWidth: WidgetConfigs[widgetKey.Clock].maxWidth,
 			x: clockStore.bounds.x,
 			y: clockStore.bounds.y,
 			title: widgetKey.Clock,
 			html: clockStore.html || 'clock.html',
 			devTools: true,
 			alwaysOnTop: clockStore.alwaysOnTop,
-			reziable: true,
+			resizable: true,
 			saveBounds: true,
 			moveable,
+			ui: 'acrylic',
 		})
-		if (useParentWindowMode && parentWin) {
-			addChildWindow(clockWindow)
-		}
 
 		if (!mainWin) {
 			mainWin = clockWindow
@@ -226,8 +182,8 @@ async function onAppReady() {
 		const damdasti = await createWindow({
 			height: damDasti.bounds.height,
 			width: damDasti.bounds.width,
-			minHeight: damDasti.bounds.minHeight,
-			minWidth: damDasti.bounds.minWidth,
+			minHeight: WidgetConfigs[widgetKey.DamDasti].minHeight,
+			minWidth: WidgetConfigs[widgetKey.DamDasti].minWidth,
 			maxHeight: 1000,
 			maxWidth: 1000,
 			x: damDasti.bounds.x,
@@ -236,45 +192,14 @@ async function onAppReady() {
 			html: damDasti.html,
 			devTools: true,
 			alwaysOnTop: damDasti.alwaysOnTop,
-			reziable: true,
+			resizable: true,
 			saveBounds: true,
 			moveable,
+			ui: 'acrylic',
 		})
-
-		if (useParentWindowMode && parentWin) {
-			addChildWindow(damdasti)
-		}
 
 		if (!mainWin) {
 			mainWin = damdasti
-		}
-	}
-
-	if (subShomaar.enable) {
-		const subShomaarWindow = await createWindow({
-			height: subShomaar.bounds.height,
-			width: subShomaar.bounds.width,
-			minHeight: subShomaar.bounds.minHeight,
-			minWidth: subShomaar.bounds.minWidth,
-			maxHeight: 1000,
-			maxWidth: 1000,
-			x: subShomaar.bounds.x,
-			y: subShomaar.bounds.y,
-			title: widgetKey.SubShomaar,
-			html: subShomaar.html,
-			devTools: true,
-			alwaysOnTop: subShomaar.alwaysOnTop,
-			reziable: true,
-			saveBounds: true,
-			moveable,
-		})
-
-		if (useParentWindowMode && parentWin) {
-			addChildWindow(subShomaarWindow)
-		}
-
-		if (!mainWin) {
-			mainWin = subShomaarWindow
 		}
 	}
 
@@ -293,6 +218,28 @@ async function onAppReady() {
 			settingPage.webContents.send('update-details', { hello: 'world' })
 		})
 	}
+
+	const initWin = await createWindow({
+		alwaysOnTop: true,
+		height: 200,
+		width: 200,
+		devTools: false,
+		html: 'initial.html',
+		moveable: false,
+		resizable: false,
+		saveBounds: false,
+		title: 'initial',
+		ui: 'normal',
+		x: 0,
+		y: 0,
+	})
+	await serve(initWin)
+	initWin.once('ready-to-show', async () => {
+		await new Promise((resolve) => setTimeout(resolve, 2000))
+		initWin.destroy()
+	})
+
+	// initWin.hide()
 
 	nativeTheme.themeSource = store.get('main').theme
 	createTray()

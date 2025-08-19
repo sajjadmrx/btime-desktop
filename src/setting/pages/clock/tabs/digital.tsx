@@ -60,30 +60,6 @@ export function DigitalClockTab({ digital, timezones, setSettingValue }: Prop) {
 					className: 'flex',
 				}}
 			/>
-			<Checkbox
-				ripple={true}
-				defaultChecked={digital?.showDate}
-				onClick={() =>
-					setSettingValue('digital', {
-						showDate: !digital.showDate,
-					})
-				}
-				label={
-					<div>
-						<Typography
-							variant={'h5'}
-							color="blue-gray"
-							className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir]"
-						>
-							نمایش تاریخ{' '}
-							<span className="font-light">(نمایش تاریخ در ساعت)</span>
-						</Typography>
-					</div>
-				}
-				containerProps={{
-					className: 'flex',
-				}}
-			/>
 
 			<div
 				className="flex flex-col w-full gap-2 mt-2 pb-10 font-[Vazir]"

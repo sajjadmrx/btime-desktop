@@ -29,7 +29,6 @@ import { ArzChandSetting } from './pages/arzChand/arzChand.setting'
 import { BtimeSetting } from './pages/btime/btime.setting'
 import { ClockSetting } from './pages/clock/clock.setting'
 import { DamDastiSetting } from './pages/dam_dasti/dam_dasti.setting'
-import { NerkhYabSetting } from './pages/nerkhyab/nerkhYab.setting'
 import { AppSetting } from './pages/setting/app.setting'
 import { SubShomaarSetting } from './pages/sub-shomaar/sub-shomaar.setting'
 import { WeatherSetting } from './pages/weather/weather.setting'
@@ -45,14 +44,7 @@ const TAB_DATA = [
 		category: 'widgets',
 	},
 	{
-		label: 'نرخ یاب',
-		value: 'currency',
-		icon: <HiCurrencyDollar className="size-5" />,
-		element: <NerkhYabSetting />,
-		category: 'widgets',
-	},
-	{
-		label: 'ارز چند؟',
+		label: 'ویجی ارز',
 		value: 'arzChand',
 		icon: <HiBanknotes className="size-5" />,
 		element: <ArzChandSetting />,
@@ -83,13 +75,13 @@ const TAB_DATA = [
 		element: <DamDastiSetting />,
 		category: 'widgets',
 	},
-	{
-		label: 'ساب‌شمار',
-		value: 'subShomaar',
-		icon: <CgProfile className="size-5" />,
-		element: <SubShomaarSetting />,
-		category: 'widgets',
-	},
+	// {
+	// 	label: 'ساب‌شمار',
+	// 	value: 'subShomaar',
+	// 	icon: <CgProfile className="size-5" />,
+	// 	element: <SubShomaarSetting />,
+	// 	category: 'widgets',
+	// },
 	{
 		label: 'حساب کاربری',
 		value: 'account',
@@ -148,10 +140,10 @@ function App() {
 	return (
 		<>
 			<QueryClientProvider client={queryClient}>
-				<div className="w-screen h-screen overflow-hidden moveable">
+				<div className="h-screen overflow-hidden moveable dark:bg-[#333] rounded-2xl bg-[#ddd]">
 					<div className="w-full h-7 flex dark:bg-[#14141495] bg-white/65">
 						<button
-							className="w-7 h-7 ml-5 flex items-center not-moveable group justify-center hover:bg-red-400 dark:hover:bg-[#b94a4aad] transition-colors duration-200 rounded"
+							className="w-7 h-7  flex items-center not-moveable group justify-center hover:bg-red-400 dark:hover:bg-[#b94a4aad] transition-colors duration-200 rounded"
 							onClick={onExitButtonClick}
 						>
 							<svg
@@ -170,7 +162,8 @@ function App() {
 							</svg>
 						</button>
 					</div>
-					<div className="flex flex-row h-screen" dir="rtl">
+
+					<div className="flex flex-row" dir="rtl">
 						<Tabs value="btime" orientation="vertical">
 							<TabsHeader
 								className="w-44 not-moveable dark:bg-[#1d1d1d5b] rounded-none bg-white pb-10 overflow-y-auto max-h-[calc(100vh-7px)] custom-scrollbar"
@@ -182,7 +175,7 @@ function App() {
 									<Typography className="mb-1  font-[Vazir] text-xs font-semibold text-gray-500 dark:text-gray-400">
 										ویجت ها
 									</Typography>
-									<div className="h-0.5 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+									<div className="h-0.5 bg-content opacity-50 rounded-full"></div>
 								</div>
 
 								{TAB_DATA.filter((tab) => tab.category === 'widgets').map(
@@ -190,7 +183,7 @@ function App() {
 										<Tab
 											key={value}
 											value={value}
-											className="hover:bg-gray-100 transition-colors duration-200 rounded dark:hover:bg-[#1d1d1d] py-2 px-3 flex justify-start"
+											className="transition-colors duration-200 rounded hover:bg-[#6c6c6c45] py-2 px-3 flex justify-start"
 										>
 											<TabItem icon={icon} label={label} />
 										</Tab>
@@ -216,6 +209,7 @@ function App() {
 									),
 								)}
 							</TabsHeader>
+
 							<TabsBody className="w-screen">
 								{TAB_DATA.map(({ value, element }) => (
 									<TabPanel

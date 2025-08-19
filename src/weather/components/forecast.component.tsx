@@ -18,11 +18,11 @@ export function ForecastComponent({
 	return (
 		<div
 			className={`flex flex-col items-center justify-around w-full 
-      h-auto gap-0.5 xs:gap-1 p-1 backdrop-blur-sm bg-neutral-900/70 rounded-lg`}
+      h-auto gap-0.5 xs:gap-1 p-1 backdrop-blur-xl bg-neutral-900/70 rounded-lg`}
 		>
 			<p
 				className={
-					'text-[0.55rem] xs:text-[0.65rem] sm:text-xs font-medium text-gray-700 dark:text-gray-100'
+					'text-[0.55rem] xs:text-[0.65rem] sm:text-xs font-medium text-content'
 				}
 				style={{
 					color: iconColor ? getAdjustedColor(iconColor) : '',
@@ -37,7 +37,7 @@ export function ForecastComponent({
 			/>
 			<p
 				className={
-					'text-[0.65rem] xs:text-[0.75rem] sm:text-sm font-medium text-gray-700 dark:text-gray-100'
+					'text-[0.65rem] xs:text-[0.75rem] sm:text-sm font-medium text-content'
 				}
 				style={{
 					color: iconColor ? getAdjustedColor(iconColor) : '',

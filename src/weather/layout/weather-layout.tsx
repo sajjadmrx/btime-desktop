@@ -54,7 +54,7 @@ export function WeatherLayout({
 				</div>
 				<div className="relative w-16 mt-1 text-xl text-center truncate xs:w-18 sm:w-20 xs:text-2xl sm:text-3xl">
 					<div
-						className={'z-10 font-semibold text-gray-700 dark:text-gray-100'}
+						className={'z-10 font-semibold text-content'}
 						style={{
 							color:
 								weatherStore.stateColor && iconColor
@@ -74,7 +74,7 @@ export function WeatherLayout({
 			<div className="z-10 flex flex-col w-full mt-2 font-bold text-center">
 				<div
 					className={
-						'w-auto truncate font-normal text-center text-[0.65rem] xs:text-xs sm:text-sm mb-2 text-gray-700 dark:text-gray-100'
+						'w-auto truncate font-normal text-center text-[0.65rem] xs:text-xs sm:text-sm mb-2 text-content'
 					}
 				>
 					{weatherData.weather.temperature.temp_description}

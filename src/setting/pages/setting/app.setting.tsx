@@ -43,7 +43,7 @@ export function AppSetting() {
 		window.ipcMain.send('reOpen')
 	}
 
-	const thmes = [
+	const themes = [
 		{
 			theme: 'light',
 			icon: 'sun.png',
@@ -72,7 +72,7 @@ export function AppSetting() {
 							تم
 						</h1>
 						<div className="flex flex-row justify-around w-full h-20 gap-4 px-3 mt-2 duration-200">
-							{thmes.map((item, index) => (
+							{themes.map((item, index) => (
 								<ThemeComponent
 									key={index}
 									setThemeValue={setThemeValue}
@@ -107,34 +107,7 @@ export function AppSetting() {
 								className: 'flex',
 							}}
 						/>
-						<Checkbox
-							ripple={true}
-							defaultChecked={mainSetting.useParentWindowMode}
-							onClick={() =>
-								setSettingValue(
-									'useParentWindowMode',
-									!mainSetting.useParentWindowMode,
-								)
-							}
-							label={
-								<div>
-									<Typography
-										variant={'h5'}
-										color="blue-gray"
-										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] font-normal"
-									>
-										حالت ویجت دسته‌بندی شده{' '}
-										<span className="font-light">
-											(تجمیع و حرکت همزمان ویجت‌ها - نیاز به راه اندازی مجدد
-											برنامه)
-										</span>
-									</Typography>
-								</div>
-							}
-							containerProps={{
-								className: 'flex',
-							}}
-						/>
+
 						<Checkbox
 							ripple={true}
 							defaultChecked={mainSetting.enableAnalytics}

@@ -1,6 +1,6 @@
 import { Checkbox, Slider, Switch, Typography } from '@material-tailwind/react'
 import type { ArzChandSettingStore } from 'electron/store'
-import { lazy, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
 import {
 	type SupportedCurrencies,
@@ -15,7 +15,6 @@ export function ArzChandSetting() {
 
 	useEffect(() => {
 		const ArzChand: ArzChandSettingStore = window.store.get(widgetKey.ArzChand)
-		ArzChand.borderRadius = ArzChand.borderRadius || 28
 		setSetting(ArzChand)
 
 		function fetchSupportedCurrencies() {
@@ -38,7 +37,7 @@ export function ArzChandSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.ArzChand)
-		} else if (!['borderRadius'].includes(key)) {
+		} else {
 			window.ipcRenderer.send('updated-setting', widgetKey.ArzChand)
 		}
 	}
@@ -50,19 +49,7 @@ export function ArzChandSetting() {
 			enable: setting.enable,
 			bounds: window.store.get(widgetKey.ArzChand).bounds,
 			currencies: setting.currencies,
-			borderRadius: setting.borderRadius,
 		})
-	}
-
-	async function onSliderChange(value: number) {
-		const fixedValue = Math.floor(value)
-
-		await window.ipcRenderer.invoke(
-			'setBorderRadius',
-			widgetKey.ArzChand,
-			`${fixedValue}px`,
-		)
-		setSettingValue('borderRadius', fixedValue)
 	}
 
 	if (!setting) return null
@@ -136,27 +123,6 @@ export function ArzChandSetting() {
 								selected={setting.template === 'classic'}
 								onClick={() => setSettingValue('template', 'classic')}
 							/>
-						</div>
-					</div>
-					<div className="flex flex-col justify-between w-full ">
-						<label
-							htmlFor="currency-select"
-							className="text-gray-600 dark:text-[#eee] font-semibold text-sm"
-						>
-							حاشیه ها
-						</label>
-						<div className="flex items-center gap-2 px-2 py-2 rounded w-36 h-fit">
-							<Slider
-								size="md"
-								color="blue"
-								defaultValue={setting.borderRadius}
-								onChange={(change) =>
-									onSliderChange(Number(change.target.value))
-								}
-							/>
-							<div className="flex flex-row justify-between w-full text-gray-600 dark:text-[#eee]">
-								{setting.borderRadius}px
-							</div>
 						</div>
 					</div>
 					<div
