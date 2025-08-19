@@ -79,11 +79,6 @@ export async function createWindow(payload: Window) {
 	})
 
 	if (os.platform() === 'darwin') win.setWindowButtonVisibility(false)
-	win.webContents.on('did-finish-load', () => {
-		if (payload.devTools) {
-			win.webContents.openDevTools()
-		}
-	})
 
 	if (global.VITE_DEV_SERVER_URL) {
 		win.loadURL(`${global.VITE_DEV_SERVER_URL}/html/${payload.html}`)
