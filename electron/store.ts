@@ -15,7 +15,6 @@ export interface windowSettings {
 		maxWidth?: number
 		maxHeight?: number
 	}
-	borderRadius: number
 	alwaysOnTop: boolean
 	enable: boolean
 	html: string
@@ -76,7 +75,6 @@ export interface MainSettingStore {
 	startup: boolean
 	theme: Theme
 	moveable: boolean
-	useParentWindowMode: boolean
 	currentVersion: string
 	enableAnalytics: boolean
 	userId: string
@@ -112,7 +110,6 @@ const storeDefaults: StoreKey = {
 		currentCalender: 'Jalali',
 		showCalendar: true,
 		showDayEvents: true,
-		borderRadius: 28,
 		alwaysOnTop: false,
 		html: 'time.html',
 	},
@@ -126,7 +123,6 @@ const storeDefaults: StoreKey = {
 			minHeight: 120,
 			minWidth: 226,
 		},
-		borderRadius: 28,
 		alwaysOnTop: false,
 		html: 'rate.html',
 		currencies: ['usd'],
@@ -143,7 +139,6 @@ const storeDefaults: StoreKey = {
 			maxWidth: 410,
 			maxHeight: 319,
 		},
-		borderRadius: 28,
 		alwaysOnTop: false,
 		html: 'arzchand.html',
 		currencies: ['usd', 'eur'],
@@ -159,7 +154,6 @@ const storeDefaults: StoreKey = {
 			minHeight: 203,
 			minWidth: 183,
 		},
-		borderRadius: 28,
 		alwaysOnTop: false,
 		city: null,
 		stateColor: true,
@@ -168,7 +162,6 @@ const storeDefaults: StoreKey = {
 	Clock: {
 		currentClock: 'digital',
 		alwaysOnTop: false,
-		borderRadius: 28,
 		bounds: {
 			width: 217,
 			height: 180,
@@ -201,7 +194,6 @@ const storeDefaults: StoreKey = {
 	},
 	DamDasti: {
 		alwaysOnTop: false,
-		borderRadius: 12,
 		bounds: {
 			width: 217,
 			height: 180,
@@ -219,12 +211,10 @@ const storeDefaults: StoreKey = {
 		startup: true,
 		theme: 'light',
 		moveable: true,
-		useParentWindowMode: true,
 		currentVersion: null,
 	},
 	SubShomaar: {
 		alwaysOnTop: false,
-		borderRadius: 12,
 		bounds: {
 			width: 217,
 			height: 180,

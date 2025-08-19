@@ -9,7 +9,6 @@ export function DamDastiSetting() {
 	useEffect(() => {
 		const DamDasti: DamDastiSettingStore = window.store.get(widgetKey.DamDasti)
 		setSetting(DamDasti)
-		DamDasti.borderRadius = DamDasti.borderRadius || 28
 	}, [])
 
 	function setSettingValue<T extends keyof DamDastiSettingStore>(
@@ -22,8 +21,6 @@ export function DamDastiSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.DamDasti)
-		} else if (!['borderRadius'].includes(key)) {
-			window.ipcRenderer.send('updated-setting', widgetKey.DamDasti)
 		}
 	}
 
@@ -34,22 +31,9 @@ export function DamDastiSetting() {
 			enable: setting.enable,
 
 			bounds: window.store.get(widgetKey.DamDasti).bounds,
-
-			borderRadius: setting.borderRadius,
 		})
 	}
 	if (!setting) return null
-
-	async function onSliderChange(value: number) {
-		const fixedValue = Math.floor(value)
-
-		await window.ipcRenderer.invoke(
-			'setBorderRadius',
-			widgetKey.DamDasti,
-			`${fixedValue}px`,
-		)
-		setSettingValue('borderRadius', fixedValue)
-	}
 
 	return (
 		<>

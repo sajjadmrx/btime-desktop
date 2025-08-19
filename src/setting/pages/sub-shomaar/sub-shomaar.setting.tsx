@@ -24,7 +24,6 @@ export function SubShomaarSetting() {
 		const SubShomaar: SubShomaarSettingStore = window.store.get(
 			widgetKey.SubShomaar,
 		)
-		SubShomaar.borderRadius = SubShomaar.borderRadius || 12
 		setSetting(SubShomaar)
 		setInputChannelName(SubShomaar.channelName || '')
 	}, [])
@@ -39,8 +38,6 @@ export function SubShomaarSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.SubShomaar)
-		} else if (!['borderRadius'].includes(key)) {
-			window.ipcRenderer.send('updated-setting', widgetKey.SubShomaar)
 		}
 	}
 
@@ -51,7 +48,6 @@ export function SubShomaarSetting() {
 			enable: setting.enable,
 			bounds: window.store.get('SubShomaar' as widgetKey.SubShomaar).bounds,
 			channelName: setting.channelName,
-			borderRadius: setting.borderRadius,
 			subscriberFormat: setting.subscriberFormat,
 		})
 	}
@@ -74,17 +70,6 @@ export function SubShomaarSetting() {
 			})
 			setIsLoadingChannel(false)
 		}
-	}
-
-	async function onSliderChange(value: number) {
-		const fixedValue = Math.floor(value)
-
-		await window.ipcRenderer.invoke(
-			'setBorderRadius',
-			widgetKey.SubShomaar,
-			`${fixedValue}px`,
-		)
-		setSettingValue('borderRadius', fixedValue)
 	}
 
 	async function onChannelInputChange(

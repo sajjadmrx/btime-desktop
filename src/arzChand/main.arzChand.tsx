@@ -21,7 +21,3 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
 // Remove Preload scripts loading
 postMessage({ payload: 'removeLoading' }, '*')
-
-window.ipcRenderer.on('border-radius', (evt, message) => {
-	document.querySelector('.h-screen').style.borderRadius = message.radius
-})

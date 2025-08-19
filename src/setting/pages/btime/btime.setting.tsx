@@ -7,7 +7,6 @@ export function BtimeSetting() {
 	const [setting, setSetting] = useState<BtimeSettingStore>(null)
 	useEffect(() => {
 		const btime: BtimeSettingStore = window.store.get(widgetKey.BTime)
-		btime.borderRadius = btime.borderRadius || 28
 		setSetting(btime)
 	}, [])
 
@@ -22,8 +21,6 @@ export function BtimeSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.BTime)
-		} else if (!['borderRadius'].includes(key)) {
-			window.ipcRenderer.send('updated-setting', widgetKey.BTime)
 		}
 	}
 
@@ -34,19 +31,7 @@ export function BtimeSetting() {
 			enable: setting.enable,
 
 			bounds: window.store.get(widgetKey.BTime).bounds,
-			borderRadius: setting.borderRadius,
 		})
-	}
-
-	async function onSliderChange(value: number) {
-		const fixedValue = Math.floor(value)
-
-		await window.ipcRenderer.invoke(
-			'setBorderRadius',
-			'BTime',
-			`${fixedValue}px`,
-		)
-		setSettingValue('borderRadius', fixedValue)
 	}
 
 	if (!setting) return null

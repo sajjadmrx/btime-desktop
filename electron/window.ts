@@ -80,16 +80,6 @@ export async function createWindow(payload: Window) {
 
 	if (os.platform() === 'darwin') win.setWindowButtonVisibility(false)
 	win.webContents.on('did-finish-load', () => {
-		const setting: windowSettings = store.get(
-			widgetKey[payload.title],
-		) as unknown as windowSettings
-
-		const borderRadius = setting.borderRadius
-
-		win.webContents.send('border-radius', {
-			radius: borderRadius ? `${borderRadius}px` : '28px',
-		})
-
 		if (payload.devTools) {
 			win.webContents.openDevTools()
 		}

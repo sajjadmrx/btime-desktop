@@ -15,7 +15,6 @@ export function ArzChandSetting() {
 
 	useEffect(() => {
 		const ArzChand: ArzChandSettingStore = window.store.get(widgetKey.ArzChand)
-		ArzChand.borderRadius = ArzChand.borderRadius || 28
 		setSetting(ArzChand)
 
 		function fetchSupportedCurrencies() {
@@ -38,8 +37,6 @@ export function ArzChandSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.ArzChand)
-		} else if (!['borderRadius'].includes(key)) {
-			window.ipcRenderer.send('updated-setting', widgetKey.ArzChand)
 		}
 	}
 
@@ -50,19 +47,7 @@ export function ArzChandSetting() {
 			enable: setting.enable,
 			bounds: window.store.get(widgetKey.ArzChand).bounds,
 			currencies: setting.currencies,
-			borderRadius: setting.borderRadius,
 		})
-	}
-
-	async function onSliderChange(value: number) {
-		const fixedValue = Math.floor(value)
-
-		await window.ipcRenderer.invoke(
-			'setBorderRadius',
-			widgetKey.ArzChand,
-			`${fixedValue}px`,
-		)
-		setSettingValue('borderRadius', fixedValue)
 	}
 
 	if (!setting) return null

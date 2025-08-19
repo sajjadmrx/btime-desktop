@@ -41,25 +41,6 @@ export function initIpcMain() {
 		shell.openExternal(url)
 	})
 
-	ipcMain.handle(
-		'setBorderRadius',
-		async (event, window: string, value: string) => {
-			const win = BrowserWindow.getAllWindows().filter(
-				(win) => win.title === window,
-			)[0]
-			if (!win) {
-				userLogger.log(`can't find ${window}`)
-				return
-			}
-			await win.webContents.executeJavaScript(
-				`
-        document.querySelector('.h-screen').style.borderRadius = '${value}'
-        `,
-				true,
-			)
-		},
-	)
-
 	ipcMain.on('updated-setting', async (event, windowKey: string) => {
 		const win = BrowserWindow.getAllWindows().filter(
 			(win) => win.title === windowKey,
@@ -134,10 +115,6 @@ export function initIpcMain() {
 				moveable,
 				ui: 'acrylic',
 			})
-
-			if (mainSetting.useParentWindowMode) {
-				addChildWindow(win)
-			}
 
 			userLogger.info(`Widget ${windowKey} enabled`)
 		}

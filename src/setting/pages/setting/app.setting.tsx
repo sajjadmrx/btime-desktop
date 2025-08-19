@@ -107,34 +107,7 @@ export function AppSetting() {
 								className: 'flex',
 							}}
 						/>
-						<Checkbox
-							ripple={true}
-							defaultChecked={mainSetting.useParentWindowMode}
-							onClick={() =>
-								setSettingValue(
-									'useParentWindowMode',
-									!mainSetting.useParentWindowMode,
-								)
-							}
-							label={
-								<div>
-									<Typography
-										variant={'h5'}
-										color="blue-gray"
-										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] font-normal"
-									>
-										حالت ویجت دسته‌بندی شده{' '}
-										<span className="font-light">
-											(تجمیع و حرکت همزمان ویجت‌ها - نیاز به راه اندازی مجدد
-											برنامه)
-										</span>
-									</Typography>
-								</div>
-							}
-							containerProps={{
-								className: 'flex',
-							}}
-						/>
+
 						<Checkbox
 							ripple={true}
 							defaultChecked={mainSetting.enableAnalytics}

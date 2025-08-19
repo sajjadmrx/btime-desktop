@@ -21,7 +21,6 @@ export function WeatherSetting() {
 
 	useEffect(() => {
 		const Weather: WeatherSettingStore = window.store.get(widgetKey.Weather)
-		Weather.borderRadius = Weather.borderRadius || 28
 		setSetting(Weather)
 		setRelatedCities([])
 	}, [])
@@ -36,8 +35,6 @@ export function WeatherSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.Weather)
-		} else if (!['borderRadius'].includes(key)) {
-			window.ipcRenderer.send('updated-setting', widgetKey.Weather)
 		}
 	}
 
@@ -63,7 +60,6 @@ export function WeatherSetting() {
 			enable: setting.enable,
 			bounds: window.store.get('Weather' as widgetKey.Weather).bounds,
 			city: setting.city,
-			borderRadius: setting.borderRadius,
 		})
 	}
 

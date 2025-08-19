@@ -34,7 +34,6 @@ export function ClockSetting() {
 	const { isAuthenticated } = useAuth()
 	useEffect(() => {
 		const clock: ClockSettingStore = window.store.get(widgetKey.Clock)
-		clock.borderRadius = clock.borderRadius || 28
 		setSetting(clock)
 
 		function fetchTimezones() {
@@ -68,8 +67,6 @@ export function ClockSetting() {
 
 		if (key === 'enable') {
 			window.ipcRenderer.send('toggle-enable', widgetKey.Clock)
-		} else if (!['borderRadius'].includes(key)) {
-			window.ipcRenderer.send('updated-setting', widgetKey.Clock)
 		}
 	}
 
@@ -80,19 +77,7 @@ export function ClockSetting() {
 			enable: setting.enable,
 
 			bounds: window.store.get(widgetKey.Clock).bounds,
-			borderRadius: setting.borderRadius,
 		})
-	}
-
-	async function onSliderChange(value: number) {
-		const fixedValue = Math.floor(value)
-
-		await window.ipcRenderer.invoke(
-			'setBorderRadius',
-			'Clock',
-			`${fixedValue}px`,
-		)
-		setSettingValue('borderRadius', fixedValue)
 	}
 
 	if (!setting) return null

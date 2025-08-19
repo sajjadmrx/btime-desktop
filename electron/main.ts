@@ -64,12 +64,7 @@ if (isWindoAndDrawin) {
 
 async function onAppReady() {
 	const mainSettings = store.get('main')
-	const useParentWindowMode = mainSettings.useParentWindowMode
 	const moveable = mainSettings.moveable
-
-	if (useParentWindowMode) {
-		parentWin = createParentWindow()
-	}
 
 	const btimeStore = store.get(widgetKey.BTime)
 	const arzChandStore = store.get(widgetKey.ArzChand)
@@ -100,9 +95,6 @@ async function onAppReady() {
 			ui: 'acrylic',
 		})
 
-		if (useParentWindowMode && parentWin) {
-			addChildWindow(btime)
-		}
 		mainWin = btime
 	}
 
@@ -127,10 +119,6 @@ async function onAppReady() {
 			saveBounds: true,
 			ui: 'acrylic',
 		})
-
-		if (useParentWindowMode && parentWin) {
-			addChildWindow(arzChandWindow)
-		}
 
 		if (!mainWin) {
 			mainWin = arzChandWindow
@@ -158,10 +146,6 @@ async function onAppReady() {
 			ui: 'acrylic',
 		})
 
-		if (useParentWindowMode && parentWin) {
-			addChildWindow(weatherWindow)
-		}
-
 		if (!mainWin) {
 			mainWin = weatherWindow
 		}
@@ -186,9 +170,6 @@ async function onAppReady() {
 			moveable,
 			ui: 'acrylic',
 		})
-		if (useParentWindowMode && parentWin) {
-			addChildWindow(clockWindow)
-		}
 
 		if (!mainWin) {
 			mainWin = clockWindow
@@ -214,10 +195,6 @@ async function onAppReady() {
 			moveable,
 			ui: 'acrylic',
 		})
-
-		if (useParentWindowMode && parentWin) {
-			addChildWindow(damdasti)
-		}
 
 		if (!mainWin) {
 			mainWin = damdasti
