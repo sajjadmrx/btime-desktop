@@ -115,48 +115,71 @@ export function isPointWithinDisplay(x: number, y: number) {
 }
 
 export function onMoved(win: BrowserWindow) {
+	let moveTimeout: NodeJS.Timeout | null = null
+
 	win.on('moved', () => {
-		if (win) {
-			let { x, y } = win.getBounds()
-			const displays = screen.getAllDisplays()
-
-			const currentDisplay =
-				displays.find((display) => {
-					const { x: dx, y: dy, width, height } = display.workArea
-					return x >= dx && x < dx + width && y >= dy && y < dy + height
-				}) || screen.getPrimaryDisplay()
-
-			const { width, height } = currentDisplay.workArea
-
-			if (x < currentDisplay.workArea.x) {
-				x = currentDisplay.workArea.x
-			} else if (
-				x + win.getBounds().width >
-				currentDisplay.workArea.x + width
-			) {
-				x = currentDisplay.workArea.x + width - win.getBounds().width
+		if (win && !win.isDestroyed()) {
+			// Clear previous timeout to avoid too frequent checks
+			if (moveTimeout) {
+				clearTimeout(moveTimeout)
 			}
 
-			if (y < currentDisplay.workArea.y) {
-				y = currentDisplay.workArea.y
-			} else if (
-				y + win.getBounds().height >
-				currentDisplay.workArea.y + height
-			) {
-				y = currentDisplay.workArea.y + height - win.getBounds().height
-			}
+			// Use a small delay to allow the move to complete
+			moveTimeout = setTimeout(() => {
+				const { x, y } = win.getBounds()
+				const displays = screen.getAllDisplays()
 
-			win.setBounds({
-				x,
-				y,
-				width: win.getBounds().width,
-				height: win.getBounds().height,
-			})
+				const currentDisplay =
+					displays.find((display) => {
+						const { x: dx, y: dy, width, height } = display.workArea
+						return x >= dx && x < dx + width && y >= dy && y < dy + height
+					}) || screen.getPrimaryDisplay()
+
+				const { width, height } = currentDisplay.workArea
+				let newX = x
+				let newY = y
+				let shouldUpdate = false
+
+				// Check if window is outside display bounds and adjust if needed
+				if (x < currentDisplay.workArea.x) {
+					newX = currentDisplay.workArea.x
+					shouldUpdate = true
+				} else if (
+					x + win.getBounds().width >
+					currentDisplay.workArea.x + width
+				) {
+					newX = currentDisplay.workArea.x + width - win.getBounds().width
+					shouldUpdate = true
+				}
+
+				if (y < currentDisplay.workArea.y) {
+					newY = currentDisplay.workArea.y
+					shouldUpdate = true
+				} else if (
+					y + win.getBounds().height >
+					currentDisplay.workArea.y + height
+				) {
+					newY = currentDisplay.workArea.y + height - win.getBounds().height
+					shouldUpdate = true
+				}
+
+				// Only update bounds if adjustment is needed
+				if (shouldUpdate) {
+					win.setBounds({
+						x: newX,
+						y: newY,
+						width: win.getBounds().width,
+						height: win.getBounds().height,
+					})
+				}
+			}, 100) // Small delay to allow move to complete
 		}
 	})
 }
 
 function onClose(win: BrowserWindow) {
+	let saveTimeout: NodeJS.Timeout | null = null
+
 	const saveWindowBounds = () => {
 		if (!win.isDestroyed()) {
 			const key = win.getTitle()
@@ -168,31 +191,33 @@ function onClose(win: BrowserWindow) {
 
 				const { x, y, width, height } = win.getBounds()
 
-				console.log(
-					'Saving window bounds on close for:',
-					widgetKey[key],
-					x,
-					y,
-					width,
-					height,
-				)
 				store.set(widgetKey[key], {
 					...currentSettings,
 					bounds: {
-						...currentSettings.bounds,
 						x,
 						y,
 						width,
 						height,
 					},
 				})
+
+				console.log(`Widget ${key} position saved: (${x}, ${y})`)
 			} catch (error) {
 				userLogger.error(`Error saving window bounds for ${key}:`, error)
 			}
 		}
 	}
+
 	win.on('close', saveWindowBounds)
+
 	win.on('blur', saveWindowBounds)
+
+	win.on('moved', () => {
+		if (saveTimeout) {
+			clearTimeout(saveTimeout)
+		}
+		saveTimeout = setTimeout(saveWindowBounds, 500)
+	})
 }
 
 export async function createSettingWindow() {
