@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
+import ReactGA from 'react-ga4'
 import type { ClockSettingStore } from '../../electron/store'
 import { widgetKey } from '../../shared/widgetKey'
+import { useAnalytics } from '../hooks/useAnalytics'
 import { useThemeMode } from '../hooks/useTheme'
 import { AnalogClockA } from './analog_clock_a'
 import { DigitalClock } from './digital'
@@ -16,6 +18,7 @@ function App() {
 		})
 	}, [])
 
+	useAnalytics('clock')
 	useThemeMode()
 
 	return (

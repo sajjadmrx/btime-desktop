@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { IoMdAdd } from 'react-icons/io'
 import { MdOutlineDragIndicator } from 'react-icons/md'
 import { RiDeleteBinLine } from 'react-icons/ri'
+import { useAnalytics } from 'src/hooks/useAnalytics'
 import { userLogger } from '../../shared/logger'
 import { useThemeMode } from '../hooks/useTheme'
 
@@ -17,6 +18,7 @@ function App() {
 	const [isDragging, setIsDragging] = useState(false)
 
 	useThemeMode()
+	useAnalytics('dam-dasti')
 
 	useEffect(() => {
 		window.ipcMain.invoke('get-apps').then((savedApps: AppItem[]) => {

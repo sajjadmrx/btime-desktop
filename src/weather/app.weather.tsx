@@ -2,6 +2,7 @@ import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { widgetKey } from '../../shared/widgetKey'
 import { useGetWeatherByLatLon } from '../api/hooks/weather/getWeatherByLatLon'
+import { useAnalytics } from '../hooks/useAnalytics'
 import { useThemeMode } from '../hooks/useTheme'
 import { WeatherLayout } from './layout/weather-layout'
 
@@ -11,7 +12,7 @@ function App() {
 	)
 
 	useThemeMode()
-
+	useAnalytics('weather')
 	useEffect(() => {
 		window.ipcRenderer.on('updated-setting', () => {
 			const weatherSetting = window.store.get(widgetKey.Weather)

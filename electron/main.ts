@@ -18,6 +18,7 @@ import { logAppStartupEvent } from './analytics'
 import { initIpcMain } from './ipc-main'
 import { store } from './store'
 import { update } from './update'
+import serve from './utils/serve'
 import { toggleStartUp } from './utils/startup.util'
 import { WidgetConfigs } from './widgets/config'
 import { createSettingWindow, createWindow } from './window'
@@ -217,6 +218,28 @@ async function onAppReady() {
 			settingPage.webContents.send('update-details', { hello: 'world' })
 		})
 	}
+
+	const initWin = await createWindow({
+		alwaysOnTop: true,
+		height: 200,
+		width: 200,
+		devTools: false,
+		html: 'initial.html',
+		moveable: false,
+		resizable: false,
+		saveBounds: false,
+		title: 'initial',
+		ui: 'normal',
+		x: 0,
+		y: 0,
+	})
+	await serve(initWin)
+	initWin.once('ready-to-show', async () => {
+		await new Promise((resolve) => setTimeout(resolve, 2000))
+		initWin.hide()
+	})
+
+	// initWin.hide()
 
 	nativeTheme.themeSource = store.get('main').theme
 	createTray()

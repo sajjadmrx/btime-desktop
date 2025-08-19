@@ -6,9 +6,11 @@ import renderer from 'vite-plugin-electron-renderer'
 import electron from 'vite-plugin-electron/simple'
 import pkg from './package.json'
 
-export default defineConfig(() => {
+export default defineConfig(({ command }) => {
 	rmSync('dist-electron', { recursive: true, force: true })
-
+	const isServe = command === 'serve'
+	const isBuild = command === 'build'
+	const sourcemap = isServe || !!process.env.VSCODE_DEBUG
 	return {
 		build: {
 			rollupOptions: {
@@ -22,6 +24,7 @@ export default defineConfig(() => {
 					'dam-dasti': path.join(__dirname, './html/dam-dasti.html'),
 					'sub-shomaar': path.join(__dirname, './html/sub-shomaar.html'),
 					parent: path.join(__dirname, './html/parent.html'),
+					initial: path.join(__dirname, './html/initial.html'),
 				},
 			},
 		},
@@ -38,7 +41,16 @@ export default defineConfig(() => {
 			}),
 			renderer(),
 		],
-		server: {},
+		server:
+			process.env.VSCODE_DEBUG &&
+			(() => {
+				// @ts-ignore
+				const url = new URL(pkg.debug.env.VITE_DEV_SERVER_URL)
+				return {
+					host: url.hostname,
+					port: +url.port,
+				}
+			})(),
 		define: {
 			'import.meta.env.PACKAGE_VERSION': JSON.stringify(pkg.version),
 		},

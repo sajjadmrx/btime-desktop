@@ -1,6 +1,6 @@
 import type { ArzChandSettingStore } from 'electron/store'
 import { useEffect, useState } from 'react'
-import { MdOutlineDragIndicator } from 'react-icons/md'
+import { useAnalytics } from 'src/hooks/useAnalytics'
 import { widgetKey } from '../../shared/widgetKey'
 import { useThemeMode } from '../hooks/useTheme'
 import { CurrenciesClassic } from './templates/classic'
@@ -19,6 +19,7 @@ function App() {
 	}, [])
 
 	useThemeMode()
+	useAnalytics('arz-chand')
 
 	return (
 		<div className="w-screen h-screen overflow-hidden moveable">

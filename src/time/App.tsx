@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { FiRefreshCw } from 'react-icons/fi'
+import { useAnalytics } from 'src/hooks/useAnalytics'
 import type { BtimeSettingStore } from '../../electron/store'
 import { widgetKey } from '../../shared/widgetKey'
 import { AuthProvider } from '../context/auth.context'
@@ -13,7 +14,6 @@ function App() {
 	const [widgetSetting, setWidgetSetting] = useState<BtimeSettingStore>(
 		window.store.get(widgetKey.BTime),
 	)
-	const [dayEventsLoading, setDayEventsLoading] = useState(false)
 
 	useEffect(() => {
 		window.ipcRenderer.on('updated-setting', () => {
@@ -22,6 +22,7 @@ function App() {
 	}, [])
 
 	useThemeMode()
+	useAnalytics('calendar')
 
 	return (
 		<>
@@ -36,9 +37,7 @@ function App() {
 						{widgetSetting.showCalendar && (
 							<AuthProvider>
 								<div className="relative">
-									<DayEventsComponent
-										onLoadingStateChange={setDayEventsLoading}
-									/>
+									<DayEventsComponent />
 								</div>
 							</AuthProvider>
 						)}

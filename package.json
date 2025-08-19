@@ -37,8 +37,10 @@
 		"react": "^18.2.0",
 		"react-countup": "^6.5.3",
 		"react-dom": "^18.2.0",
+		"react-ga4": "^2.1.0",
 		"react-icons": "^5.5.0",
 		"react-tailwindcss-select": "^1.8.5",
+		"serve-handler": "^6.1.6",
 		"windows-shortcuts": "^0.1.6"
 	},
 	"devDependencies": {
