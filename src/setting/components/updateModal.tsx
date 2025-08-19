@@ -22,15 +22,11 @@ const Button = ({ primary = false, children, onClick }) => (
 
 const UpdateModal = ({ onClick }) => {
 	const latestUpdate = {
-		version: '1.4.10',
+		version: '1.5',
 		features: [
 			{
-				text: 'اضافه شدن رویدادهای گوگل کلندر به تقویم',
-				emoji: '📅',
-			},
-			{
-				text: 'بهبود عملکرد برنامه',
-				emoji: '⚡',
+				text: 'تغییر کلی در طراحی',
+				emoji: '🎨',
 			},
 		],
 	}
