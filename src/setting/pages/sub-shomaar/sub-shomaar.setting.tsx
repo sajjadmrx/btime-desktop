@@ -189,28 +189,6 @@ export function SubShomaarSetting() {
 						/>
 					</div>
 
-					<div className="flex flex-col justify بین w-full ">
-						<label
-							htmlFor="border-radius-slider"
-							className="text-gray-600 dark:text-[#eee] font-semibold text-sm"
-						>
-							حاشیه ها
-						</label>
-						<div className="flex items-center gap-2 px-2 py-2 rounded w-36 h-fit">
-							<Slider
-								size="md"
-								color="blue"
-								defaultValue={setting.borderRadius}
-								onChange={(change) =>
-									onSliderChange(Number(change.target.value))
-								}
-							/>
-							<div className="flex flex-row justify بین w-full text-gray-600 dark:text-[#eee]">
-								{setting.borderRadius}px
-							</div>
-						</div>
-					</div>
-
 					<div
 						className="flex flex-col items-center justify بین w-full gap-2"
 						dir="rtl"

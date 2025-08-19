@@ -129,6 +129,10 @@ body {
   backdrop-filter: blur(10px) saturate(180%);
 }
 
+.border-content {
+  @apply border-gray-200 dark:border-[#5d5d5d];
+}
+
 .hidden-scrollbar {
   @apply scrollbar-none;
 }

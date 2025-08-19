@@ -69,12 +69,12 @@ export async function createWindow(payload: Window) {
 		center: true,
 		maximizable: false,
 		minimizable: false,
-		focusable: false,
 		titleBarStyle: 'hidden',
 		...(payload.ui === 'acrylic' && {
 			vibrancy: 'fullscreen-ui', // on MacOS
 			backgroundMaterial: 'acrylic', // on Windows 11
 			backgroundColor: '#00000000',
+			focusable: false,
 		}),
 	})
 
@@ -229,6 +229,6 @@ export async function createSettingWindow() {
 		reziable: false,
 		saveBounds: false,
 		closable: true,
-		ui: 'acrylic',
+		ui: 'normal',
 	})
 }

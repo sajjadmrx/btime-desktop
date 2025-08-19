@@ -45,9 +45,9 @@ function App() {
 	return (
 		<div className="w-screen h-screen overflow-hidden">
 			<div className="h-full px-0 moveable">
-				<div className="flex flex-col items-center justify-around h-full">
+				<div className="flex flex-col items-center justify-around">
 					<div
-						className="flex flex-col items-center justify-between w-full h-64 px-2 py-8"
+						className="flex flex-col items-center justify-between w-full"
 						dir="rtl"
 					>
 						{weather && isSuccess ? (
@@ -59,7 +59,7 @@ function App() {
 							<WeatherSkeleton />
 						) : (
 							<div className="flex flex-col items-center justify-center w-full h-64 not-moveable">
-								<div className="text-gray-600 dark:text-[#eee] font-light text-center dark:bg-gray-800/10 bg-gray-200/10 rounded-md p-2">
+								<div className="p-2 font-light text-center rounded-md text-content dark:bg-gray-800/10 bg-gray-200/10">
 									لطفا در تنظیمات شهر مورد نظر خود را انتخاب کنید
 								</div>
 								<button

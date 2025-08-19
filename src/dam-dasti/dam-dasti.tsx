@@ -83,14 +83,16 @@ function App() {
 		const files = Array.from(e.dataTransfer.files)
 		if (files.length > 0) {
 			for (const file of files) {
-				const appInfo = await window.ipcMain.invoke('get-app-info', file.path)
+				const filePath =
+					(file as any).path || file.webkitRelativePath || file.name
+				const appInfo = await window.ipcMain.invoke('get-app-info', filePath)
 				if (appInfo) {
 					setApps((prevApps) => [
 						...prevApps,
 						{
 							id: Date.now().toString(),
 							name: appInfo.name,
-							path: file.path,
+							path: filePath,
 							icon: appInfo.icon,
 						},
 					])

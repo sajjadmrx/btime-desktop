@@ -75,13 +75,13 @@ const TAB_DATA = [
 		element: <DamDastiSetting />,
 		category: 'widgets',
 	},
-	{
-		label: 'ساب‌شمار',
-		value: 'subShomaar',
-		icon: <CgProfile className="size-5" />,
-		element: <SubShomaarSetting />,
-		category: 'widgets',
-	},
+	// {
+	// 	label: 'ساب‌شمار',
+	// 	value: 'subShomaar',
+	// 	icon: <CgProfile className="size-5" />,
+	// 	element: <SubShomaarSetting />,
+	// 	category: 'widgets',
+	// },
 	{
 		label: 'حساب کاربری',
 		value: 'account',
@@ -140,7 +140,7 @@ function App() {
 	return (
 		<>
 			<QueryClientProvider client={queryClient}>
-				<div className="h-screen overflow-hidden moveable">
+				<div className="h-screen overflow-hidden moveable dark:bg-[#333] rounded-2xl bg-[#ddd]">
 					<div className="w-full h-7 flex dark:bg-[#14141495] bg-white/65">
 						<button
 							className="w-7 h-7  flex items-center not-moveable group justify-center hover:bg-red-400 dark:hover:bg-[#b94a4aad] transition-colors duration-200 rounded"
@@ -168,7 +168,7 @@ function App() {
 							<TabsHeader
 								className="w-44 not-moveable dark:bg-[#1d1d1d5b] rounded-none bg-white pb-10 overflow-y-auto max-h-[calc(100vh-7px)] custom-scrollbar"
 								indicatorProps={{
-									className: 'bg-[#39393945]',
+									className: 'bg-white dark:bg-[#1d1d1d]',
 								}}
 							>
 								<div className="px-3 mb-2">

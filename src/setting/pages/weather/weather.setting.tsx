@@ -93,17 +93,6 @@ export function WeatherSetting() {
 		applyChanges()
 	}
 
-	async function onSliderChange(value: number) {
-		const fixedValue = Math.floor(value)
-
-		await window.ipcRenderer.invoke(
-			'setBorderRadius',
-			widgetKey.Weather,
-			`${fixedValue}px`,
-		)
-		setSettingValue('borderRadius', fixedValue)
-	}
-
 	if (!setting) return null
 	return (
 		<>
@@ -182,28 +171,6 @@ export function WeatherSetting() {
 								className: 'flex',
 							}}
 						/>
-					</div>
-
-					<div className="flex flex-col justify-between w-full ">
-						<label
-							htmlFor="currency-select"
-							className="text-gray-600 dark:text-[#eee] font-semibold text-sm"
-						>
-							حاشیه ها
-						</label>
-						<div className="flex items-center gap-2 px-2 py-2 rounded w-36 h-fit">
-							<Slider
-								size="md"
-								color="blue"
-								defaultValue={setting.borderRadius}
-								onChange={(change) =>
-									onSliderChange(Number(change.target.value))
-								}
-							/>
-							<div className="flex flex-row justify-between w-full text-gray-600 dark:text-[#eee]">
-								{setting.borderRadius}px
-							</div>
-						</div>
 					</div>
 
 					<div

@@ -1,6 +1,6 @@
 import { Checkbox, Slider, Switch, Typography } from '@material-tailwind/react'
 import type { ArzChandSettingStore } from 'electron/store'
-import { useEffect, useState } from 'react'
+import { lazy, useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
 import {
 	type SupportedCurrencies,
@@ -54,6 +54,17 @@ export function ArzChandSetting() {
 		})
 	}
 
+	async function onSliderChange(value: number) {
+		const fixedValue = Math.floor(value)
+
+		await window.ipcRenderer.invoke(
+			'setBorderRadius',
+			widgetKey.ArzChand,
+			`${fixedValue}px`,
+		)
+		setSettingValue('borderRadius', fixedValue)
+	}
+
 	if (!setting) return null
 	return (
 		<>
@@ -69,17 +80,16 @@ export function ArzChandSetting() {
 								<Typography
 									variant={'h5'}
 									color="blue-gray"
-									className="text-content text-[13px] font-[Vazir] flex flex-row items-center mr-3"
+									className="text-gray-600  dark:text-[#c7c7c7] text-[13px] font-[Vazir] flex flex-row items-center mr-3"
 								>
 									فعال سازی
 								</Typography>
 								<Typography
 									variant="h5"
 									color="gray"
-									className="text-muted text-xs font-[Vazir] mr-3"
+									className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir] mr-3"
 								>
-									فعالسازی ویجت ویجی‌ارز{' '}
-									<span className="font-light">(نمایش قیمت ارزها)</span>
+									فعالسازی ویجت ویجی‌ارز(نمایش قیمت ارزها)
 								</Typography>
 							</div>
 						}
@@ -99,7 +109,7 @@ export function ArzChandSetting() {
 									<Typography
 										variant={'h5'}
 										color="blue-gray"
-										className="text-content text-[13px] font-[Vazir]"
+										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir]"
 									>
 										اولویت بالا{' '}
 										<span className="font-light">(همیشه بالای همه باشد)</span>
@@ -112,10 +122,10 @@ export function ArzChandSetting() {
 						/>
 					</div>
 					<div className="w-full">
-						<label className="text-sm font-semibold text-content">
+						<label className="text-gray-600 dark:text-[#eee] font-semibold text-sm">
 							قالب ها
 						</label>
-						<div className="flex w-full gap-2 px-2 py-2 mt-2 rounded-lg h-14 bg-content">
+						<div className="flex mt-2 gap-2 w-full h-14 rounded-lg px-2 py-2 dark:bg-[#464545] bg-[#e8e6e6]">
 							<TemplateItem
 								title={'پیشفرض'}
 								selected={setting.template === 'default' || !setting.template}
@@ -139,7 +149,7 @@ export function ArzChandSetting() {
 						>
 							<label
 								htmlFor="currency-select"
-								className="font-semibold text-content"
+								className="text-gray-600 dark:text-[#eee] font-semibold"
 							>
 								انتخاب ارز:
 							</label>
@@ -156,7 +166,7 @@ export function ArzChandSetting() {
 									color={'blue'}
 								/>
 							) : (
-								<div className="text-muted">در حال بارگذاری...</div>
+								<div>در حال بارگذاری...</div>
 							)}
 						</div>
 					</div>
@@ -222,12 +232,12 @@ function TemplateItem({ title, selected, onClick }) {
 	return (
 		<div
 			onClick={onClick}
-			className={`w-full h-10 flex justify-center items-center rounded-lg text-content cursor-pointer ${
+			className={`w-full h-10 flex justify-center items-center rounded-lg text-gray-600 dark:text-[#eee] cursor-pointer ${
 				selected
-					? 'bg-gray-300'
+					? 'bg-[#f5f5f5] dark:bg-[#3a3a3a]'
 					: 'hover:bg-[#f5f5f578] dark:hover:bg-[#3a3a3a5c]'
 			} 
-        ${selected && '!text-gray-800'}
+        ${selected && 'text-gray-600 dark:text-gray-300'}
         transition-all  ease-in-out duration-2000`}
 		>
 			{title}

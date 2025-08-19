@@ -71,13 +71,11 @@ async function onAppReady() {
 		parentWin = createParentWindow()
 	}
 
-	const nerkhStore = store.get(widgetKey.NerkhYab)
 	const btimeStore = store.get(widgetKey.BTime)
 	const arzChandStore = store.get(widgetKey.ArzChand)
 	const weatherStore = store.get(widgetKey.Weather)
 	const clockStore = store.get(widgetKey.Clock)
 	const damDasti = store.get(widgetKey.DamDasti)
-	const subShomaar = store.get(widgetKey.SubShomaar)
 
 	// Btime widget
 	if (btimeStore.enable) {
@@ -106,36 +104,6 @@ async function onAppReady() {
 			addChildWindow(btime)
 		}
 		mainWin = btime
-	}
-
-	// NerkhYab widget
-	if (nerkhStore.enable) {
-		const nerkhWindow = await createWindow({
-			height: nerkhStore.bounds.height,
-			minHeight: nerkhStore.bounds.minHeight || 120,
-			minWidth: nerkhStore.bounds.minWidth || 226,
-			maxWidth: nerkhStore.bounds.maxWidth,
-			maxHeight: nerkhStore.bounds.maxHeight,
-			width: nerkhStore.bounds.width,
-			x: nerkhStore.bounds.x,
-			y: nerkhStore.bounds.y,
-			title: widgetKey.NerkhYab,
-			html: nerkhStore.html || 'rate.html',
-			devTools: true,
-			alwaysOnTop: nerkhStore.alwaysOnTop,
-			reziable: true,
-			moveable,
-			ui: 'acrylic',
-			saveBounds: true,
-		})
-
-		if (useParentWindowMode && parentWin) {
-			addChildWindow(nerkhWindow)
-		}
-
-		if (!mainWin) {
-			mainWin = nerkhWindow
-		}
 	}
 
 	// ArzChand widget
@@ -253,35 +221,6 @@ async function onAppReady() {
 
 		if (!mainWin) {
 			mainWin = damdasti
-		}
-	}
-
-	if (subShomaar.enable) {
-		const subShomaarWindow = await createWindow({
-			height: subShomaar.bounds.height,
-			width: subShomaar.bounds.width,
-			minHeight: subShomaar.bounds.minHeight,
-			minWidth: subShomaar.bounds.minWidth,
-			maxHeight: 1000,
-			maxWidth: 1000,
-			x: subShomaar.bounds.x,
-			y: subShomaar.bounds.y,
-			title: widgetKey.SubShomaar,
-			html: subShomaar.html,
-			devTools: true,
-			alwaysOnTop: subShomaar.alwaysOnTop,
-			reziable: true,
-			saveBounds: true,
-			moveable,
-			ui: 'acrylic',
-		})
-
-		if (useParentWindowMode && parentWin) {
-			addChildWindow(subShomaarWindow)
-		}
-
-		if (!mainWin) {
-			mainWin = subShomaarWindow
 		}
 	}
 

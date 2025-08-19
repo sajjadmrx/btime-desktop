@@ -53,7 +53,7 @@ export function DigitalClock({ digital }: Prop) {
 		<div className="flex items-center justify-center h-full px-2 text-center">
 			<div
 				className={
-					'flex flex-col text-6xl font-bold font-mono relative w-60 overflow-hidden justify-center items-center font-[digital7] text-gray-600 dark:text-[#d3d3d3]'
+					'flex flex-col text-6xl font-bold font-mono relative w-60 overflow-hidden justify-center items-center font-[digital7] text-content'
 				}
 			>
 				<div
