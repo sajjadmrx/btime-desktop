@@ -20,7 +20,7 @@ import { addChildWindow, createParentWindow } from './parentWindow'
 import { store } from './store'
 import { update } from './update'
 import { toggleStartUp } from './utils/startup.util'
-import { BtimeConfig } from './widgets/btime-config'
+import { BtimeConfig, ClockConfig } from './widgets/btime-config'
 import { createSettingWindow, createWindow } from './window'
 config()
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
@@ -171,8 +171,8 @@ async function onAppReady() {
 		const clockWindow = await createWindow({
 			height: clockStore.bounds.height,
 			width: clockStore.bounds.width,
-			minHeight: clockStore.bounds.minHeight,
-			minWidth: clockStore.bounds.minWidth,
+			minHeight: ClockConfig.minHeight,
+			minWidth: ClockConfig.minWidth,
 			maxHeight: clockStore.bounds.maxHeight,
 			maxWidth: clockStore.bounds.maxWidth,
 			x: clockStore.bounds.x,

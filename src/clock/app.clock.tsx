@@ -20,7 +20,7 @@ function App() {
 
 	return (
 		<div className="w-screen h-screen overflow-hidden">
-			<div className="h-full px-0 moveable">
+			<div className="h-full moveable">
 				{setting.currentClock === 'digital' ? (
 					<DigitalClock digital={setting.digital} />
 				) : (
