@@ -21,7 +21,7 @@ export interface Window {
 	html: string
 	devTools: boolean
 	alwaysOnTop: boolean
-	reziable: boolean
+	resizable: boolean
 	saveBounds: boolean
 	closable?: boolean
 	ui: 'normal' | 'acrylic'
@@ -55,7 +55,7 @@ export async function createWindow(payload: Window) {
 		minWidth: payload.minWidth,
 		maxWidth: payload.maxWidth,
 		maxHeight: payload.maxHeight,
-		resizable: payload.reziable,
+		resizable: payload.resizable,
 		alwaysOnTop: payload.alwaysOnTop,
 		movable: payload.moveable,
 		closable: payload.closable,
@@ -226,7 +226,7 @@ export async function createSettingWindow() {
 		html: 'setting.html',
 		devTools: true,
 		alwaysOnTop: true,
-		reziable: false,
+		resizable: false,
 		saveBounds: false,
 		closable: true,
 		ui: 'normal',

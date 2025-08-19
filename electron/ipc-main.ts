@@ -41,22 +41,6 @@ export function initIpcMain() {
 		shell.openExternal(url)
 	})
 
-	ipcMain.handle('getBorderRadius', async (event, window: string) => {
-		try {
-			const win = BrowserWindow.getAllWindows().filter(
-				(win) => win.title === window,
-			)[0]
-			const borderRadius = await win.webContents.executeJavaScript(`
- getComputedStyle(document.querySelector('.h-screen')).borderRadius
-  `)
-
-			return borderRadius
-		} catch (error) {
-			userLogger.error(`Error in getBorderRadius: ${error}`)
-			return ''
-		}
-	})
-
 	ipcMain.handle(
 		'setBorderRadius',
 		async (event, window: string, value: string) => {
@@ -88,9 +72,7 @@ export function initIpcMain() {
 				const bTimeSetting = setting as unknown as BtimeSettingStore
 				if (bTimeSetting.showCalendar) {
 					win.setSize(BtimeConfig.minWidth, BtimeConfig.minHeight)
-					win.setResizable(false)
 				} else {
-					win.setResizable(true)
 					win.setSize(setting.bounds.width, setting.bounds.height)
 				}
 			}
@@ -147,7 +129,7 @@ export function initIpcMain() {
 				html: setting.html,
 				devTools: true,
 				alwaysOnTop: setting.alwaysOnTop,
-				reziable: true,
+				resizable: windowKey !== widgetKey.BTime,
 				saveBounds: true,
 				moveable,
 				ui: 'acrylic',
