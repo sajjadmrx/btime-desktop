@@ -38,17 +38,6 @@ export function BtimeSetting() {
 		})
 	}
 
-	async function onSliderChange(value: number) {
-		const fixedValue = Math.floor(value)
-
-		await window.ipcRenderer.invoke(
-			'setBorderRadius',
-			'BTime',
-			`${fixedValue}px`,
-		)
-		setSettingValue('borderRadius', fixedValue)
-	}
-
 	if (!setting) return null
 
 	return (
@@ -65,14 +54,14 @@ export function BtimeSetting() {
 								<Typography
 									variant={'h5'}
 									color="blue-gray"
-									className="text-gray-600  dark:text-[#c7c7c7] text-[13px] font-[Vazir] mr-3"
+									className="text-content text-[13px] font-[Vazir] mr-3"
 								>
 									فعال سازی
 								</Typography>
 								<Typography
 									variant="h5"
 									color="gray"
-									className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir] mr-3"
+									className="text-muted text-xs font-[Vazir] mr-3"
 								>
 									فعالسازی ویجت نمایش تاریخ
 								</Typography>
@@ -94,7 +83,7 @@ export function BtimeSetting() {
 									<Typography
 										variant={'h5'}
 										color="blue-gray"
-										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] items-center "
+										className="text-content text-[13px] font-[Vazir] items-center "
 									>
 										اولویت بالا{' '}
 										<span className="font-light">(همیشه بالای همه باشد)</span>
@@ -117,7 +106,7 @@ export function BtimeSetting() {
 									<Typography
 										variant={'h5'}
 										color="blue-gray"
-										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir] items-center "
+										className="text-content text-[13px] font-[Vazir] items-center "
 									>
 										نمایش تقویم{' '}
 										<span className="font-light">
@@ -132,10 +121,10 @@ export function BtimeSetting() {
 						/>
 					</div>
 					<div className="w-full">
-						<label className="text-gray-600 dark:text-[#eee] font-semibold text-sm">
+						<label className="text-sm font-semibold text-content">
 							نوع تقویم
 						</label>
-						<div className="flex mt-2 gap-2 w-full h-14 rounded-lg px-2 py-2 dark:bg-[#464545] bg-[#e8e6e6]">
+						<div className="flex w-full gap-2 px-2 py-2 mt-2 rounded-lg h-14 bg-content">
 							<CalendarItem
 								title="جلالی"
 								selected={setting.currentCalender === 'Jalali'}
@@ -146,45 +135,6 @@ export function BtimeSetting() {
 								selected={setting.currentCalender === 'Gregorian'}
 								onClick={() => setSettingValue('currentCalender', 'Gregorian')}
 							/>
-						</div>
-
-						<div className="text-gray-600 dark:text-gray-300 text-sm p-2 bg-[#e8e6e6] dark:bg-[#24242459] rounded-lg mt-2 flex items-center">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 24 24"
-								fill="currentColor"
-								className="w-6 h-6 ml-1"
-							>
-								<path
-									fillRule="evenodd"
-									d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
-									clipRule="evenodd"
-								/>
-							</svg>{' '}
-							<p className="font-light">
-								برای نمایش تقویم، ویجت رو در سایز مناسب قرار بدید.
-							</p>
-						</div>
-					</div>
-					<div className="flex flex-col justify-between w-full">
-						<label
-							htmlFor="currency-select"
-							className="text-gray-600 dark:text-[#eee] font-semibold text-sm"
-						>
-							حاشیه ها
-						</label>
-						<div className="flex items-center gap-2 px-2 py-2 rounded w-36 h-fit">
-							<Slider
-								size="md"
-								color="blue"
-								defaultValue={setting.borderRadius}
-								onChange={(change) =>
-									onSliderChange(Number(change.target.value))
-								}
-							/>
-							<div className="flex flex-row justify-between w-full text-gray-600 dark:text-[#eee]">
-								{setting.borderRadius}px
-							</div>
 						</div>
 					</div>
 				</div>
@@ -197,12 +147,12 @@ function CalendarItem({ title, selected, onClick }) {
 	return (
 		<div
 			onClick={onClick}
-			className={`w-full h-10 flex justify-center items-center rounded-lg text-gray-600 dark:text-[#eee] cursor-pointer ${
+			className={`w-full h-10 flex justify-center items-center rounded-lg text-content cursor-pointer ${
 				selected
-					? 'bg-[#f5f5f5] dark:bg-[#3a3a3a]'
+					? 'bg-gray-300'
 					: 'hover:bg-[#f5f5f578] dark:hover:bg-[#3a3a3a5c]'
 			} 
-        ${selected && 'text-gray-600 dark:text-gray-300'}
+        ${selected && '!text-gray-800'}
         transition-all  ease-in-out duration-2000`}
 		>
 			{title}

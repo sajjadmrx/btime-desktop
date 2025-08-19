@@ -59,7 +59,7 @@ function DayComponent({ index, gregorianFirstDay, events, currentDate }: Prop) {
 	const isCurrentDay = day === currentDate.date()
 
 	const getTextColorClass = () => {
-		return 'dark:text-gray-300 text-gray-700'
+		return 'text-gray-300'
 	}
 
 	const getBackgroundClass = () => {
@@ -67,71 +67,19 @@ function DayComponent({ index, gregorianFirstDay, events, currentDate }: Prop) {
 			return ''
 		}
 
-		return 'dark:bg-gray-800 bg-gray-100 dark:ring-1 ring-1 dark:ring-gray-600 ring-gray-400'
-	}
-
-	const getHoverClass = () => {
-		if (isCurrentDay) return ''
-
-		return 'hover:bg-gray-200 dark:hover:bg-gray-700'
-	}
-
-	const dayEventsList = dayEvents.length ? dayEvents : []
-
-	const getTooltipClass = () => {
-		return 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-lg'
-	}
-
-	function DayEvents() {
-		return dayEventsList.map((eventInfo, index) => (
-			<li key={index} className="max-w-full truncate">
-				<span
-					className={`whitespace-break-spaces font-[Vazir] text-xs ${
-						eventInfo.isHoliday
-							? 'font-medium dark:text-red-400 text-red-600'
-							: 'font-light dark:text-gray-300 text-gray-700'
-					}`}
-				>
-					{eventInfo.title} {eventInfo.isHoliday ? '(Holiday)' : ''}
-				</span>
-			</li>
-		))
+		return 'dark:bg-gray-800/20 bg-gray-100/30 ring-1 dark:ring-gray-800/40 ring-gray-300/60'
 	}
 
 	return (
-		<>
-			<Tooltip
-				className={`rounded-lg ${getTooltipClass()} w-52 min-h-2 truncate`}
-				content={
-					<div className="flex flex-col items-center justify-between w-full py-1">
-						<ul className="w-full px-3 text-xs">
-							{dayEventsList.length ? (
-								<DayEvents />
-							) : (
-								<li className="text-center font-[Vazir] font-light text-xs dark:text-gray-300 text-gray-700">
-									No events.
-								</li>
-							)}
-						</ul>
-					</div>
-				}
-				animate={{
-					mount: { scale: 1, y: 0 },
-					unmount: { scale: 0, y: 15 },
-				}}
-			>
-				<div
-					className={`text-center h-6 w-6 flex items-center justify-center
+		<div
+			className={`text-center h-6 w-6 flex items-center justify-center
             rounded-full cursor-pointer text-xs sm:text-sm transition-all duration-200
             ${getTextColorClass()}
             ${getBackgroundClass()}
-            ${getHoverClass()}
           `}
-				>
-					{day}
-				</div>
-			</Tooltip>
-		</>
+		>
+			{day}
+		</div>
 	)
 }
 
@@ -141,7 +89,7 @@ interface WeekDayProp {
 
 function WeekDayComponent({ day }: WeekDayProp) {
 	const getWeekdayClass = () => {
-		return 'dark:text-gray-400 text-gray-700'
+		return 'dark:text-gray-100 text-white opacity-80'
 	}
 
 	return (

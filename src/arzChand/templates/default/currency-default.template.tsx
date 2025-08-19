@@ -88,7 +88,7 @@ export function CurrencyDefaultComponent({ currencyCode }: Prop) {
 							className={`xs:text-xs sm:text-sm lg:text-[1rem] ${textColor}`}
 							dir="ltr"
 						>
-							{currency.rialPrice ? currency.rialPrice.toLocaleString() : '-'}
+							{getPrice(currency)}
 						</p>
 						<p className={`text-xs font-light ${textColor}`} dir="ltr">
 							1 {currency.code?.toUpperCase()}
@@ -103,4 +103,10 @@ export function CurrencyDefaultComponent({ currencyCode }: Prop) {
 			</div>
 		</div>
 	)
+}
+
+function getPrice(currency: FetchedCurrency) {
+	if (currency.code.toLowerCase() === 'btc')
+		return `$${currency.price.toLocaleString()}`
+	return currency.rialPrice ? currency.rialPrice.toLocaleString() : '-'
 }

@@ -1,6 +1,6 @@
 import { Checkbox, Slider, Switch, Typography } from '@material-tailwind/react'
 import type { ArzChandSettingStore } from 'electron/store'
-import { lazy, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { widgetKey } from '../../../../shared/widgetKey'
 import {
 	type SupportedCurrencies,
@@ -54,17 +54,6 @@ export function ArzChandSetting() {
 		})
 	}
 
-	async function onSliderChange(value: number) {
-		const fixedValue = Math.floor(value)
-
-		await window.ipcRenderer.invoke(
-			'setBorderRadius',
-			widgetKey.ArzChand,
-			`${fixedValue}px`,
-		)
-		setSettingValue('borderRadius', fixedValue)
-	}
-
 	if (!setting) return null
 	return (
 		<>
@@ -80,16 +69,17 @@ export function ArzChandSetting() {
 								<Typography
 									variant={'h5'}
 									color="blue-gray"
-									className="text-gray-600  dark:text-[#c7c7c7] text-[13px] font-[Vazir] flex flex-row items-center mr-3"
+									className="text-content text-[13px] font-[Vazir] flex flex-row items-center mr-3"
 								>
 									فعال سازی
 								</Typography>
 								<Typography
 									variant="h5"
 									color="gray"
-									className="dark:text-gray-500 text-gray-600 text-[12px] font-[Vazir] mr-3"
+									className="text-muted text-xs font-[Vazir] mr-3"
 								>
-									فعالسازی ویجت ارز چند (نمایش قیمت ارزها)
+									فعالسازی ویجت ویجی‌ارز{' '}
+									<span className="font-light">(نمایش قیمت ارزها)</span>
 								</Typography>
 							</div>
 						}
@@ -109,7 +99,7 @@ export function ArzChandSetting() {
 									<Typography
 										variant={'h5'}
 										color="blue-gray"
-										className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir]"
+										className="text-content text-[13px] font-[Vazir]"
 									>
 										اولویت بالا{' '}
 										<span className="font-light">(همیشه بالای همه باشد)</span>
@@ -122,10 +112,10 @@ export function ArzChandSetting() {
 						/>
 					</div>
 					<div className="w-full">
-						<label className="text-gray-600 dark:text-[#eee] font-semibold text-sm">
+						<label className="text-sm font-semibold text-content">
 							قالب ها
 						</label>
-						<div className="flex mt-2 gap-2 w-full h-14 rounded-lg px-2 py-2 dark:bg-[#464545] bg-[#e8e6e6]">
+						<div className="flex w-full gap-2 px-2 py-2 mt-2 rounded-lg h-14 bg-content">
 							<TemplateItem
 								title={'پیشفرض'}
 								selected={setting.template === 'default' || !setting.template}
@@ -138,27 +128,7 @@ export function ArzChandSetting() {
 							/>
 						</div>
 					</div>
-					<div className="flex flex-col justify-between w-full ">
-						<label
-							htmlFor="currency-select"
-							className="text-gray-600 dark:text-[#eee] font-semibold text-sm"
-						>
-							حاشیه ها
-						</label>
-						<div className="flex items-center gap-2 px-2 py-2 rounded w-36 h-fit">
-							<Slider
-								size="md"
-								color="blue"
-								defaultValue={setting.borderRadius}
-								onChange={(change) =>
-									onSliderChange(Number(change.target.value))
-								}
-							/>
-							<div className="flex flex-row justify-between w-full text-gray-600 dark:text-[#eee]">
-								{setting.borderRadius}px
-							</div>
-						</div>
-					</div>
+
 					<div
 						className="flex flex-row items-center justify-between w-full gap-2"
 						dir="rtl"
@@ -169,7 +139,7 @@ export function ArzChandSetting() {
 						>
 							<label
 								htmlFor="currency-select"
-								className="text-gray-600 dark:text-[#eee] font-semibold"
+								className="font-semibold text-content"
 							>
 								انتخاب ارز:
 							</label>
@@ -186,7 +156,7 @@ export function ArzChandSetting() {
 									color={'blue'}
 								/>
 							) : (
-								<div>در حال بارگذاری...</div>
+								<div className="text-muted">در حال بارگذاری...</div>
 							)}
 						</div>
 					</div>
@@ -252,12 +222,12 @@ function TemplateItem({ title, selected, onClick }) {
 	return (
 		<div
 			onClick={onClick}
-			className={`w-full h-10 flex justify-center items-center rounded-lg text-gray-600 dark:text-[#eee] cursor-pointer ${
+			className={`w-full h-10 flex justify-center items-center rounded-lg text-content cursor-pointer ${
 				selected
-					? 'bg-[#f5f5f5] dark:bg-[#3a3a3a]'
+					? 'bg-gray-300'
 					: 'hover:bg-[#f5f5f578] dark:hover:bg-[#3a3a3a5c]'
 			} 
-        ${selected && 'text-gray-600 dark:text-gray-300'}
+        ${selected && '!text-gray-800'}
         transition-all  ease-in-out duration-2000`}
 		>
 			{title}

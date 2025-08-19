@@ -120,5 +120,15 @@ body {
 }
 
 .text-muted {
-  @apply text-white opacity-50 dark:text-gray-100;
+  @apply text-white opacity-70 dark:text-gray-100;
+}
+
+.bg-content {
+  @apply bg-[#6565652a] dark:bg-[#4040406b] dark:backdrop-blur-xl;
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+  backdrop-filter: blur(10px) saturate(180%);
+}
+
+.hidden-scrollbar {
+  @apply scrollbar-none;
 }

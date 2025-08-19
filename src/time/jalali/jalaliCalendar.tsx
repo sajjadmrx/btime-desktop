@@ -38,7 +38,7 @@ export function JalaliCalendar({
 						className={`
 						p-0 text-xs
 						h-6 w-6 mx-auto flex items-center justify-center rounded-full
-						text-muted
+						text-muted font-thin
 					`}
 					>
 						{prevMonthStartDay + i}
@@ -61,7 +61,7 @@ export function JalaliCalendar({
 						className={`
 						p-0 text-xs
 						h-6 w-6 mx-auto flex items-center justify-center rounded-full
-						text-muted
+						text-muted font-thin
 					`}
 					>
 						{i + 1}

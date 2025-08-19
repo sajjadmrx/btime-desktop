@@ -150,6 +150,7 @@ export function initIpcMain() {
 				reziable: true,
 				saveBounds: true,
 				moveable,
+				ui: 'acrylic',
 			})
 
 			if (mainSetting.useParentWindowMode) {
