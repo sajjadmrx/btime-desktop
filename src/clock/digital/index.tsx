@@ -29,7 +29,7 @@ export function DigitalClock({ digital }: DigitalClockProps) {
 	const minutes = time.getMinutes().toString().padStart(2, '0')
 	const seconds = time.getSeconds().toString().padStart(2, '0')
 
-	const isDay = true // Number(hours) >= 6 && Number(hours) < 18
+	const isDay = Number(hours) >= 6 && Number(hours) < 18
 	const textColor = isDay ? 'text-gray-400' : 'text-[#536dfe]'
 
 	return (
