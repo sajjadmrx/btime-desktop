@@ -17,7 +17,7 @@ import {
 	store,
 	type windowSettings,
 } from './store'
-import { BtimeConfig } from './widgets/btime-config'
+import { WidgetConfigs } from './widgets/config'
 import { createSettingWindow, createWindow } from './window'
 
 const windowsShortcuts = require('windows-shortcuts')
@@ -52,7 +52,10 @@ export function initIpcMain() {
 			if (windowKey === widgetKey.BTime) {
 				const bTimeSetting = setting as unknown as BtimeSettingStore
 				if (bTimeSetting.showCalendar) {
-					win.setSize(BtimeConfig.minWidth, BtimeConfig.minHeight)
+					win.setSize(
+						WidgetConfigs[widgetKey.BTime].minWidth,
+						WidgetConfigs[widgetKey.BTime].minHeight,
+					)
 				} else {
 					win.setSize(setting.bounds.width, setting.bounds.height)
 				}
@@ -97,13 +100,13 @@ export function initIpcMain() {
 				userLogger.error(`Window not found for ${windowKey}`)
 			}
 		} else {
-			const win = await createWindow({
+			await createWindow({
 				height: setting.bounds.height,
 				width: setting.bounds.width,
-				minHeight: setting.bounds.minHeight,
-				minWidth: setting.bounds.minWidth,
-				maxHeight: setting.bounds.maxHeight,
-				maxWidth: setting.bounds.maxWidth,
+				minHeight: WidgetConfigs[windowKey].minHeight,
+				minWidth: WidgetConfigs[windowKey].minWidth,
+				maxHeight: WidgetConfigs[windowKey].maxHeight,
+				maxWidth: WidgetConfigs[windowKey].maxWidth,
 				x: setting.bounds.x,
 				y: setting.bounds.y,
 				title: windowKey,

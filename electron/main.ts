@@ -16,11 +16,10 @@ import { getIconPath, getPublicFilePath } from '../shared/getIconPath'
 import { widgetKey } from '../shared/widgetKey'
 import { logAppStartupEvent } from './analytics'
 import { initIpcMain } from './ipc-main'
-import { addChildWindow, createParentWindow } from './parentWindow'
 import { store } from './store'
 import { update } from './update'
 import { toggleStartUp } from './utils/startup.util'
-import { BtimeConfig, ClockConfig } from './widgets/btime-config'
+import { WidgetConfigs } from './widgets/config'
 import { createSettingWindow, createWindow } from './window'
 config()
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
@@ -76,12 +75,14 @@ async function onAppReady() {
 	if (btimeStore.enable) {
 		const btime = await createWindow({
 			height: btimeStore.showCalendar
-				? BtimeConfig.minHeight
+				? WidgetConfigs[widgetKey.BTime].minHeight
 				: btimeStore.bounds.height,
-			minWidth: btimeStore.showCalendar && BtimeConfig.minWidth,
-			minHeight: btimeStore.showCalendar && BtimeConfig.minHeight,
+			minWidth:
+				btimeStore.showCalendar && WidgetConfigs[widgetKey.BTime].minWidth,
+			minHeight:
+				btimeStore.showCalendar && WidgetConfigs[widgetKey.BTime].minHeight,
 			width: btimeStore.showCalendar
-				? BtimeConfig.minWidth
+				? WidgetConfigs[widgetKey.BTime].minWidth
 				: btimeStore.bounds.width,
 			x: btimeStore.bounds.x,
 			y: btimeStore.bounds.y,
@@ -103,10 +104,10 @@ async function onAppReady() {
 		const arzChandWindow = await createWindow({
 			height: arzChandStore.bounds.height,
 
-			minHeight: arzChandStore.bounds.minHeight || 120,
-			minWidth: arzChandStore.bounds.minWidth || 320,
-			maxWidth: arzChandStore.bounds.maxWidth || 410,
-			maxHeight: arzChandStore.bounds.maxHeight || 319,
+			minHeight: WidgetConfigs[widgetKey.ArzChand].minHeight,
+			minWidth: WidgetConfigs[widgetKey.ArzChand].minWidth,
+			maxWidth: WidgetConfigs[widgetKey.ArzChand].maxWidth,
+			maxHeight: WidgetConfigs[widgetKey.ArzChand].maxHeight,
 			moveable,
 			width: arzChandStore.bounds.width,
 			x: arzChandStore.bounds.x,
@@ -129,10 +130,10 @@ async function onAppReady() {
 	if (weatherStore.enable) {
 		const weatherWindow = await createWindow({
 			height: weatherStore.bounds.height,
-			minWidth: weatherStore.bounds.minWidth || 183,
-			minHeight: weatherStore.bounds.minHeight || 203,
-			maxWidth: weatherStore.bounds.maxWidth,
-			maxHeight: weatherStore.bounds.maxHeight,
+			minWidth: WidgetConfigs[widgetKey.Weather].minWidth,
+			minHeight: WidgetConfigs[widgetKey.Weather].minHeight,
+			maxWidth: WidgetConfigs[widgetKey.Weather].maxWidth,
+			maxHeight: WidgetConfigs[widgetKey.Weather].maxHeight,
 			width: weatherStore.bounds.width,
 			x: weatherStore.bounds.x,
 			y: weatherStore.bounds.y,
@@ -155,10 +156,10 @@ async function onAppReady() {
 		const clockWindow = await createWindow({
 			height: clockStore.bounds.height,
 			width: clockStore.bounds.width,
-			minHeight: ClockConfig.minHeight,
-			minWidth: ClockConfig.minWidth,
-			maxHeight: clockStore.bounds.maxHeight,
-			maxWidth: clockStore.bounds.maxWidth,
+			minHeight: WidgetConfigs[widgetKey.Clock].minHeight,
+			minWidth: WidgetConfigs[widgetKey.Clock].minWidth,
+			maxHeight: WidgetConfigs[widgetKey.Clock].maxHeight,
+			maxWidth: WidgetConfigs[widgetKey.Clock].maxWidth,
 			x: clockStore.bounds.x,
 			y: clockStore.bounds.y,
 			title: widgetKey.Clock,
@@ -180,8 +181,8 @@ async function onAppReady() {
 		const damdasti = await createWindow({
 			height: damDasti.bounds.height,
 			width: damDasti.bounds.width,
-			minHeight: damDasti.bounds.minHeight,
-			minWidth: damDasti.bounds.minWidth,
+			minHeight: WidgetConfigs[widgetKey.DamDasti].minHeight,
+			minWidth: WidgetConfigs[widgetKey.DamDasti].minWidth,
 			maxHeight: 1000,
 			maxWidth: 1000,
 			x: damDasti.bounds.x,

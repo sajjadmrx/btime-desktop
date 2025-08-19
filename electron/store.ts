@@ -10,10 +10,6 @@ export interface windowSettings {
 		y: number
 		width: number
 		height: number
-		minWidth: number
-		minHeight: number
-		maxWidth?: number
-		maxHeight?: number
 	}
 	alwaysOnTop: boolean
 	enable: boolean
@@ -83,7 +79,6 @@ export type Theme = 'system' | 'light' | 'dark'
 
 export interface StoreKey {
 	[widgetKey.BTime]: BtimeSettingStore
-	[widgetKey.NerkhYab]: NerkhYabSettingStore
 	[widgetKey.ArzChand]: ArzChandSettingStore
 	[widgetKey.Weather]: WeatherSettingStore
 	[widgetKey.Clock]: ClockSettingStore
@@ -102,10 +97,6 @@ const storeDefaults: StoreKey = {
 			y: 0,
 			width: 441,
 			height: 265,
-			minHeight: 150,
-			minWidth: 150,
-			maxHeight: 266,
-			maxWidth: 510,
 		},
 		currentCalender: 'Jalali',
 		showCalendar: true,
@@ -113,20 +104,7 @@ const storeDefaults: StoreKey = {
 		alwaysOnTop: false,
 		html: 'time.html',
 	},
-	NerkhYab: {
-		enable: true,
-		bounds: {
-			x: 0,
-			y: 0,
-			width: 226,
-			height: 134,
-			minHeight: 120,
-			minWidth: 226,
-		},
-		alwaysOnTop: false,
-		html: 'rate.html',
-		currencies: ['usd'],
-	},
+
 	ArzChand: {
 		enable: false,
 		bounds: {
@@ -134,10 +112,6 @@ const storeDefaults: StoreKey = {
 			y: 0,
 			width: 226,
 			height: 134,
-			minHeight: 110,
-			minWidth: 110,
-			maxWidth: 410,
-			maxHeight: 319,
 		},
 		alwaysOnTop: false,
 		html: 'arzchand.html',
@@ -151,8 +125,6 @@ const storeDefaults: StoreKey = {
 			y: 0,
 			width: 183,
 			height: 203,
-			minHeight: 203,
-			minWidth: 183,
 		},
 		alwaysOnTop: false,
 		city: null,
@@ -167,8 +139,6 @@ const storeDefaults: StoreKey = {
 			height: 180,
 			x: 0,
 			y: 0,
-			minWidth: 150,
-			minHeight: 76,
 		},
 		enable: false,
 		analogA: {
@@ -199,8 +169,6 @@ const storeDefaults: StoreKey = {
 			height: 180,
 			x: 0,
 			y: 0,
-			minWidth: 150,
-			minHeight: 76,
 		},
 		enable: false,
 		html: 'dam-dasti.html',
@@ -220,8 +188,6 @@ const storeDefaults: StoreKey = {
 			height: 180,
 			x: 0,
 			y: 0,
-			minWidth: 150,
-			minHeight: 76,
 		},
 		enable: false,
 		html: 'sub-shomaar.html',
