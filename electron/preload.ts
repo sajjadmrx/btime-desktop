@@ -1,6 +1,7 @@
 import * as electronToolkit from '@electron-toolkit/preload'
 
 import { contextBridge, ipcRenderer } from 'electron'
+import { widgetKey } from 'shared/widgetKey'
 import { type StoreKey, store } from './store'
 
 // --------- Expose some API to the Renderer process ---------
@@ -121,16 +122,14 @@ window.onmessage = (ev) => {
 setTimeout(removeLoading, 4999)
 
 export const storePreload = {
-	// get: <T>(key: T & keyof StoreKey) => store.get<T>(key),
-	get: <K extends keyof StoreKey>(key: K): StoreKey[K] =>
-		store.get<StoreKey[K]>(key),
-	set: <K extends keyof StoreKey>(key: K, value: StoreKey[K]): StoreKey[K] =>
-		store.set<T>(key, value as V),
+	get: <K extends keyof StoreKey>(key: K): StoreKey[K] => store.get(key),
+	set: <K extends keyof StoreKey>(key: K, value: StoreKey[K]) =>
+		store.set(key, value),
 }
 
 export const ipcPreload = {
 	reOpen: () => ipcRenderer.send('reOpen'),
-	changeTheme: (theme: StoreKey['theme']) =>
+	changeTheme: (theme: StoreKey['main']['theme']) =>
 		ipcRenderer.send('changeTheme', theme),
 	openSettingWindow: () => ipcRenderer.send('openSettingWindow'),
 	openUrl: (url: string) => ipcRenderer.send('open-url', url),
