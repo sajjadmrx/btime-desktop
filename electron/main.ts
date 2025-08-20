@@ -20,6 +20,7 @@ import { store } from './store'
 import { update } from './update'
 import serve from './utils/serve'
 import { toggleStartUp } from './utils/startup.util'
+import { forceCloseWin } from './utils/try-close-win'
 import { WidgetConfigs } from './widgets/config'
 import { createSettingWindow, createWindow } from './window'
 config()
@@ -234,12 +235,11 @@ async function onAppReady() {
 		y: 0,
 	})
 	await serve(initWin)
-	initWin.once('ready-to-show', async () => {
-		await new Promise((resolve) => setTimeout(resolve, 2000))
-		initWin.destroy()
-	})
 
-	// initWin.hide()
+	initWin.on('ready-to-show', async () => {
+		await new Promise((resolve) => setTimeout(resolve, 2000)) // after 2 seconds
+		forceCloseWin(initWin)
+	})
 
 	nativeTheme.themeSource = store.get('main').theme
 	createTray()
