@@ -1,11 +1,7 @@
 name: Release
 on:
-  push:
-    branches: ["main"]
-    paths-ignore:
-      - "README.md"
-      - "README-*.md"
-      - ".github/ISSUE_TEMPLATE/*"
+  release:
+    types: [created] 
 jobs:
   publish_on_linux:
     runs-on: ubuntu-latest
