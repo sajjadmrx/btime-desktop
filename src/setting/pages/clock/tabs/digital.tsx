@@ -61,6 +61,31 @@ export function DigitalClockTab({ digital, timezones, setSettingValue }: Prop) {
 				}}
 			/>
 
+			<Checkbox
+				ripple={true}
+				defaultChecked={digital?.autoUpdateColor}
+				onClick={() =>
+					setSettingValue('digital', {
+						autoUpdateColor: !digital.autoUpdateColor,
+					})
+				}
+				label={
+					<div>
+						<Typography
+							variant={'h5'}
+							color="blue-gray"
+							className="dark:text-[#c7c7c7] text-gray-600 text-[13px] font-[Vazir]"
+						>
+							رنگ بندی خودکار{' '}
+							<span className="font-light">(تغییر رنگ در روز و شب)</span>
+						</Typography>
+					</div>
+				}
+				containerProps={{
+					className: 'flex',
+				}}
+			/>
+
 			<div
 				className="flex flex-col w-full gap-2 mt-2 pb-10 font-[Vazir]"
 				dir="rtl"

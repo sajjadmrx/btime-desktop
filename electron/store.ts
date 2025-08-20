@@ -60,6 +60,7 @@ export interface DigitalClockSettingStore {
 	showSecond: boolean
 	showDate: boolean
 	showTimeZone: boolean
+	autoUpdateColor: boolean
 }
 
 export interface ClockSettingStore extends windowSettings {
@@ -155,6 +156,7 @@ const storeDefaults: StoreKey = {
 			showDate: true,
 			showSecond: true,
 			showTimeZone: true,
+			autoUpdateColor: true,
 			timeZone: {
 				label: 'آسیا / تهران',
 				value: 'Asia/Tehran',
