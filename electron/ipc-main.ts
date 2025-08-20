@@ -52,12 +52,19 @@ export function initIpcMain() {
 			if (windowKey === widgetKey.BTime) {
 				const bTimeSetting = setting as unknown as BtimeSettingStore
 				if (bTimeSetting.showCalendar) {
-					win.setSize(
-						WidgetConfigs[widgetKey.BTime].minWidth,
-						WidgetConfigs[widgetKey.BTime].minHeight,
-					)
+					win.setBounds({
+						x: win.getBounds().x,
+						y: win.getBounds().y,
+						width: WidgetConfigs[widgetKey.BTime].minWidth,
+						height: WidgetConfigs[widgetKey.BTime].minHeight,
+					})
 				} else {
-					win.setSize(setting.bounds.width, setting.bounds.height)
+					win.setBounds({
+						x: win.getBounds().x,
+						y: win.getBounds().y,
+						width: WidgetConfigs[widgetKey.BTime].off_calendar_MinWidth,
+						height: WidgetConfigs[widgetKey.BTime].off_calendar_MinHeight,
+					})
 				}
 			}
 
