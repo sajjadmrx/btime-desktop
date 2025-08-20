@@ -3,7 +3,7 @@ import { useAnalytics } from '../hooks/useAnalytics'
 
 function App() {
 	useAnalytics('startup')
-	return <div></div>
+	return <div>Please wait while the app is loading...</div>
 }
 
 const rootElement = document.getElementById('root')
