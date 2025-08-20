@@ -1,11 +1,11 @@
 # ✍ معرفی
 <p align="center">
-    <img src=".github/assets/banner.png" alt="Widgetify banner" width="600">
+    <img src="https://github.com/user-attachments/assets/8b37ebff-449a-48d8-80fb-ab9d1e890f2a" alt="Widgetify banner" width="600">
 </p>
 
 <p align="center">
     <a href="https://discord.gg/p9TZzEV39e" target="_blank">
-         <img src="https://discordapp.com/api/guilds/1088561568272367777/widget.png?style=banner2" alt="total" >
+         <img src="https://discordapp.com/api/guilds/1375251820326162578/widget.png?style=banner2" alt="total" >
     </a>
     <br/>
 <br/>
