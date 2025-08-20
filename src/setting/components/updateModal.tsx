@@ -28,6 +28,10 @@ const UpdateModal = ({ onClick }) => {
 				text: 'تغییر کلی در طراحی',
 				emoji: '🎨',
 			},
+			{
+				text: 'رفع مشکلات',
+				emoji: '🐛',
+			},
 		],
 	}
 
