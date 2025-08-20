@@ -22,7 +22,7 @@ const Button = ({ primary = false, children, onClick }) => (
 
 const UpdateModal = ({ onClick }) => {
 	const latestUpdate = {
-		version: '1.5',
+		version: 'درخشان',
 		features: [
 			{
 				text: 'تغییر کلی در طراحی',
