@@ -8,6 +8,7 @@ export const WidgetConfigs: Partial<
 			minHeight: number
 			maxWidth?: number
 			maxHeight?: number
+			[str: string]: any
 		}
 	>
 > = {
@@ -16,6 +17,8 @@ export const WidgetConfigs: Partial<
 		minHeight: 290,
 		maxHeight: 266,
 		maxWidth: 510,
+		off_calendar_MinHeight: 190,
+		off_calendar_MinWidth: 200,
 	},
 	[widgetKey.Clock]: {
 		minWidth: 140,
