@@ -48,7 +48,7 @@ mac:
   publish:
     - github
 nsis:
-  perMachine: true
+  perMachine: false
   oneClick: false
   installerIcon: "public/icons/app/win/icon.ico"
   deleteAppDataOnUninstall: true
