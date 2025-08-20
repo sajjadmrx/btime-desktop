@@ -116,7 +116,7 @@ body {
 }
 
 .text-content {
-  @apply text-gray-200 opacity-85 dark:text-gray-200 dark:opacity-100;
+  @apply text-gray-800 opacity-85 dark:text-gray-200 dark:opacity-100;
 }
 
 .text-muted {
