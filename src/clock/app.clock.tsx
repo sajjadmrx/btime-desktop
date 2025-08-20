@@ -22,14 +22,12 @@ function App() {
 	useThemeMode()
 
 	return (
-		<div className="w-screen h-screen overflow-hidden">
-			<div className="h-full moveable">
-				{setting.currentClock === 'digital' ? (
-					<DigitalClock digital={setting.digital} />
-				) : (
-					<AnalogClockA analog={setting.analogA} />
-				)}
-			</div>
+		<div className="w-screen h-screen overflow-hidden moveable">
+			{setting.currentClock === 'digital' ? (
+				<DigitalClock digital={setting.digital} />
+			) : (
+				<AnalogClockA analog={setting.analogA} />
+			)}
 		</div>
 	)
 }

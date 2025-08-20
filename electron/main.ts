@@ -220,27 +220,6 @@ async function onAppReady() {
 		})
 	}
 
-	const initWin = await createWindow({
-		alwaysOnTop: true,
-		height: 200,
-		width: 200,
-		devTools: false,
-		html: 'initial.html',
-		moveable: false,
-		resizable: false,
-		saveBounds: false,
-		title: 'initial',
-		ui: 'normal',
-		x: 0,
-		y: 0,
-	})
-	await serve(initWin)
-
-	initWin.on('ready-to-show', async () => {
-		await new Promise((resolve) => setTimeout(resolve, 2000)) // after 2 seconds
-		forceCloseWin(initWin)
-	})
-
 	nativeTheme.themeSource = store.get('main').theme
 	createTray()
 	update(mainWin, app)

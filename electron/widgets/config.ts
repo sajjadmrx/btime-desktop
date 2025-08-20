@@ -18,8 +18,8 @@ export const WidgetConfigs: Partial<
 		maxWidth: 510,
 	},
 	[widgetKey.Clock]: {
-		minWidth: 166,
-		minHeight: 184,
+		minWidth: 140,
+		minHeight: 170,
 	},
 	[widgetKey.ArzChand]: {
 		minHeight: 110,
