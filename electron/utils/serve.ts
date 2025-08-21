@@ -14,14 +14,11 @@ const isDevelopment = isDev
 // ================
 export default async function (mainWindow: BrowserWindow) {
 	if (isDevelopment) {
-		const startUrl =
-			process.env.VITE_DEV_SERVER_URL ||
-			Url.format({
-				pathname: path.join(process.env.DIST, 'index.html'),
-				protocol: 'file:',
-				slashes: true,
-			})
-
+		const startUrl = Url.format({
+			pathname: path.join(process.env.DIST, '/html/initial.html'),
+			protocol: 'file:',
+			slashes: true,
+		})
 		return mainWindow.loadURL(startUrl)
 	}
 
@@ -29,8 +26,7 @@ export default async function (mainWindow: BrowserWindow) {
 
 	const server = http.createServer((request, response) => {
 		return handler(request, response, {
-			public: process.env.DIST,
-			// public: process.env.PUBLIC,
+			public: path.join(process.env.DIST, '/html/initial.html'),
 			directoryListing: false,
 		})
 	})
