@@ -3,7 +3,7 @@ import ReactGA from 'react-ga4'
 
 export const useAnalytics = (widgetName: string) => {
 	useEffect(() => {
-		ReactGA.initialize('G-T2SYTC8P3X')
+		ReactGA.initialize('G-10KJSV5VNM')
 		ReactGA.event({
 			action: widgetName,
 			category: widgetName,

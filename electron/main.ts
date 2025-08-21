@@ -1,5 +1,6 @@
 import { release } from 'node:os'
 import { join } from 'node:path'
+import { setTimeout } from 'node:timers/promises'
 import { config } from 'dotenv'
 import {
 	BrowserWindow,
@@ -14,7 +15,6 @@ import {
 import isDev from 'electron-is-dev'
 import { getIconPath, getPublicFilePath } from '../shared/getIconPath'
 import { widgetKey } from '../shared/widgetKey'
-import { logAppStartupEvent } from './analytics'
 import { initIpcMain } from './ipc-main'
 import { store } from './store'
 import { update } from './update'
@@ -30,10 +30,9 @@ process.env.DIST_ELECTRON = join(__dirname, '../')
 process.env.DIST = join(process.env.DIST_ELECTRON, './dist')
 process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
 	? join(process.env.DIST_ELECTRON, './public')
-	: process.env.DIST
+	: join(process.env.DIST_ELECTRON, './dist')
 
 let mainWin: BrowserWindow | null
-let parentWin: BrowserWindow | null
 const icon = nativeImage.createFromPath(getIconPath())
 global.VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL
 
@@ -58,8 +57,8 @@ if (isDev) {
 	})
 }
 
-const isWindoAndDrawin: boolean = ['darwin', 'win32'].includes(process.platform)
-if (isWindoAndDrawin) {
+const isWindowsOrMac: boolean = ['darwin', 'win32'].includes(process.platform)
+if (isWindowsOrMac) {
 	toggleStartUp(app, store.get('main').startup)
 }
 
@@ -215,7 +214,7 @@ async function onAppReady() {
 		const settingPage = await createSettingWindow()
 
 		settingPage.once('ready-to-show', async () => {
-			await new Promise((resolve) => setTimeout(resolve, 2000))
+			await setTimeout(2000)
 			settingPage.webContents.send('update-details', { hello: 'world' })
 		})
 	}
@@ -223,6 +222,28 @@ async function onAppReady() {
 	nativeTheme.themeSource = store.get('main').theme
 	createTray()
 	update(mainWin, app)
+
+	const init = await createWindow({
+		alwaysOnTop: false,
+		devTools: true,
+		height: 200,
+		width: 200,
+		html: 'initial.html',
+		moveable: false,
+		resizable: false,
+		saveBounds: false,
+		title: 'initial',
+		ui: 'normal',
+		x: 0,
+		y: 0,
+		closable: true,
+	})
+	await serve(init)
+	init.on('ready-to-show', async () => {
+		init.show()
+		await setTimeout(1000)
+		forceCloseWin(init)
+	})
 
 	globalShortcut.register(openSettingShortcut, async () => {
 		if (mainWin) {
@@ -236,8 +257,6 @@ async function onAppReady() {
 			}
 		}
 	})
-
-	logAppStartupEvent(app)
 }
 
 app.on('window-all-closed', () => {
@@ -314,7 +333,7 @@ function getContextMenu() {
 		{
 			label: 'Open at boot',
 			icon: store.get('main').startup && getIcon('icons/checked.png'),
-			visible: isWindoAndDrawin,
+			visible: isWindowsOrMac,
 			click: () => {
 				const startupStatus = store.get('main').startup
 				const newValue = !startupStatus
