@@ -22,15 +22,11 @@ const Button = ({ primary = false, children, onClick }) => (
 
 const UpdateModal = ({ onClick }) => {
 	const latestUpdate = {
-		version: 'درخشان',
+		version: 'بیژن',
 		features: [
 			{
-				text: 'تغییر کلی در طراحی',
-				emoji: '🎨',
-			},
-			{
-				text: 'رفع مشکلات',
-				emoji: '🐛',
+				text: 'اضافه شدن رنگ بندی خودکار بر اساس روز و شب در تنظیمات ساعت دیجیتال',
+				emoji: '🌗',
 			},
 		],
 	}

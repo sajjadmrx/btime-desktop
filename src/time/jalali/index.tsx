@@ -1,7 +1,5 @@
 import type { BtimeSettingStore } from 'electron/store'
 import type moment from 'jalali-moment'
-import ms from 'ms'
-import { useEffect, useState } from 'react'
 import { useGetEvents } from '../../api/hooks/events/getEvents.hook'
 import { useDate } from '../context/date.context'
 import { JalaliCalendar } from './jalaliCalendar'
