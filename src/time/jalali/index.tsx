@@ -28,17 +28,28 @@ export function JalaliComponent(prop: Prop) {
 		return isHoliday
 	}
 
-	const isHoliday = checkIfHoliday(today, today.day())
+	const isHoliday = true //checkIfHoliday(today, today.day())
 
 	return setting.showCalendar ? (
 		<div className="flex flex-row-reverse items-start w-full h-full py-1 moveable">
 			<div className="flex flex-col items-center self-center lg:gap-4 gap-2 w-[40%] relative">
+				{isHoliday && (
+					<>
+						<div className="absolute w-32 px-2 py-1 text-sm text-[#f7374f] transform rotate-45 shadow-xl bg-red-600/60 -right-8 -top-4">
+							<div className="relative z-10 font-extrabold tracking-wide text-center">
+								تعطیل
+							</div>
+							<div className="absolute inset-0 opacity-50 bg-error/80 blur-xs" />
+						</div>
+						<div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-error/5 via-transparent to-error/10" />
+						<div className="absolute w-2 h-2 rounded-full top-2 left-2 bg-error/30 animate-pulse" />
+						<div className="absolute bottom-2 right-2 w-1.5 h-1.5 bg-error/20 rounded-full animate-pulse delay-300" />{' '}
+					</>
+				)}
 				<div className={'select-none text-content'}>
 					{today.locale('fa').format('dddd')}
 				</div>
-				<div
-					className={`text-6xl font-extrabold select-none text-content ${isHoliday ? '!text-red-600' : ''}`}
-				>
+				<div className={'text-6xl font-extrabold select-none text-content'}>
 					{today.locale('fa').jDate()}
 				</div>
 				<div className={'flex flex-col gap-0 text-content'}>
@@ -64,12 +75,23 @@ export function JalaliComponent(prop: Prop) {
 	) : (
 		<div className="flex justify-center w-full h-full py-1 moveable">
 			<div className="flex flex-col items-center justify-center lg:gap-4 gap-2 w-[40%] relative">
+				{isHoliday && (
+					<>
+						<div className="absolute w-32 px-2 py-1 text-sm text-[#f7374f] transform rotate-45 shadow-xl bg-red-600/60 left-12 top-2">
+							<div className="relative z-10 font-extrabold tracking-wide text-center">
+								تعطیل
+							</div>
+							<div className="absolute inset-0 opacity-50 bg-error/80 blur-xs" />
+						</div>
+						<div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-error/5 via-transparent to-error/10" />
+						<div className="absolute w-2 h-2 rounded-full top-2 left-2 bg-error/30 animate-pulse" />
+						<div className="absolute bottom-2 right-2 w-1.5 h-1.5 bg-error/20 rounded-full animate-pulse delay-300" />{' '}
+					</>
+				)}
 				<div className={'select-none text-content'}>
 					{today.locale('fa').format('dddd')}
 				</div>
-				<div
-					className={`text-6xl select-none text-content ${isHoliday ? '!text-red-600' : ''}`}
-				>
+				<div className={'text-6xl select-none text-content'}>
 					{today.locale('fa').jDate()}
 				</div>
 				<div className={'flex flex-col gap-2 text-content'}>
