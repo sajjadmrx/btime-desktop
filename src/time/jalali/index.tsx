@@ -28,7 +28,7 @@ export function JalaliComponent(prop: Prop) {
 		return isHoliday
 	}
 
-	const isHoliday = true //checkIfHoliday(today, today.day())
+	const isHoliday = checkIfHoliday(today, today.day())
 
 	return setting.showCalendar ? (
 		<div className="flex flex-row-reverse items-start w-full h-full py-1 moveable">
