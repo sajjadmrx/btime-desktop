@@ -22,11 +22,11 @@ const Button = ({ primary = false, children, onClick }) => (
 
 const UpdateModal = ({ onClick }) => {
 	const latestUpdate = {
-		version: 'بیژن',
+		version: 'رز',
 		features: [
 			{
-				text: 'اضافه شدن رنگ بندی خودکار بر اساس روز و شب در تنظیمات ساعت دیجیتال',
-				emoji: '🌗',
+				text: 'رفع مشکل ساعت دیجیتال',
+				emoji: '🕒',
 			},
 		],
 	}
