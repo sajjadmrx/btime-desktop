@@ -32,9 +32,9 @@ export function DigitalClock({ digital }: DigitalClockProps) {
 	const isDay = Number(hours) >= 6 && Number(hours) < 18
 	const textColor = digital.autoUpdateColor
 		? isDay
-			? 'text-content'
+			? 'text-gray-800 dark:text-gray-200'
 			: 'text-[#536dfe]'
-		: 'text-content'
+		: 'text-gray-800 dark:text-gray-200'
 
 	return (
 		<div className="relative flex flex-col items-center w-full h-full">
