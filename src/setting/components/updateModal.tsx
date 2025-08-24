@@ -22,11 +22,11 @@ const Button = ({ primary = false, children, onClick }) => (
 
 const UpdateModal = ({ onClick }) => {
 	const latestUpdate = {
-		version: 'رز',
+		version: 'یاس',
 		features: [
 			{
-				text: 'رفع مشکل ساعت دیجیتال',
-				emoji: '🕒',
+				text: 'بهبود رنگ ها در ویجت تقویم',
+				emoji: '🎨',
 			},
 		],
 	}
