@@ -33,7 +33,7 @@ export function JalaliComponent(prop: Prop) {
 			<div className="flex flex-col items-center self-center lg:gap-4 gap-2 w-[40%] relative">
 				{isHoliday && (
 					<>
-						<div className="absolute w-32 px-2 py-1 text-sm text-[#f7374f] transform rotate-45 shadow-xl bg-red-600/60 -right-8 -top-4">
+						<div className="absolute w-32 px-2 py-1 text-sm text-gray-200 transform rotate-45 bg-[#f7374f] shadow-xl -right-8 -top-4">
 							<div className="relative z-10 font-extrabold tracking-wide text-center">
 								تعطیل
 							</div>
@@ -75,7 +75,7 @@ export function JalaliComponent(prop: Prop) {
 			<div className="flex flex-col items-center justify-center lg:gap-4 gap-2 w-[40%] relative">
 				{isHoliday && (
 					<>
-						<div className="absolute w-32 px-2 py-1 text-sm text-[#f7374f] transform rotate-45 shadow-xl bg-red-600/60 left-12 top-2">
+						<div className="absolute w-32 px-2 py-1 text-sm text-gray-200 transform rotate-45 shadow-xl bg-[#f7374f] left-12 top-2">
 							<div className="relative z-10 font-extrabold tracking-wide text-center">
 								تعطیل
 							</div>

@@ -92,7 +92,7 @@ function DayComponent({ index, jalaliFirstDay, isHoliday, currentDate }: Prop) {
 			return 'dark:text-red-400 text-red-700'
 		}
 
-		return 'text-gray-300'
+		return 'text-content'
 	}
 
 	const getBackgroundClass = () => {
@@ -128,7 +128,7 @@ function WeekDayComponent({ day, index }: WeekDayProp) {
 	const getWeekdayClass = () => {
 		return isFriday
 			? 'dark:text-red-400 text-red-600'
-			: 'dark:text-gray-100 text-white opacity-80'
+			: 'text-content opacity-80'
 	}
 
 	return (
