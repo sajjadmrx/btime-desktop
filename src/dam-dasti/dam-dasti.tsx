@@ -103,39 +103,36 @@ function App() {
 		}
 	}, [])
 
-	const iconButtonStyle =
-		'text-gray-500 dark:text-gray-400/90 hover:bg-gray-200/70 dark:hover:bg-[#3c3c3c8a]'
-
 	return (
 		<div
 			className={
-				'w-screen h-screen flex flex-col p-1 overflow-hidden transition-colors duration-300'
+				'w-screen h-screen flex flex-col p-1 overflow-hidden transition-colors duration-300 moveable'
 			}
 			onDragOver={handleDragOver}
 			onDragLeave={handleDragLeave}
 			onDrop={handleDrop}
 		>
-			<div className="absolute bottom-0 left-0 right-0 z-50 flex justify-end p-2">
-				<div className="flex items-center">
-					<button
-						className={`w-8 h-8 moveable flex justify-center items-center rounded-full transition-colors ${iconButtonStyle}`}
-						style={{ backdropFilter: 'blur(20px)' }}
-						title="جابجایی"
-					>
-						<MdOutlineDragIndicator size={18} />
-					</button>
-				</div>
-			</div>
+			{/* <div className="absolute bottom-0 right-0 z-50 flex justify-start p-2 w-fit">
+				<button
+					className={
+						'w-8 h-8 moveable flex justify-center items-center rounded-full transition-colors text-content'
+					}
+					style={{ backdropFilter: 'blur(20px)' }}
+					title="جابجایی"
+				>
+					<MdOutlineDragIndicator size={18} />
+				</button>
+			</div> */}
 
 			<div
 				className={
-					'flex flex-wrap items-start justify-center w-full py-2 h-full gap-2 px-1 overflow-y-auto scrollbar-thin hidden-scrollbar'
+					'flex flex-wrap items-start justify-center py-1 gap-1 px-1 overflow-y-auto scrollbar-thin hidden-scrollbar'
 				}
 			>
 				{apps.map((app) => (
 					<div
 						key={app.id}
-						className="relative  flex flex-col items-center transition-all group w-[60px] xxs:w-[45px] xs:w-[55px]  sm:w-[55px] md:w-[85px] "
+						className="relative not-moveable  flex flex-col items-center transition-all group w-[60px] xxs:w-[45px] xs:w-[55px]  sm:w-[55px] md:w-[85px] "
 					>
 						<button
 							className="absolute z-10 flex items-center justify-center w-5 h-5 text-white transition-all bg-red-500 rounded-full opacity-0 cursor-pointer -top-1 -right-1 group-hover:opacity-100 hover:scale-110 hover:bg-red-600"
@@ -158,7 +155,7 @@ function App() {
 								<img
 									src={app.icon}
 									alt={app.name}
-									className={'object-cover w-full h-full p-1 rounded-2xl'}
+									className={'object-cover w-full h-full p-0.5 rounded-2xl'}
 									onError={(e) => {
 										e.currentTarget.style.display = 'none'
 										const defaultIcon = document.createElement('div')
@@ -174,28 +171,20 @@ function App() {
 								</div>
 							)}
 						</div>
-
-						<span
-							className={
-								'w-full px-1 text-xs xxs:text-[10px] sm:text-xs font-medium text-center truncate text-content'
-							}
-						>
-							{app.name.charAt(0).toUpperCase() + app.name.slice(1)}
-						</span>
 					</div>
 				))}
 
-				<div className="relative flex flex-col items-center w-[60px] xs:w-[65px] sm:w-[75px] md:w-[85px] group">
+				<div
+					className="flex flex-col items-center justify-center transition-all group w-[60px] xxs:w-[45px] xs:w-[55px]  sm:w-[55px] md:w-[55px]"
+					onClick={handleAddApp}
+				>
 					<div
-						className="relative  flex flex-col items-center justify-center transition-all group w-[60px] xxs:w-[45px] xs:w-[55px]  sm:w-[55px] md:w-[85px] cursor-pointer border-2 border-gray-400/30 border-dashed rounded-full h-12 group-hover:border-blue-400 hover:scale-105 dark:group-hover:border-blue-500"
-						title="افزودن برنامه جدید"
-						onClick={handleAddApp}
+						className={`relative mb-2 transition-all rounded-2xl shadow-md cursor-pointer w-12 h-12 xs:w-12 xs:h-12 sm:w-10 sm:h-10 hover:scale-110  xxs:w-8 xxs:h-8 
+                                group-hover:ring-2 group-hover:ring-blue-400 dark:group-hover:ring-blue-500`}
 					>
-						<IoMdAdd
-							size={20}
-							className={`text-gray-400
-                                transition-colors dark:text-gray-500 group-hover:text-blue-500 dark:group-hover:text-blue-400`}
-						/>
+						<div className="flex items-center justify-center w-full h-full text-xl font-medium text-white rounded-full sm:text-xs">
+							<IoMdAdd />
+						</div>
 					</div>
 				</div>
 			</div>
